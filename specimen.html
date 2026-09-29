@@ -1,0 +1,240 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Whitepaper Template Specimen</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div class="titleblock">
+  <div class="meta"><span>ORGANIZATION &nbsp;|&nbsp; DOCUMENT TYPE</span><span>DRAFT, MONTH YEAR</span></div>
+  <h1>Whitepaper Template Specimen</h1>
+  <div class="subtitle">Each style in style.css, shown once with placeholder text</div>
+  <div class="byline">Author Name</div>
+</div>
+
+<h2><span class="n">1</span>Type</h2>
+<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Body text is set in Source Serif 4, justified and hyphenated.<sup class="fn">1</sup> Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Numbers set inline read as 12.5 km, 3,400 units, and 0.25°.</p>
+<p><span class="runin">Run-in label.</span> Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Text can use <i>italics</i>, <b>bold</b>, <span class="smallcaps">small caps</span>, and <a href="#">links</a>, sparingly.<sup class="fn">2</sup></p>
+
+<h3>Third-level heading</h3>
+<p>Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium.</p>
+<h4>Fourth-level heading</h4>
+<p>Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt.</p>
+
+<h2><span class="n">2</span>Lists and blocks</h2>
+<div style="display:flex; gap:18pt">
+<ul style="flex:1">
+  <li>Neque porro quisquam est qui dolorem</li>
+  <li>Ipsum quia dolor sit amet consectetur</li>
+  <li>Adipisci velit sed quia non numquam</li>
+</ul>
+<ol style="flex:1">
+  <li>Ut enim ad minima veniam</li>
+  <li>Quis nostrum exercitationem</li>
+  <li>Ullam corporis suscipit laboriosam</li>
+</ol>
+</div>
+<ol class="lead">
+  <li><b>Bold lead-in,</b> nisi ut aliquid ex ea commodi consequatur. Quis autem vel eum iure reprehenderit qui in ea voluptate.</li>
+  <li><b>Another lead-in,</b> velit esse quam nihil molestiae consequatur, vel illum qui dolorem eum fugiat quo voluptas nulla pariatur.</li>
+</ol>
+
+<blockquote>At vero eos et accusamus et iusto odio dignissimos ducimus qui blanditiis praesentium voluptatum deleniti atque corrupti.<span class="source">Named Person, Title, Publication, Year</span></blockquote>
+
+<div class="ruled">
+  <div class="label">Ruled block</div>
+  <p>Temporibus autem quibusdam et aut officiis debitis aut rerum necessitatibus saepe eveniet ut et voluptates repudiandae sint et molestiae non recusandae.</p>
+</div>
+
+<div class="sidebar">
+  <p>Side-ruled block. Itaque earum rerum hic tenetur a sapiente delectus, ut aut reiciendis voluptatibus maiores alias consequatur aut perferendis doloribus asperiores repellat.</p>
+</div>
+
+<h2><span class="n">3</span>Figures</h2>
+<p>Figures are inline SVG: thin black strokes, gray fills, square corners, and labels on leader lines. Aliquam erat volutpat, nam dui mi tincidunt quis accumsan porttitor facilisis luctus metus.</p>
+
+<figure>
+<svg viewBox="0 0 700 170" xmlns="http://www.w3.org/2000/svg" font-family="Source Sans 3, sans-serif" font-size="8.6">
+  <defs>
+    <marker id="chev" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 1 L9 5 L0 9" fill="none" stroke="#111" stroke-width="1.4"/></marker>
+  </defs>
+  <text x="0" y="11" font-weight="700" font-size="8.6" letter-spacing="0.5">(a) LINE WEIGHTS AND PATTERNS</text>
+  <g stroke="#111" fill="none">
+    <line x1="0" y1="32" x2="150" y2="32" stroke-width="0.4"/>
+    <line x1="0" y1="52" x2="150" y2="52" stroke-width="0.7"/>
+    <line x1="0" y1="72" x2="150" y2="72" stroke-width="1.0"/>
+    <line x1="0" y1="92" x2="150" y2="92" stroke-width="1.6"/>
+    <line x1="0" y1="118" x2="150" y2="118" stroke-width="0.7" stroke-dasharray="4 3"/>
+    <line x1="0" y1="138" x2="150" y2="138" stroke="#888" stroke-width="0.6" stroke-dasharray="1.5 3"/>
+    <line x1="0" y1="158" x2="150" y2="158" stroke-width="0.5" stroke-dasharray="10 2.5 2 2.5"/>
+  </g>
+  <g fill="#333" font-size="8">
+    <text x="160" y="35">0.4 pt hairline</text>
+    <text x="160" y="55">0.7 pt outline</text>
+    <text x="160" y="75">1.0 pt emphasis</text>
+    <text x="160" y="95">1.6 pt heavy</text>
+    <text x="160" y="121">dashed</text>
+    <text x="160" y="141">dotted reference</text>
+    <text x="160" y="161">center line</text>
+  </g>
+
+  <text x="300" y="11" font-weight="700" font-size="8.6" letter-spacing="0.5">(b) BOXES AND CONNECTORS</text>
+  <g fill="#fff" stroke="#111" stroke-width="0.8">
+    <rect x="300" y="40" width="100" height="36"/>
+    <rect x="450" y="40" width="100" height="36"/>
+    <rect x="600" y="40" width="100" height="36" stroke-width="1.6"/>
+  </g>
+  <g text-anchor="middle" fill="#111" font-size="9">
+    <text x="350" y="56">Block A</text><text x="350" y="68" fill="#555" font-size="8">short description</text>
+    <text x="500" y="56">Block B</text><text x="500" y="68" fill="#555" font-size="8">short description</text>
+    <text x="650" y="56" font-weight="700">Block C</text><text x="650" y="68" fill="#555" font-size="8">heavier outline</text>
+  </g>
+  <g stroke="#111" stroke-width="0.8" fill="none">
+    <path d="M400 58 H447" marker-end="url(#chev)"/>
+    <path d="M550 58 H597" marker-end="url(#chev)"/>
+    <path d="M650 76 V110 H350 V79" stroke-dasharray="4 3" marker-end="url(#chev)"/>
+  </g>
+  <g stroke="#111" stroke-width="1" fill="none"><path d="M421 46 l6 6 l-6 5 l6 6 l-6 5"/></g>
+  <text x="424" y="92" text-anchor="middle" font-size="8" font-style="italic" fill="#333">interruption mark</text>
+  <text x="500" y="124" text-anchor="middle" font-size="8" font-style="italic" fill="#333">dashed return path</text>
+</svg>
+<figcaption><b>Figure 1.</b> Line work. (a) Stroke weights and patterns, each with one job. (b) Square boxes, open chevron arrowheads, a heavier outline for emphasis, and italic annotations.</figcaption>
+</figure>
+
+<figure>
+<svg viewBox="0 40 700 252" xmlns="http://www.w3.org/2000/svg" font-family="Source Sans 3, sans-serif" font-size="8.6">
+  <defs>
+    <pattern id="hatch" width="5" height="5" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><line x1="0" y1="0" x2="0" y2="5" stroke="#111" stroke-width="0.5"/></pattern>
+    <marker id="dim" viewBox="0 0 10 10" refX="10" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0 2 L10 5 L0 8 Z" fill="#111"/></marker>
+    <clipPath id="det"><circle cx="545" cy="140" r="78"/></clipPath>
+  </defs>
+
+  <!-- part B, a second material in gray -->
+  <rect x="170" y="160" width="70" height="40" fill="#d9d9d9" stroke="#111" stroke-width="0.8"/>
+  <!-- part A, sectioned -->
+  <path d="M80 60 L120 60 L120 190 Q120 200 130 200 L300 200 L300 240 L80 240 Z" fill="url(#hatch)" stroke="#111" stroke-width="1"/>
+  <circle cx="255" cy="220" r="8" fill="#fff" stroke="#111" stroke-width="0.8"/>
+  <g stroke="#111" stroke-width="0.4" stroke-dasharray="6 2 1.5 2">
+    <line x1="240" y1="220" x2="270" y2="220"/><line x1="255" y1="205" x2="255" y2="235"/>
+  </g>
+
+  <!-- dimensions -->
+  <g stroke="#111" stroke-width="0.4">
+    <line x1="80" y1="244" x2="80" y2="270"/><line x1="300" y1="244" x2="300" y2="270"/>
+    <line x1="80" y1="264" x2="300" y2="264" marker-start="url(#dim)" marker-end="url(#dim)"/>
+    <line x1="76" y1="60" x2="50" y2="60"/><line x1="76" y1="240" x2="50" y2="240"/>
+    <line x1="56" y1="60" x2="56" y2="240" marker-start="url(#dim)" marker-end="url(#dim)"/>
+  </g>
+  <rect x="176" y="258" width="28" height="11" fill="#fff"/>
+  <text x="190" y="267" text-anchor="middle" fill="#111" font-size="8.4">220</text>
+  <rect x="50" y="136" width="12" height="26" fill="#fff"/>
+  <text transform="translate(59,150) rotate(-90)" text-anchor="middle" fill="#111" font-size="8.4">180</text>
+
+  <!-- leader labels -->
+  <g stroke="#111" stroke-width="0.4" fill="none">
+    <path d="M104 110 L150 90 H158"/>
+    <path d="M214 164 L232 128 H240"/>
+    <path d="M261 214 L290 180 H298"/>
+  </g>
+  <g fill="#111">
+    <text x="161" y="93">Part A, sectioned</text>
+    <text x="243" y="131">Part B</text>
+    <text x="301" y="183">Ø16 hole with center lines</text>
+  </g>
+
+  <!-- callout to detail -->
+  <circle cx="124" cy="196" r="15" fill="none" stroke="#111" stroke-width="0.6" stroke-dasharray="2 2"/>
+  <text x="104" y="178" fill="#111" font-weight="700">A</text>
+  <path d="M139 196 L467 150" stroke="#111" stroke-width="0.5" stroke-dasharray="2 2" fill="none"/>
+
+  <!-- detail A, 3:1 -->
+  <g clip-path="url(#det)">
+    <rect x="460" y="55" width="180" height="180" fill="#fff"/>
+    <path d="M400 40 L545 40 L545 110 Q545 140 575 140 L720 140 L720 260 L400 260 Z" fill="url(#hatch)" stroke="#111" stroke-width="1.2"/>
+  </g>
+  <circle cx="545" cy="140" r="78" fill="none" stroke="#111" stroke-width="0.6" stroke-dasharray="2 2"/>
+  <path d="M556 128 L600 90 H612" stroke="#111" stroke-width="0.4" fill="none"/>
+  <text x="615" y="93" fill="#111">R10 fillet</text>
+  <text x="545" y="236" text-anchor="middle" fill="#111" font-weight="700" font-size="8.2" letter-spacing="0.4">DETAIL A (3:1)</text>
+
+  <text x="0" y="286" fill="#666" font-size="7.4" font-style="italic">Dimensions in millimeters.</text>
+</svg>
+<figcaption><b>Figure 2.</b> Drawing conventions. Hatching marks a cut surface and gray marks a second material. Dimensions use extension lines and filled arrowheads, and a dashed callout leads to a magnified detail.</figcaption>
+</figure>
+
+<figure>
+<svg viewBox="0 0 700 200" xmlns="http://www.w3.org/2000/svg" font-family="Source Sans 3, sans-serif" font-size="8.4">
+  <g transform="translate(70,16)">
+    <!-- uncertainty band -->
+    <path d="M0 150 C80 120 160 70 240 50 C320 32 400 26 480 24 L480 44 C400 48 320 58 240 78 C160 102 80 140 0 162 Z" fill="#e3e3e3"/>
+    <!-- axes -->
+    <line x1="0" y1="0" x2="0" y2="160" stroke="#111" stroke-width="0.7"/>
+    <line x1="0" y1="160" x2="480" y2="160" stroke="#111" stroke-width="0.7"/>
+    <g stroke="#111" stroke-width="0.6">
+      <line x1="0" y1="160" x2="0" y2="164"/><line x1="96" y1="160" x2="96" y2="164"/><line x1="192" y1="160" x2="192" y2="164"/><line x1="288" y1="160" x2="288" y2="164"/><line x1="384" y1="160" x2="384" y2="164"/><line x1="480" y1="160" x2="480" y2="164"/>
+      <line x1="-4" y1="160" x2="0" y2="160"/><line x1="-4" y1="120" x2="0" y2="120"/><line x1="-4" y1="80" x2="0" y2="80"/><line x1="-4" y1="40" x2="0" y2="40"/><line x1="-4" y1="0" x2="0" y2="0"/>
+    </g>
+    <g fill="#333" font-size="8" text-anchor="middle"><text x="0" y="175">0</text><text x="96" y="175">2</text><text x="192" y="175">4</text><text x="288" y="175">6</text><text x="384" y="175">8</text><text x="480" y="175">10</text></g>
+    <g fill="#333" font-size="8" text-anchor="end"><text x="-7" y="163">0</text><text x="-7" y="123">25</text><text x="-7" y="83">50</text><text x="-7" y="43">75</text><text x="-7" y="3">100</text></g>
+    <text x="240" y="192" text-anchor="middle" fill="#333">Horizontal axis (units)</text>
+    <text transform="translate(-30,80) rotate(-90)" text-anchor="middle" fill="#333">Vertical axis (units)</text>
+    <!-- reference line -->
+    <line x1="0" y1="64" x2="480" y2="64" stroke="#888" stroke-width="0.6" stroke-dasharray="1.5 2.5"/>
+    <text x="486" y="67" fill="#555" font-style="italic">reference</text>
+    <!-- model curve -->
+    <path d="M0 156 C80 130 160 86 240 64 C320 45 400 37 480 34" fill="none" stroke="#111" stroke-width="1.5"/>
+    <text x="486" y="37" fill="#111" font-weight="600">model</text>
+    <!-- observations -->
+    <g fill="#fff" stroke="#111" stroke-width="0.9">
+      <circle cx="48" cy="146" r="2.6"/><circle cx="110" cy="122" r="2.6"/><circle cx="170" cy="96" r="2.6"/><circle cx="230" cy="72" r="2.6"/><circle cx="300" cy="50" r="2.6"/><circle cx="360" cy="46" r="2.6"/><circle cx="430" cy="34" r="2.6"/>
+    </g>
+    <path d="M300 50 L330 92 H340" stroke="#111" stroke-width="0.4" fill="none"/>
+    <text x="343" y="95" fill="#111">observations</text>
+    <path d="M140 118 L120 138 H112" stroke="#111" stroke-width="0.4" fill="none"/>
+    <text x="109" y="141" text-anchor="end" fill="#111">uncertainty</text>
+    <text x="240" y="-4" text-anchor="middle" fill="#555" font-style="italic" font-size="8">Notional.</text>
+  </g>
+</svg>
+<figcaption><b>Figure 3.</b> A chart with direct labels instead of a legend: a curve, an uncertainty band in gray, open-circle points, and a dotted reference line. The chart is marked "Notional." because its data are illustrative.</figcaption>
+</figure>
+
+<h2><span class="n">4</span>Tables</h2>
+<table class="keep">
+  <thead><tr><th>Item</th><th>Description</th><th class="num">Value</th><th class="num">Change</th></tr></thead>
+  <tbody>
+    <tr><td>Item one</td><td>Lorem ipsum dolor sit amet</td><td class="num">1,240</td><td class="num">+3.1%</td></tr>
+    <tr><td>Item two</td><td>Consectetur adipiscing elit</td><td class="num">860</td><td class="num">−0.4%</td></tr>
+    <tr><td>Item three</td><td>Sed do eiusmod tempor</td><td class="num">17,905</td><td class="num">+12.0%</td></tr>
+  </tbody>
+  <caption><b>Table 1.</b> Booktabs-style rules with right-aligned tabular figures.</caption>
+</table>
+
+<table style="margin-top:10pt">
+  <thead><tr><th></th><th>Item</th><th>Notes</th></tr></thead>
+  <tbody>
+    <tr><td class="icon"><svg width="12" height="12"><circle cx="6" cy="6" r="5" fill="#111" stroke="#111"/></svg></td><td>Item one</td><td>Ut enim ad minim veniam, quis nostrud exercitation.</td></tr>
+    <tr><td class="icon"><svg width="12" height="12"><circle cx="6" cy="6" r="5" fill="#fff" stroke="#111"/><path d="M6 1 A5 5 0 1 1 1 6 L6 6 Z" fill="#111"/></svg></td><td>Item two</td><td>Duis aute irure dolor in reprehenderit.</td></tr>
+    <tr><td class="icon"><svg width="12" height="12"><circle cx="6" cy="6" r="5" fill="#fff" stroke="#111"/><path d="M6 1 A5 5 0 0 1 6 11 Z" fill="#111"/></svg></td><td>Item three</td><td>Excepteur sint occaecat cupidatat non proident.</td></tr>
+    <tr><td class="icon"><svg width="12" height="12"><circle cx="6" cy="6" r="5" fill="#fff" stroke="#111"/><path d="M6 1 A5 5 0 0 1 11 6 L6 6 Z" fill="#111"/></svg></td><td>Item four</td><td>Sed ut perspiciatis unde omnis iste natus.</td></tr>
+    <tr><td class="icon"><svg width="12" height="12"><circle cx="6" cy="6" r="5" fill="#fff" stroke="#111"/></svg></td><td>Item five</td><td>Nemo enim ipsam voluptatem quia voluptas.</td></tr>
+  </tbody>
+</table>
+<div class="legend">
+  <span><svg width="10" height="10"><circle cx="5" cy="5" r="4.2" fill="#111"/></svg> full</span>
+  <span><svg width="10" height="10"><circle cx="5" cy="5" r="4.2" fill="#fff" stroke="#111"/><path d="M5 0.8 A4.2 4.2 0 1 1 0.8 5 L5 5 Z" fill="#111"/></svg> three quarters</span>
+  <span><svg width="10" height="10"><circle cx="5" cy="5" r="4.2" fill="#fff" stroke="#111"/><path d="M5 0.8 A4.2 4.2 0 0 1 5 9.2 Z" fill="#111"/></svg> half</span>
+  <span><svg width="10" height="10"><circle cx="5" cy="5" r="4.2" fill="#fff" stroke="#111"/><path d="M5 0.8 A4.2 4.2 0 0 1 9.2 5 L5 5 Z" fill="#111"/></svg> quarter</span>
+  <span><svg width="10" height="10"><circle cx="5" cy="5" r="4.2" fill="#fff" stroke="#111"/></svg> empty</span>
+</div>
+
+<div class="notes">
+  <ol>
+    <li>Author Name, “Exact Title of the Source,” <i>Publication</i>, Day Month Year.</li>
+    <li>Organization, <i>Document Title</i>, identifier, Month Year.</li>
+  </ol>
+</div>
+
+</body>
+</html>
