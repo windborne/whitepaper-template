@@ -2,7 +2,9 @@
 
 A grayscale print stylesheet for writing documents in HTML and printing them to PDF, with a specimen page that shows each style once. Use it for papers, reports, memos, notes, or anything else that ends up as a PDF.
 
-![Specimen pages](preview/specimen.png)
+![Specimen, page 2](preview/specimen-2.png)
+
+The full specimen is [specimen.pdf](specimen.pdf).
 
 ## Files
 
@@ -26,7 +28,7 @@ Then print it:
 ./build.sh my-document.html
 ```
 
-`build.sh` needs Chrome or Chromium. Page previews in `preview/` need `pdftoppm` (Poppler), and the side-by-side image needs ImageMagick. Fonts (Source Serif 4 and Source Sans 3) load from Google Fonts, so printing needs a network connection. Page size, margins, and footer text are set in the `@page` rule at the top of `style.css`.
+`build.sh` needs Chrome or Chromium. Page previews in `preview/` need `pdftoppm` (Poppler). Fonts (Source Serif 4 and Source Sans 3) load from Google Fonts, so printing needs a network connection. Page size, margins, and footer text are set in the `@page` rule at the top of `style.css`.
 
 Figures are inline SVG, which keeps them editable as text and sharp in the PDF. The specimen's figures show line weights, arrowheads, hatching, dimensions, callouts, a detail view, and a chart.
 

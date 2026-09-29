@@ -24,11 +24,6 @@ if command -v pdftoppm >/dev/null 2>&1; then
   name="$(basename "${in%.html}")"
   mkdir -p preview
   rm -f "preview/$name"-*.png
-  pdftoppm -r 110 -png "$out" "preview/$name"
+  pdftoppm -r 150 -png "$out" "preview/$name"
   echo "wrote preview/$name-*.png"
-  if command -v magick >/dev/null 2>&1; then
-    magick "preview/$name"-*.png -bordercolor '#c8c8c8' -border 1 \
-      -bordercolor white -border 14 +append +repage "preview/$name.png"
-    echo "wrote preview/$name.png"
-  fi
 fi
