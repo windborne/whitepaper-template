@@ -2,6 +2,8 @@
 
 A grayscale print stylesheet for writing documents in HTML and printing them to PDF, with a specimen page that shows each style once. Use it for papers, reports, memos, notes, or anything else that ends up as a PDF.
 
+![Specimen, page 1](preview/specimen-1.png)
+
 ![Specimen, page 2](preview/specimen-2.png)
 
 The full specimen is [specimen.pdf](specimen.pdf).
