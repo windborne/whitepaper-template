@@ -1,0 +1,208 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Typesetting Documents with AI</title>
+<link rel="stylesheet" href="../style.css">
+<style>
+  @page { @bottom-left { content: "Typesetting documents with AI  |  WindBorne Systems"; } }
+</style>
+</head>
+<body>
+
+<div class="titleblock">
+  <div class="meta"><span>WINDBORNE SYSTEMS &nbsp;|&nbsp; EXAMPLE WHITEPAPER</span><span>DRAFT, SEPTEMBER 2026</span></div>
+  <h1>Typesetting documents with AI</h1>
+  <div class="subtitle">A written house style, a print stylesheet and a page-by-page review make AI drafts read like designed documents</div>
+  <div class="byline">WindBorne Systems</div>
+</div>
+
+<div class="summary">
+<p>An AI model asked for a whitepaper will write a web page: colored boxes, bold phrases, bullet lists, a legend on every chart and a stock vocabulary readers now recognize at a glance. The fix is not a better prompt but a better starting point. We give the model three things: a stylesheet that makes the printed page look right by default, a written guide that says what good looks like for text, tables and figures, and a loop in which the model prints the document and looks at every page before calling it done. This paper describes that method and is itself set with it. We ask that teams writing papers, reports and proposals start from this template and send back what it gets wrong.</p>
+</div>
+
+<h2><span class="n">1</span>Why the defaults look wrong</h2>
+<p>Language models learned layout mostly from the web, so their instinct is to make a document scannable on a screen. Printed documents work differently. A reader of a proposal or a technical report reads it through, often on paper, and judges it partly by whether it looks like the work of someone careful. Color used as decoration, headings on every paragraph and a pull quote that repeats the text all signal the opposite.<sup class="fn">1</sup></p>
+<p>The writing has the same problem. Models reach for inflated words and fixed rhythms: three adjectives where one would do, a closing sentence that restates the paragraph, and hedges stacked on hedges. Each habit is small. Together they tell the reader that nobody weighed the words, and the reader discounts the claims along with the prose.</p>
+
+<h2><span class="n">2</span>The method</h2>
+<p>The method has five steps, shown in Figure 1. The model first settles who the reader is, what they should do afterward and the three or four points that get them there. It then writes the document in plain HTML using only the classes in <code>style.css</code>, prints it to PDF with headless Chrome, and looks at an image of every page. Most of the quality comes from the fourth step, and from repeating it: a model that inspects its own pages finds stranded headings, colliding labels and half-empty pages that it cannot see in the source.</p>
+
+<figure>
+<svg viewBox="0 0 700 142" xmlns="http://www.w3.org/2000/svg" font-family="'Source Sans 3', sans-serif" font-size="8.6">
+  <defs>
+    <marker id="chev" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 1 L9 5 L0 9" fill="none" stroke="#111" stroke-width="1.4"/></marker>
+  </defs>
+  <g fill="#fff" stroke="#111" stroke-width="0.8">
+    <rect x="0" y="8" width="116" height="40"/>
+    <rect x="146" y="8" width="116" height="40"/>
+    <rect x="292" y="8" width="116" height="40"/>
+    <rect x="438" y="8" width="116" height="40" stroke-width="1.6"/>
+    <rect x="584" y="8" width="116" height="40"/>
+  </g>
+  <g text-anchor="middle" fill="#111" font-size="9">
+    <text x="58" y="25">1&#8194;Outline</text>
+    <text x="204" y="25">2&#8194;Write HTML</text>
+    <text x="350" y="25">3&#8194;Build PDF</text>
+    <text x="496" y="25" font-weight="700">4&#8194;Read the pages</text>
+    <text x="642" y="25">5&#8194;Check, hand over</text>
+  </g>
+  <g text-anchor="middle" fill="#555" font-size="8">
+    <text x="58" y="39">reader, purpose, points</text>
+    <text x="204" y="39">style.css classes only</text>
+    <text x="350" y="39">build.sh, headless Chrome</text>
+    <text x="496" y="39">every page image</text>
+    <text x="642" y="39">check.py, PDF and HTML</text>
+  </g>
+  <g stroke="#111" stroke-width="0.8" fill="none">
+    <path d="M116 28 H143" marker-end="url(#chev)"/>
+    <path d="M262 28 H289" marker-end="url(#chev)"/>
+    <path d="M408 28 H435" marker-end="url(#chev)"/>
+    <path d="M554 28 H581" marker-end="url(#chev)"/>
+    <path d="M496 48 V80 H204 V51" stroke-dasharray="4 3" marker-end="url(#chev)"/>
+  </g>
+  <text x="350" y="94" text-anchor="middle" font-size="8" font-style="italic" fill="#333">revise and rebuild, usually three rounds or more</text>
+  <g font-size="8" fill="#333">
+    <line x1="0" y1="112" x2="700" y2="112" stroke="#bbb" stroke-width="0.4"/>
+    <text x="0" y="128">Inputs the model is given:</text>
+    <text x="146" y="128">SKILL.md, the written rules</text>
+    <text x="292" y="128">style.css, the print stylesheet</text>
+    <text x="438" y="128">specimen.html and examples/</text>
+    <text x="584" y="128">check.py, the checker</text>
+  </g>
+</svg>
+<figcaption><b>Figure 1.</b> The five steps of the method. The heavier outline marks the step that does most of the work; the dashed path is the revision loop, which runs until a full read of the pages turns up nothing to fix.</figcaption>
+</figure>
+
+<p>The model starts from a complete example rather than a blank file. It copies structure from <code>examples/</code> and individual styles from the specimen, which shows each style once. Anything the stylesheet does not provide, such as a new color or a font size, is treated as a sign that the document is drifting from the house style rather than as a gap to fill.</p>
+
+<h2><span class="n">3</span>Figures are drafted, not illustrated</h2>
+<p>Figures carry the most visible difference between a designed document and a generated one. We draw every figure as inline SVG, which prints sharp and stays editable as text, and follow the conventions of engineering drawing: a small set of line weights, each with one job; gray fills and hatching instead of color; square corners; and labels placed directly on the drawing.<sup class="fn">2</sup> Figure 2 shows the difference labeling alone makes.</p>
+
+<figure>
+<div class="figrow">
+<div>
+<svg viewBox="0 0 340 150" xmlns="http://www.w3.org/2000/svg" font-family="'Source Sans 3', sans-serif" font-size="8.6">
+  <defs><pattern id="hatchA" width="5" height="5" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><line x1="0" y1="0" x2="0" y2="5" stroke="#111" stroke-width="0.5"/></pattern></defs>
+  <text x="0" y="11" font-weight="700" letter-spacing="0.5">(a) NUMBERED KEY</text>
+  <rect x="40" y="30" width="170" height="90" fill="#fff" stroke="#111" stroke-width="1"/>
+  <rect x="56" y="78" width="60" height="30" fill="url(#hatchA)" stroke="#111" stroke-width="0.8"/>
+  <circle cx="165" cy="70" r="20" fill="#e6e6e6" stroke="#111" stroke-width="0.8"/>
+  <g fill="#fff" stroke="#111" stroke-width="0.6"><circle cx="232" cy="40" r="7"/><circle cx="232" cy="70" r="7"/><circle cx="232" cy="100" r="7"/></g>
+  <g stroke="#111" stroke-width="0.4"><line x1="210" y1="40" x2="225" y2="40"/><line x1="185" y1="70" x2="225" y2="70"/><path d="M116 100 H225"/></g>
+  <g text-anchor="middle" font-size="8"><text x="232" y="43">1</text><text x="232" y="73">2</text><text x="232" y="103">3</text></g>
+  <g font-size="8" fill="#333"><text x="40" y="140">1 Housing&#8195;2 Sensor&#8195;3 Battery pack</text></g>
+</svg>
+</div>
+<div>
+<svg viewBox="0 0 340 150" xmlns="http://www.w3.org/2000/svg" font-family="'Source Sans 3', sans-serif" font-size="8.6">
+  <defs><pattern id="hatchB" width="5" height="5" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><line x1="0" y1="0" x2="0" y2="5" stroke="#111" stroke-width="0.5"/></pattern></defs>
+  <text x="0" y="11" font-weight="700" letter-spacing="0.5">(b) DIRECT LABELS</text>
+  <rect x="40" y="30" width="170" height="90" fill="#fff" stroke="#111" stroke-width="1"/>
+  <rect x="56" y="78" width="60" height="30" fill="url(#hatchB)" stroke="#111" stroke-width="0.8"/>
+  <circle cx="165" cy="70" r="20" fill="#e6e6e6" stroke="#111" stroke-width="0.8"/>
+  <g stroke="#111" stroke-width="0.4" fill="none">
+    <path d="M200 34 L226 22 H234"/>
+    <path d="M182 80 L226 96 H234"/>
+    <path d="M100 100 L130 138 H234"/>
+  </g>
+  <g fill="#111" font-size="8.6"><text x="237" y="25">Housing</text><text x="237" y="99">Sensor</text><text x="237" y="141">Battery pack</text></g>
+</svg>
+</div>
+</div>
+<figcaption><b>Figure 2.</b> The same drawing labeled two ways. (a) A numbered key sends the eye back and forth between drawing and legend. (b) Direct labels on leader lines are read in place, and need no extra marks on the drawing.</figcaption>
+</figure>
+
+<p>Type in a figure must print at a size close to the caption. Because the drawing scales with the page, we fix the width of the drawing space and derive sizes from it. The printed size of one drawing unit is</p>
+<div class="eq"><math display="block"><mi>s</mi><mo>=</mo><mfrac><mi>W</mi><mi>V</mi></mfrac></math><span class="eqn">(1)</span></div>
+<p>where <i>W</i> is the printed width of the figure in points and <i>V</i> is the width of the SVG <code>viewBox</code> in drawing units. A full-width figure on a letter page with 0.8&nbsp;in side margins has <i>W</i>&nbsp;=&nbsp;496.8&nbsp;pt, and with <i>V</i>&nbsp;=&nbsp;700 each unit prints at 0.71&nbsp;pt. A label set at font size <i>f</i> in drawing units then prints at</p>
+<div class="eq"><math display="block"><msub><mi>f</mi><mtext>print</mtext></msub><mo>=</mo><mi>s</mi><mo>&#x2062;</mo><mi>f</mi><mo>&#x2248;</mo><mn>0.71</mn><mo>&#x2062;</mo><mi>f</mi></math><span class="eqn">(2)</span></div>
+<p>so the house label size of 8.6 prints at about 6.1&nbsp;pt and the smallest permitted, 7.4, at about 5.3&nbsp;pt. Line weights scale the same way; Appendix A lists them.</p>
+
+<h2><span class="n">4</span>Checking the result</h2>
+<p>A written guide is easy to follow loosely, so the template includes a checker. It reads the HTML source for color, stray fonts, unnumbered or uncited figures, straight quotes, hyphens in ranges and a list of stock phrases, and reads the printed PDF for color, headings stranded at the foot of a page and a nearly empty last page. It runs in a second after each build:</p>
+<pre>./build.sh examples/whitepaper.html
+python3 check.py examples/whitepaper.html</pre>
+<p>The checker catches mechanical faults, not judgment. In our trials the number of faults a model found in its own pages fell quickly over the first three rounds of the loop and then leveled off, as in Figure 3; what remained were matters of emphasis and wording that a person had to call.</p>
+
+<figure>
+<svg viewBox="0 0 700 190" xmlns="http://www.w3.org/2000/svg" font-family="'Source Sans 3', sans-serif" font-size="8.4">
+  <g transform="translate(70,16)">
+    <line x1="0" y1="0" x2="0" y2="140" stroke="#111" stroke-width="0.7"/>
+    <line x1="0" y1="140" x2="480" y2="140" stroke="#111" stroke-width="0.7"/>
+    <g stroke="#111" stroke-width="0.6">
+      <line x1="0" y1="140" x2="0" y2="144"/><line x1="96" y1="140" x2="96" y2="144"/><line x1="192" y1="140" x2="192" y2="144"/><line x1="288" y1="140" x2="288" y2="144"/><line x1="384" y1="140" x2="384" y2="144"/><line x1="480" y1="140" x2="480" y2="144"/>
+      <line x1="-4" y1="140" x2="0" y2="140"/><line x1="-4" y1="105" x2="0" y2="105"/><line x1="-4" y1="70" x2="0" y2="70"/><line x1="-4" y1="35" x2="0" y2="35"/><line x1="-4" y1="0" x2="0" y2="0"/>
+    </g>
+    <g fill="#333" font-size="8" text-anchor="middle"><text x="0" y="155">0</text><text x="96" y="155">1</text><text x="192" y="155">2</text><text x="288" y="155">3</text><text x="384" y="155">4</text><text x="480" y="155">5</text></g>
+    <g fill="#333" font-size="8" text-anchor="end"><text x="-7" y="143">0</text><text x="-7" y="108">10</text><text x="-7" y="73">20</text><text x="-7" y="38">30</text><text x="-7" y="3">40</text></g>
+    <text x="240" y="172" text-anchor="middle" fill="#333">Review round</text>
+    <text transform="translate(-30,70) rotate(-90)" text-anchor="middle" fill="#333">Faults found on the pages</text>
+    <path d="M0 21 C60 60 110 95 192 115 C260 128 360 133 480 135" fill="none" stroke="#111" stroke-width="1.5"/>
+    <g fill="#fff" stroke="#111" stroke-width="0.9">
+      <circle cx="0" cy="21" r="2.6"/><circle cx="96" cy="84" r="2.6"/><circle cx="192" cy="112" r="2.6"/><circle cx="288" cy="130" r="2.6"/><circle cx="384" cy="133" r="2.6"/><circle cx="480" cy="137" r="2.6"/>
+    </g>
+    <path d="M96 84 L130 60 H140" stroke="#111" stroke-width="0.4" fill="none"/>
+    <text x="143" y="63" fill="#111">faults found per round</text>
+    <path d="M320 133 L340 100 H350" stroke="#111" stroke-width="0.4" fill="none"/>
+    <text x="353" y="103" fill="#111">left for a person: emphasis, wording</text>
+    <text x="240" y="-4" text-anchor="middle" fill="#555" font-style="italic" font-size="8">Notional.</text>
+  </g>
+</svg>
+<figcaption><b>Figure 3.</b> Faults a model finds by reading its own printed pages, by review round. Most mechanical faults are gone after three rounds. The data are illustrative of the pattern, not a measurement.</figcaption>
+</figure>
+
+<h2><span class="n">5</span>Choice of format</h2>
+<p>We write in HTML and CSS rather than a word processor, LaTeX or slide software. Table 1 gives our assessment. HTML is the format models write most reliably, it holds vector figures directly in the source, and it produces a text file whose changes can be reviewed line by line. Its weakness is print control: Chrome supports page size, margins, footers and page-break rules, but not every feature of a typesetting system, such as balanced columns or true footnotes at the foot of each page.<sup class="fn">3</sup> For papers and whitepapers of the kind we write, that trade is worth making.</p>
+
+<table class="keep rating">
+  <thead><tr><th>Format</th><th>Print control</th><th>Written reliably by AI</th><th>Easy hand edits</th><th>Vector figures in source</th><th>Readable diffs</th></tr></thead>
+  <tbody>
+    <tr><td>Word processor</td><td class="icon"><svg width="12" height="12"><circle cx="6" cy="6" r="5" fill="#fff" stroke="#111"/><path d="M6 1 A5 5 0 0 1 6 11 Z" fill="#111"/></svg></td><td class="icon"><svg width="12" height="12"><circle cx="6" cy="6" r="5" fill="#fff" stroke="#111"/><path d="M6 1 A5 5 0 0 1 11 6 L6 6 Z" fill="#111"/></svg></td><td class="icon"><svg width="12" height="12"><circle cx="6" cy="6" r="5" fill="#111" stroke="#111"/></svg></td><td class="icon"><svg width="12" height="12"><circle cx="6" cy="6" r="5" fill="#fff" stroke="#111"/><path d="M6 1 A5 5 0 0 1 11 6 L6 6 Z" fill="#111"/></svg></td><td class="icon"><svg width="12" height="12"><circle cx="6" cy="6" r="5" fill="#fff" stroke="#111"/></svg></td></tr>
+    <tr><td>LaTeX</td><td class="icon"><svg width="12" height="12"><circle cx="6" cy="6" r="5" fill="#111" stroke="#111"/></svg></td><td class="icon"><svg width="12" height="12"><circle cx="6" cy="6" r="5" fill="#fff" stroke="#111"/><path d="M6 1 A5 5 0 0 1 6 11 Z" fill="#111"/></svg></td><td class="icon"><svg width="12" height="12"><circle cx="6" cy="6" r="5" fill="#fff" stroke="#111"/><path d="M6 1 A5 5 0 0 1 11 6 L6 6 Z" fill="#111"/></svg></td><td class="icon"><svg width="12" height="12"><circle cx="6" cy="6" r="5" fill="#fff" stroke="#111"/><path d="M6 1 A5 5 0 0 1 6 11 Z" fill="#111"/></svg></td><td class="icon"><svg width="12" height="12"><circle cx="6" cy="6" r="5" fill="#111" stroke="#111"/></svg></td></tr>
+    <tr><td>Slide software</td><td class="icon"><svg width="12" height="12"><circle cx="6" cy="6" r="5" fill="#fff" stroke="#111"/><path d="M6 1 A5 5 0 0 1 11 6 L6 6 Z" fill="#111"/></svg></td><td class="icon"><svg width="12" height="12"><circle cx="6" cy="6" r="5" fill="#fff" stroke="#111"/><path d="M6 1 A5 5 0 0 1 11 6 L6 6 Z" fill="#111"/></svg></td><td class="icon"><svg width="12" height="12"><circle cx="6" cy="6" r="5" fill="#111" stroke="#111"/></svg></td><td class="icon"><svg width="12" height="12"><circle cx="6" cy="6" r="5" fill="#fff" stroke="#111"/><path d="M6 1 A5 5 0 0 1 6 11 Z" fill="#111"/></svg></td><td class="icon"><svg width="12" height="12"><circle cx="6" cy="6" r="5" fill="#fff" stroke="#111"/></svg></td></tr>
+    <tr><td>HTML and CSS</td><td class="icon"><svg width="12" height="12"><circle cx="6" cy="6" r="5" fill="#fff" stroke="#111"/><path d="M6 1 A5 5 0 1 1 1 6 L6 6 Z" fill="#111"/></svg></td><td class="icon"><svg width="12" height="12"><circle cx="6" cy="6" r="5" fill="#111" stroke="#111"/></svg></td><td class="icon"><svg width="12" height="12"><circle cx="6" cy="6" r="5" fill="#fff" stroke="#111"/><path d="M6 1 A5 5 0 0 1 6 11 Z" fill="#111"/></svg></td><td class="icon"><svg width="12" height="12"><circle cx="6" cy="6" r="5" fill="#111" stroke="#111"/></svg></td><td class="icon"><svg width="12" height="12"><circle cx="6" cy="6" r="5" fill="#111" stroke="#111"/></svg></td></tr>
+  </tbody>
+  <caption><b>Table 1.</b> Formats for AI-written print documents, rated from empty (poor) to full (good). The ratings are our judgment from use, not a benchmark; HTML trails LaTeX only on fine print control.</caption>
+</table>
+
+<h2><span class="n">6</span>Limits</h2>
+<p>The method makes documents consistent; it does not make them right. A model following the guide will still state a number it cannot support unless it is told not to, so the guide requires a source or an explicit label for every figure a reader could question, and a visible placeholder where a fact is missing. The checker’s phrase list is short and will need to grow. The grayscale rule rules out color maps, which some scientific figures need; a document that depends on them should say so and keep color to those figures alone.</p>
+
+<h2><span class="n">7</span>What we ask</h2>
+<p>Teams writing a paper, report or proposal should give their AI the <code>SKILL.md</code> guide and this repository, and send back the first document they make with it together with the places where the guide was silent or wrong. We will fold those into the guide and the stylesheet, so that the next document starts from a better default.</p>
+
+<div class="notes">
+  <ol>
+    <li>Robert Bringhurst, <i>The Elements of Typographic Style</i>, version 4.0, Hartley &amp; Marks, 2012.</li>
+    <li>American Society of Mechanical Engineers, <i>Line Conventions and Lettering</i>, ASME Y14.2-2014, 2014.</li>
+    <li>W3C, “CSS Paged Media Module Level 3,” Working Draft, <i>www.w3.org/TR/css-page-3</i>.</li>
+  </ol>
+</div>
+
+<section class="appendix">
+<h2>Appendix A. Figure conventions at a glance</h2>
+<p>Table 2 lists the line weights and type sizes from the guide with the printed size each gives on a full-width letter figure, from equation (1). Edward Tufte’s advice to spend ink on data and little else is a good test for anything not listed here.<sup class="fn">4</sup></p>
+<table class="keep">
+  <thead><tr><th>Element</th><th>Use</th><th class="num">Drawing units</th><th class="num">Printed, pt</th></tr></thead>
+  <tbody>
+    <tr><td>Hairline</td><td>Leaders, dimensions, ticks</td><td class="num">0.4</td><td class="num">0.28</td></tr>
+    <tr><td>Hatching</td><td>Cut surfaces, set-apart regions</td><td class="num">0.5</td><td class="num">0.35</td></tr>
+    <tr><td>Outline</td><td>Boxes, parts, axes, connectors</td><td class="num">0.8</td><td class="num">0.57</td></tr>
+    <tr><td>Emphasis</td><td>Section outlines, key edges</td><td class="num">1.2</td><td class="num">0.85</td></tr>
+    <tr><td>Heavy</td><td>The subject of the figure</td><td class="num">1.6</td><td class="num">1.14</td></tr>
+    <tr><td>Label</td><td>Names of parts and series</td><td class="num">8.6</td><td class="num">6.11</td></tr>
+    <tr><td>Secondary text</td><td>Descriptions, tick labels</td><td class="num">8.0</td><td class="num">5.68</td></tr>
+    <tr><td>Smallest text</td><td>Notes such as units</td><td class="num">7.4</td><td class="num">5.26</td></tr>
+  </tbody>
+  <caption><b>Table 2.</b> Line weights and type sizes for figures. Printed sizes assume a viewBox 700 units wide across a 496.8&nbsp;pt measure.</caption>
+</table>
+<div class="notes">
+  <ol start="4">
+    <li>Edward R. Tufte, <i>The Visual Display of Quantitative Information</i>, 2nd ed., Graphics Press, 2001.</li>
+  </ol>
+</div>
+</section>
+
+</body>
+</html>

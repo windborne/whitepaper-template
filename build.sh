@@ -7,8 +7,8 @@ cd "$(dirname "$0")"
 in="${1:-specimen.html}"
 out="${in%.html}.pdf"
 
-browser=""
-for b in chromium chromium-browser google-chrome-stable google-chrome; do
+browser="${CHROME:-}"
+[ -n "$browser" ] || for b in chromium chromium-browser google-chrome-stable google-chrome; do
   if command -v "$b" >/dev/null 2>&1; then browser="$b"; break; fi
 done
 mac="/Applications/Google Chrome.app/Contents/MacOS/Google Chrome"
