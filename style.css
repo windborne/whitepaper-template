@@ -51,7 +51,8 @@ h1 { font-size: 19pt; line-height: 1.15; font-weight: 700; letter-spacing: -0.01
 h2 { font-size: 10.6pt; font-weight: 700; margin: 13pt 0 5pt; break-after: avoid; text-align: left; }
 h3 { font-size: 9.4pt; font-weight: 700; margin: 10pt 0 3pt; break-after: avoid; text-align: left; }
 h4 { font-size: 9.4pt; font-weight: 400; font-style: italic; margin: 8pt 0 2pt; break-after: avoid; text-align: left; }
-h2 .n, h3 .n { display: inline-block; width: 1.6em; }
+h2 .n { display: inline-block; width: 1.6em; }
+h3 .n { display: inline-block; min-width: 2.2em; }
 
 /* Inline */
 .runin { font-style: italic; }
@@ -109,20 +110,16 @@ table caption { caption-side: bottom; font: 400 8pt/1.38 var(--serif); color: #2
 /* Opener: summary text beside a figure on the first page. */
 .opener { display: flex; gap: 18pt; align-items: flex-start; margin-bottom: 10pt; }
 .opener > * { flex: 1; min-width: 0; }
+.opener > figure { flex: 0 0 42%; }
 .opener figure { margin: 0; }
 
-/* Confidentiality marking: a banner above the title block, and a running head on
-   later pages. Chrome cannot read the running head from the page, so the document
-   sets it in its own style block:  @page { @top-right { content: "CONFIDENTIAL"; } }  */
-.banner { font: 400 8pt var(--sans); text-align: center; margin: 0 0 10pt; }
-.banner b { font-weight: 700; letter-spacing: 0.06em; }
-@page { @top-right { content: ""; font: 700 7pt "IBM Plex Sans", sans-serif; letter-spacing: 0.06em; color: #111; } }
-@page :first { @top-right { content: ""; } }
 
-/* Photographs and raster images. Converted to grayscale in print. */
-figure img { display: block; max-width: 100%; height: auto; filter: grayscale(1); }
+/* Photographs and raster images. Photos keep their color; add class="gray" to
+   print a screenshot or borrowed chart in grayscale. */
+figure img { display: block; max-width: 100%; height: auto; }
+figure img.gray { filter: grayscale(1); }
 figure.half { width: 60%; }
-.figrow { display: flex; gap: 12pt; align-items: flex-start; }
+.figrow { display: flex; gap: 12pt; align-items: flex-start; break-inside: avoid; }
 .figrow > * { flex: 1; min-width: 0; }
 
 /* Display equations, numbered at the right margin. */

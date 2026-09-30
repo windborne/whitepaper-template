@@ -21,6 +21,14 @@ The visual rules apply to documents meant to be read as pages: papers, whitepape
 6. **Run the checker:** `python3 check.py my-document.html`. Fix everything it reports, or say why a report is wrong.
 7. **Hand over** the PDF and the HTML together. The HTML is the editable source.
 
+**Rebuilding an existing document.** When the person hands you a finished PDF or slide-styled report to redo in this style:
+
+- Extract the full text first and keep every fact, number and caveat. Cut words, not content.
+- Turn every image of a table into a real table, and a row of stat tiles or a "validated today / tomorrow" graphic into a small table. Redraw every chart you have the numbers for as SVG. A chart whose data you do not have (a time series drawn in a dashboard, for example) stays as an image, and you say that it should be redrawn from the data.
+- Keep photographs and scientific maps as images.
+- Do not reconcile numbers that disagree between the text and the figures, and do not fill in missing sources. List each one when you hand over, and leave a `[TK]` where a source is missing.
+- Drop the separate cover page, the logo and any legal boilerplate. The title block and the summary go on page one with the text.
+
 ## 2. The look
 
 The target is a well-made engineering report or a university press book, not a web page or a slide deck.
@@ -39,9 +47,10 @@ The target is a well-made engineering report or a university press book, not a w
 
 Every document opens with the `.titleblock`: the meta line (organization and document type on the left, status and date on the right, e.g. `DRAFT, SEPTEMBER 2026`), the title, an optional subtitle, and the byline with name, role and organization. Titles say what the document is about in plain words. Subtitles say what it concludes or proposes.
 
+There is no separate cover page and no logo; the organization's name in the meta line does that job. A title page that holds only a title, a date and a photo wastes the page a reader is most likely to read.
+
 **The first page stands alone.** A reader who only sees page one should know the claim, the ask and the evidence. The pattern that works: the summary paragraph beside the strongest figure (`.opener`), a short numbered list with bold lead-ins of what the reader gets, a run-in paragraph on the ask or the program, and a small table of today against what we are building toward. Sections start on page two.
 
-**Confidential documents** carry a `.banner` line above the title block (`<b>CONFIDENTIAL.</b> Do not distribute without authorization from a WindBorne representative.`), a running head on later pages (in the document's own style block: `@page { @top-right { content: "CONFIDENTIAL"; } }`), and the same words in the footer.
 
 | Type | Length | Sections, in order |
 |---|---|---|
@@ -98,7 +107,8 @@ Readers now spot machine-written text quickly and discount it. Remove these on s
 ## 6. Tables
 
 - Booktabs rules only: heavy rule above the header, light rule below it, hairlines between rows, heavy rule at the end. No vertical rules, no shaded rows, no boxed cells.
-- Numbers right-aligned in `td.num` with the same number of decimals down a column. Units go in the column header, not in every cell.
+- Numbers right-aligned in `td.num` with the same number of decimals down a column. When a column spans orders of magnitude (0.28 next to 0.0007), give every value the same number of significant figures instead, and never add digits the source does not have. Units go in the column header, not in every cell.
+- Group related columns under a spanning header (`<th colspan="2">Impact per 1,000 units (%)</th>` over `24 h` and `72 h`) instead of repeating the unit in each header.
 - Captions go below the table: `<caption><b>Table 2.</b> Sentence describing what the table shows and what to notice.</caption>`.
 - Harvey balls (see the specimen) for qualitative ratings, with a `.legend`. Never check marks, crosses or colored dots.
 - Keep short tables on one page (`class="keep"`). A table longer than a page gets its header repeated automatically; do not split it by hand.
@@ -128,7 +138,7 @@ Dashed (`4 3`) for return paths, future or planned items; dotted (`1.5 3`, gray 
 
 **Labels.** Label things directly, next to the thing or on a thin leader line with a short horizontal shoulder (`M x y L x2 y2 H x3`). Avoid legends; use one only when direct labels would collide. No numbered keys that send the reader to the caption.
 
-**Charts.** Axes 0.7 with outward ticks and labeled units; no gridlines, or very light ones (`#ddd`, 0.3) only when readers must read values. The data series is the heaviest line. Uncertainty as a gray band, observations as open circles, a reference level as a dotted gray line, all labeled directly. Start the value axis at zero for bars. No 3-D, no pie charts, no dual axes. Mark illustrative data "Notional." above the plot area.
+**Charts.** Axes 0.7 with outward ticks and labeled units; no gridlines, or very light ones (`#ddd`, 0.3) only when readers must read values. The data series is the heaviest line. Uncertainty as a gray band, observations as open circles, a reference level as a dotted gray line, all labeled directly. Start the value axis at zero for bars. No 3-D, no pie charts, no dual axes. Mark illustrative data "Notional." above the plot area. When a chart mixes measured points with a notional curve, draw the measured points as markers, the notional curve dotted, and say which is which in the figure note: "Points are measured. The curve is notional."
 
 **Diagrams.** A block diagram shows one idea: flow left to right or top to bottom, one heavier outline on the component the text is about, a dashed return path for feedback. Show one example of each thing, not several. A concept or CONOP figure can combine a simple side-view line drawing (terrain line, vehicle silhouettes as outlines) with numbered step markers that the text refers to in order. Add "Not to scale." in small italic when proportions are schematic.
 
@@ -136,7 +146,7 @@ Dashed (`4 3`) for return paths, future or planned items; dotted (`1.5 3`, gray 
 
 **Captions.** Below the figure: `<b>Figure 3.</b>` then one or two sentences that say what the figure shows and what to notice, as a full sentence. The caption does not repeat the panel titles. Refer to every figure in the text before it appears ("Figure 3 shows…"), and number figures in order of first mention.
 
-**Placement.** A figure sits after the paragraph that first cites it, or at the top of the next page. It never splits (`break-inside: avoid` is set). Two small related figures go side by side in `.figrow`. A tall, narrow figure such as a plan-view map goes in `figure.right`, floated with the text running beside it. Small multiples (the same map at four densities, panels a to d) share one `.figrow` and one caption.
+**Placement.** A figure sits after the paragraph that first cites it, or at the top of the next page. It never splits (`break-inside: avoid` is set). Two small related figures go side by side in `.figrow`, which never splits across pages. When the two are images of different shapes, set each figure's `flex` to its image's width divided by its height (`<figure style="flex:1.09">` beside `<figure style="flex:1.78">`) so both print at the same height and the captions line up. A tall, narrow figure such as a plan-view map goes in `figure.right`, floated with the text running beside it. Small multiples (the same map at four densities, panels a to d) share one `.figrow` and one caption.
 
 **Figure notes.** A short italic line under the drawing, `<div class="note">`, carries the view and the status: "Plan view. Notional.", "Not to scale.", "Dimensions in millimeters." On a notional chart say what would make it real: "Notional. To be measured in the first demonstration."
 
@@ -144,7 +154,7 @@ Dashed (`4 3`) for return paths, future or planned items; dotted (`1.5 3`, gray 
 
 ## 8. Images, equations, code
 
-**Photographs and screenshots.** `<figure><img src="…" alt="…"></figure>`. The stylesheet renders them in grayscale; check they still read that way. Crop tight to what matters. Add leader-line labels by overlaying an SVG in the same figure, not by drawing on the image in an editor. Use at least 200 dpi at printed size. Never use an image of text, a table or a chart that could be drawn.
+**Photographs and screenshots.** `<figure><img src="…" alt="…"></figure>`. Photographs print in color. Add `class="gray"` to print a screenshot or a borrowed chart in grayscale, and check it still reads. A chart with a dark background cannot be fixed with a filter: redraw it from its data, or keep it and say it needs redrawing. Crop tight to what matters. Add leader-line labels by overlaying an SVG in the same figure, not by drawing on the image in an editor. Use at least 200 dpi at printed size. Never use an image of text, a table or a chart that could be drawn.
 
 **Equations.** Display equations use MathML inside `.eq`, numbered at the right:
 
@@ -168,6 +178,7 @@ Refer to them as "equation (1)". Define every symbol in the sentence after the e
 - Letter size by default (edit `@page` for A4). Set the footer text in `@page` to the document's short title and organization. The first page has no footer.
 - Fill pages. A last page that holds fewer than five lines should be pulled back by tightening text, not by shrinking type.
 - Use `.pagebreak` only to start an appendix or a major part; let everything else flow.
+- When a figure lands on the next page and leaves a gap, fix it in this order: move the figure to after a nearby paragraph, float it (`figure.right`) if it is narrow, pair it with another in `.figrow`, or crop it. Do not shrink it below the size where its text reads at 6 pt.
 - Side-by-side layouts (`display:flex` with small gaps) are fine for two short lists or two small figures. Do not build multi-column page layouts.
 
 ## 11. Before handing over

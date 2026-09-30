@@ -72,6 +72,7 @@ class Doc(HTMLParser):
         self.in_notes = 0
         self._classes = []
         self.has_images = False
+        self.pending_float = None
         self.uses_accent = False
 
     def add(self, msg):
@@ -156,6 +157,10 @@ class Doc(HTMLParser):
             m = re.match(rf"\s*{label}\s+(\d+)\.", self.caption_buf)
             if not m:
                 self.add(f"{kind} caption should start with '{label} N.'")
+            elif kind == "figure" and any("right" in c.split() for c, t in zip(self._classes, self.stack) if t == "figure"):
+                # A floated figure sits before the paragraph it floats beside, so count
+                # it as placed at the end of that paragraph.
+                self.pending_float = (kind, int(m.group(1)))
             else:
                 self.events.append((kind, int(m.group(1)), self.getpos()[0]))
             body = self.caption_buf[m.end():].strip() if m else self.caption_buf
@@ -172,6 +177,10 @@ class Doc(HTMLParser):
             if ":" in h:
                 self.add(f"colon in heading: {h!r}")
             self.heading = None
+        if tag == "p" and self.pending_float and "figure" not in self.stack:
+            kind, n = self.pending_float
+            self.events.append((kind, n, self.getpos()[0]))
+            self.pending_float = None
         if self.in_notes and len(self.stack) == self.in_notes and tag == self.stack[-1]:
             self.in_notes = 0
         while tag in self.stack:

@@ -52,7 +52,6 @@ Figures are inline SVG, which keeps them editable as text and sharp in the PDF. 
 | `.sidebar` | Block set off with a left rule |
 | `table`, `td.num`, `td.icon`, `caption`, `.legend` | Ruled tables, numeric columns, icon columns, captions, legends |
 | `table.keep`, `.keep` | Keep a short table or block on one page |
-| `.banner` | Confidentiality line above the title block (running head: see `style.css`) |
 | `.summary`, `.opener` | Summary under the title, alone or beside a first-page figure |
 | `figure`, `figcaption`, `.note` | Figures, captions, and a small italic note such as "Not to scale." |
 | `figure.right`, `.figrow` | A figure floated beside the text; figures side by side or small multiples |
