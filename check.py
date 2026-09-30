@@ -32,7 +32,7 @@ STOCK_PHRASES = [
 
 ALLOWED_NAMED = {"none", "black", "white", "transparent", "currentcolor",
                  "inherit", "gray", "grey"}
-ALLOWED_FONTS = ("source serif 4", "source sans 3", "source code pro",
+ALLOWED_FONTS = ("newsreader", "ibm plex sans", "ibm plex mono", "stix two math",
                  "sans-serif", "serif", "monospace")
 SKIP_TEXT = {"code", "pre", "style", "script", "svg", "math"}
 EMOJI = re.compile("[\U0001F300-\U0001FAFF☀-➿⭐✅]")

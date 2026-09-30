@@ -30,7 +30,7 @@ Then print it:
 ./build.sh my-document.html
 ```
 
-`build.sh` needs Chrome or Chromium. Page previews in `preview/` need `pdftoppm` (Poppler). Fonts (Source Serif 4 and Source Sans 3) load from Google Fonts, so printing needs a network connection. Page size, margins, and footer text are set in the `@page` rule at the top of `style.css`.
+`build.sh` needs Chrome or Chromium. Page previews in `preview/` need `pdftoppm` (Poppler). Fonts (Newsreader, IBM Plex Sans and IBM Plex Mono) load from Google Fonts, so printing needs a network connection. Page size, margins, and footer text are set in the `@page` rule at the top of `style.css`.
 
 Figures are inline SVG, which keeps them editable as text and sharp in the PDF. The specimen's figures show line weights, arrowheads, hatching, dimensions, callouts, a detail view, and a chart.
 
