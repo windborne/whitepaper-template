@@ -11,6 +11,8 @@
   --ink-4: #777;
   --rule: #bbb;
   --fill: #e6e6e6;
+  --accent: #0a80b3;       /* one accent, for the subject of a figure only */
+  --accent-2: #a8cfe0;     /* its tint, for a region or band */
   --serif: "Newsreader", Georgia, serif;
   --sans: "IBM Plex Sans", "Helvetica Neue", Arial, sans-serif;
 }
@@ -72,6 +74,9 @@ blockquote .source { display: block; font: 400 8pt var(--sans); font-style: norm
 
 /* Figures */
 figure { margin: 10pt 0 12pt; break-inside: avoid; }
+figure.right { float: right; width: 46%; margin: 2pt 0 8pt 14pt; }
+figure.right figcaption { text-align: left; }
+figure .note { font: italic 400 7.4pt var(--sans); color: #666; margin-top: 2pt; }
 figure svg { display: block; width: 100%; height: auto; font-family: var(--sans); }
 figcaption { font: 400 8pt/1.38 var(--serif); color: #222; margin-top: 5pt; text-align: left; }
 figcaption b { font-weight: 700; }
@@ -94,12 +99,25 @@ table caption { caption-side: bottom; font: 400 8pt/1.38 var(--serif); color: #2
 
 /* Source notes */
 .notes { margin-top: 16pt; border-top: 0.5pt solid var(--ink); padding-top: 6pt; font-size: 7.9pt; line-height: 1.4; color: var(--ink-2); text-align: left; }
-.notes ol { margin: 0; padding-left: 1.3em; }
+.notes ol { margin: 0; padding-left: 1.9em; }
 .notes li { margin-bottom: 2pt; }
 
 /* Summary block under the title. Same text face, set a little larger. */
 .summary { font-size: 10pt; line-height: 1.45; margin: 0 0 12pt; }
 .summary p:last-child { margin-bottom: 0; }
+
+/* Opener: summary text beside a figure on the first page. */
+.opener { display: flex; gap: 18pt; align-items: flex-start; margin-bottom: 10pt; }
+.opener > * { flex: 1; min-width: 0; }
+.opener figure { margin: 0; }
+
+/* Confidentiality marking: a banner above the title block, and a running head on
+   later pages. Chrome cannot read the running head from the page, so the document
+   sets it in its own style block:  @page { @top-right { content: "CONFIDENTIAL"; } }  */
+.banner { font: 400 8pt var(--sans); text-align: center; margin: 0 0 10pt; }
+.banner b { font-weight: 700; letter-spacing: 0.06em; }
+@page { @top-right { content: ""; font: 700 7pt "IBM Plex Sans", sans-serif; letter-spacing: 0.06em; color: #111; } }
+@page :first { @top-right { content: ""; } }
 
 /* Photographs and raster images. Converted to grayscale in print. */
 figure img { display: block; max-width: 100%; height: auto; filter: grayscale(1); }
@@ -119,6 +137,9 @@ code, pre { font-family: "IBM Plex Mono", Menlo, Consolas, monospace; font-size:
 code { hyphens: none; }
 pre { margin: 6pt 0 10pt; padding: 5pt 0; border-top: 0.5pt solid #999; border-bottom: 0.5pt solid #999; line-height: 1.4; white-space: pre-wrap; text-align: left; break-inside: avoid; }
 
-/* Appendices start on a new page and letter their headings. */
+/* Appendices. The part title carries heavy rules; each appendix starts a new page. */
+.part { break-before: page; }
+.part h1 { font-size: 17pt; border-top: 1.5pt solid var(--ink); border-bottom: 0.5pt solid var(--ink); padding: 8pt 0; margin: 0 0 12pt; }
 .appendix { break-before: page; }
+.part + .appendix { break-before: auto; }
 .pagebreak { break-before: page; }
