@@ -21,11 +21,11 @@
 <p>An AI model asked for a whitepaper will write a web page: colored boxes, bold phrases, bullet lists, a legend on every chart and a stock vocabulary readers now recognize at a glance. The fix is not a better prompt but a better starting point. We give the model three things: a stylesheet that makes the printed page look right by default, a written guide that says what good looks like for text, tables and figures, and a loop in which the model prints the document and looks at every page before calling it done. This paper describes that method and is itself set with it. We ask that teams writing papers, reports and proposals start from this template and send back what it gets wrong.</p>
 </div>
 
-<h2><span class="n">1</span>Why the defaults look wrong</h2>
+<h2>Why the defaults look wrong</h2>
 <p>Language models learned layout mostly from the web, so their instinct is to make a document scannable on a screen. Printed documents work differently. A reader of a proposal or a technical report reads it through, often on paper, and judges it partly by whether it looks like the work of someone careful. Color used as decoration, headings on every paragraph and a pull quote that repeats the text all signal the opposite.<sup class="fn">1</sup></p>
 <p>The writing has the same problem. Models reach for inflated words and fixed rhythms: three adjectives where one would do, a closing sentence that restates the paragraph, and hedges stacked on hedges. Each habit is small. Together they tell the reader that nobody weighed the words, and the reader discounts the claims along with the prose.</p>
 
-<h2><span class="n">2</span>The method</h2>
+<h2>The method</h2>
 <p>The method has five steps, shown in Figure 1. The model first settles who the reader is, what they should do afterward and the three or four points that get them there. It then writes the document in plain HTML using only the classes in <code>style.css</code>, prints it to PDF with headless Chrome, and looks at an image of every page. Most of the quality comes from the fourth step, and from repeating it: a model that inspects its own pages finds stranded headings, colliding labels and half-empty pages that it cannot see in the source.</p>
 
 <figure>
@@ -71,13 +71,13 @@
     <text x="584" y="128">check.py, the checker</text>
   </g>
 </svg>
-<figcaption><b>Figure 1.</b> The five steps of the method. The heavier outline marks the step that does most of the work; the dashed path is the revision loop, which runs until a full read of the pages turns up nothing to fix.</figcaption>
+<figcaption><b>Figure 1.</b> The five steps of the method. The heavier outline marks the step that does most of the work. The dashed path is the revision loop, which runs until a full read of the pages turns up nothing to fix.</figcaption>
 </figure>
 
 <p>The model starts from a complete example rather than a blank file. It copies structure from <code>examples/</code> and individual styles from the specimen, which shows each style once. Anything the stylesheet does not provide, such as a new color or a font size, is treated as a sign that the document is drifting from the house style rather than as a gap to fill.</p>
 
-<h2><span class="n">3</span>Figures are drafted, not illustrated</h2>
-<p>Figures carry the most visible difference between a designed document and a generated one. We draw every figure as inline SVG, which prints sharp and stays editable as text, and follow the conventions of engineering drawing: a small set of line weights, each with one job; gray fills and hatching instead of color; square corners; and labels placed directly on the drawing.<sup class="fn">2</sup> Figure 2 shows the difference labeling alone makes.</p>
+<h2>Figures are drafted, not illustrated</h2>
+<p>Figures carry the most visible difference between a designed document and a generated one. We draw every figure as inline SVG, which prints sharp and stays editable as text, and follow the conventions of engineering drawing: a small set of line weights, each with one job, gray fills and hatching instead of color, square corners, and labels placed directly on the drawing.<sup class="fn">2</sup> Figure 2 shows the difference labeling alone makes.</p>
 
 <figure>
 <div class="figrow">
@@ -117,13 +117,13 @@
 <div class="eq"><math display="block"><mi>s</mi><mo>=</mo><mfrac><mi>W</mi><mi>V</mi></mfrac></math><span class="eqn">(1)</span></div>
 <p>where <i>W</i> is the printed width of the figure in points and <i>V</i> is the width of the SVG <code>viewBox</code> in drawing units. A full-width figure on a letter page with 0.8&nbsp;in side margins has <i>W</i>&nbsp;=&nbsp;496.8&nbsp;pt, and with <i>V</i>&nbsp;=&nbsp;700 each unit prints at 0.71&nbsp;pt. A label set at font size <i>f</i> in drawing units then prints at</p>
 <div class="eq"><math display="block"><msub><mi>f</mi><mtext>print</mtext></msub><mo>=</mo><mi>s</mi><mo>&#x2062;</mo><mi>f</mi><mo>&#x2248;</mo><mn>0.71</mn><mo>&#x2062;</mo><mi>f</mi></math><span class="eqn">(2)</span></div>
-<p>so the house label size of 8.6 prints at about 6.1&nbsp;pt and the smallest permitted, 7.4, at about 5.3&nbsp;pt. Line weights scale the same way; Appendix A lists them.</p>
+<p>so the house label size of 8.6 prints at about 6.1&nbsp;pt and the smallest permitted, 7.4, at about 5.3&nbsp;pt. Line weights scale the same way. Appendix A lists them.</p>
 
-<h2><span class="n">4</span>Checking the result</h2>
+<h2>Checking the result</h2>
 <p>A written guide is easy to follow loosely, so the template includes a checker. It reads the HTML source for color, stray fonts, unnumbered or uncited figures, straight quotes, hyphens in ranges and a list of stock phrases, and reads the printed PDF for color, headings stranded at the foot of a page and a nearly empty last page. It runs in a second after each build:</p>
 <pre>./build.sh examples/whitepaper.html
 python3 check.py examples/whitepaper.html</pre>
-<p>The checker catches mechanical faults, not judgment. In our trials the number of faults a model found in its own pages fell quickly over the first three rounds of the loop and then leveled off, as in Figure 3; what remained were matters of emphasis and wording that a person had to call.</p>
+<p>The checker catches mechanical faults, not judgment. In our trials the number of faults a model found in its own pages fell quickly over the first three rounds of the loop and then leveled off, as in Figure 3. What remained were matters of emphasis and wording that a person had to call.</p>
 
 <figure>
 <svg viewBox="0 0 700 190" xmlns="http://www.w3.org/2000/svg" font-family="'IBM Plex Sans', sans-serif" font-size="8.4">
@@ -152,7 +152,7 @@ python3 check.py examples/whitepaper.html</pre>
 <figcaption><b>Figure 3.</b> Faults a model finds by reading its own printed pages, by review round. Most mechanical faults are gone after three rounds. The data are illustrative of the pattern, not a measurement.</figcaption>
 </figure>
 
-<h2><span class="n">5</span>Choice of format</h2>
+<h2>Choice of format</h2>
 <p>We write in HTML and CSS rather than a word processor, LaTeX or slide software. Table 1 gives our assessment. HTML is the format models write most reliably, it holds vector figures directly in the source, and it produces a text file whose changes can be reviewed line by line. Its weakness is print control: Chrome supports page size, margins, footers and page-break rules, but not every feature of a typesetting system, such as balanced columns or true footnotes at the foot of each page.<sup class="fn">3</sup> For papers and whitepapers of the kind we write, that trade is worth making.</p>
 
 <table class="keep rating">
@@ -163,13 +163,13 @@ python3 check.py examples/whitepaper.html</pre>
     <tr><td>Slide software</td><td class="icon"><svg width="12" height="12"><circle cx="6" cy="6" r="5" fill="#fff" stroke="#111"/><path d="M6 1 A5 5 0 0 1 11 6 L6 6 Z" fill="#111"/></svg></td><td class="icon"><svg width="12" height="12"><circle cx="6" cy="6" r="5" fill="#fff" stroke="#111"/><path d="M6 1 A5 5 0 0 1 11 6 L6 6 Z" fill="#111"/></svg></td><td class="icon"><svg width="12" height="12"><circle cx="6" cy="6" r="5" fill="#111" stroke="#111"/></svg></td><td class="icon"><svg width="12" height="12"><circle cx="6" cy="6" r="5" fill="#fff" stroke="#111"/><path d="M6 1 A5 5 0 0 1 6 11 Z" fill="#111"/></svg></td><td class="icon"><svg width="12" height="12"><circle cx="6" cy="6" r="5" fill="#fff" stroke="#111"/></svg></td></tr>
     <tr><td>HTML and CSS</td><td class="icon"><svg width="12" height="12"><circle cx="6" cy="6" r="5" fill="#fff" stroke="#111"/><path d="M6 1 A5 5 0 1 1 1 6 L6 6 Z" fill="#111"/></svg></td><td class="icon"><svg width="12" height="12"><circle cx="6" cy="6" r="5" fill="#111" stroke="#111"/></svg></td><td class="icon"><svg width="12" height="12"><circle cx="6" cy="6" r="5" fill="#fff" stroke="#111"/><path d="M6 1 A5 5 0 0 1 6 11 Z" fill="#111"/></svg></td><td class="icon"><svg width="12" height="12"><circle cx="6" cy="6" r="5" fill="#111" stroke="#111"/></svg></td><td class="icon"><svg width="12" height="12"><circle cx="6" cy="6" r="5" fill="#111" stroke="#111"/></svg></td></tr>
   </tbody>
-  <caption><b>Table 1.</b> Formats for AI-written print documents, rated from empty (poor) to full (good). The ratings are our judgment from use, not a benchmark; HTML trails LaTeX only on fine print control.</caption>
+  <caption><b>Table 1.</b> Formats for AI-written print documents, rated from empty (poor) to full (good). The ratings are our judgment from use, not a benchmark. HTML trails LaTeX only on fine print control.</caption>
 </table>
 
-<h2><span class="n">6</span>Limits</h2>
-<p>The method makes documents consistent; it does not make them right. A model following the guide will still state a number it cannot support unless it is told not to, so the guide requires a source or an explicit label for every figure a reader could question, and a visible placeholder where a fact is missing. The checker’s phrase list is short and will need to grow. The grayscale rule rules out color maps, which some scientific figures need; a document that depends on them should say so and keep color to those figures alone.</p>
+<h2>Limits</h2>
+<p>The method makes documents consistent. It does not make them right. A model following the guide will still state a number it cannot support unless it is told not to, so the guide requires a source or an explicit label for every figure a reader could question, and a visible placeholder where a fact is missing. The checker’s phrase list is short and will need to grow. The grayscale rule rules out color maps, which some scientific figures need. A document that depends on them should say so and keep color to those figures alone.</p>
 
-<h2><span class="n">7</span>What we ask</h2>
+<h2>What we ask</h2>
 <p>Teams writing a paper, report or proposal should give their AI the <code>SKILL.md</code> guide and this repository, and send back the first document they make with it together with the places where the guide was silent or wrong. We will fold those into the guide and the stylesheet, so that the next document starts from a better default.</p>
 
 <div class="notes">

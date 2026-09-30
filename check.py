@@ -237,11 +237,18 @@ def check_source(path):
             out.append((line, "hyphen in a numeric range; use an en dash (–)"))
         if re.search(r"(?<![\w-])-\d", data):
             out.append((line, "hyphen before a number; use a minus sign (−) if it is negative"))
+        if ";" in data and not self_is_list(data):
+            out.append((line, "semicolon in prose; use a period"))
         if "[TK" in data:
             out.append((line, "unresolved [TK] placeholder"))
-    if words and em > max(1, words // 400):
-        out.append((0, f"{em} em dashes in {words} words; use at most about one per page"))
+    if em:
+        out.append((0, f"{em} em dash(es); the house style uses none"))
     return out
+
+
+def self_is_list(data):
+    """A semicolon that separates list items in a table cell or caption is fine."""
+    return data.count(";") >= 2 and len(data) < 200
 
 
 def check_pdf(pdf):
