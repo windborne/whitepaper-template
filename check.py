@@ -3,7 +3,7 @@
 
 Usage: python3 check.py my-document.html
 
-Checks the HTML source for color, stray fonts and sizes, figure and table
+Checks the HTML source for color other than the accent, stray fonts and sizes, figure and table
 numbering, captions, citations, punctuation, and common AI-writing tells.
 If the PDF has been built and PyMuPDF is installed (pip install pymupdf),
 also checks the printed pages for color, stranded headings, and a nearly
@@ -31,7 +31,7 @@ STOCK_PHRASES = [
 ]
 
 ALLOWED_NAMED = {"none", "black", "white", "transparent", "currentcolor",
-                 "inherit", "gray", "grey"}
+                 "inherit", "gray", "grey", "var(--accent)", "var(--accent-2)"}
 ALLOWED_FONTS = ("newsreader", "ibm plex sans", "ibm plex mono", "stix two math",
                  "sans-serif", "serif", "monospace")
 SKIP_TEXT = {"code", "pre", "style", "script", "svg", "math"}
@@ -71,6 +71,8 @@ class Doc(HTMLParser):
         self.notes_items = 0
         self.in_notes = 0
         self._classes = []
+        self.has_images = False
+        self.uses_accent = False
 
     def add(self, msg):
         self.findings.append((self.getpos()[0], msg))
@@ -83,11 +85,15 @@ class Doc(HTMLParser):
         cls = (a.get("class") or "").split()
         in_svg = "svg" in self.stack or tag == "svg"
         for k in ("fill", "stroke", "stop-color", "color"):
+            if k in a and "--accent" in a[k]:
+                self.uses_accent = True
             if k in a and not is_gray(a[k]):
                 self.add(f"non-gray {k} {a[k]!r} on <{tag}>")
         style = a.get("style") or ""
         for prop, val in re.findall(r"([a-z-]+)\s*:\s*([^;]+)", style):
             if "color" in prop or prop in ("fill", "stroke", "background"):
+                if "--accent" in val:
+                    self.uses_accent = True
                 for c in re.findall(r"#[0-9a-fA-F]{3,6}\b|rgba?\([^)]*\)|\b[a-z]+\b", val):
                     if (c.startswith("#") or c.startswith("rgb")) and not is_gray(c):
                         self.add(f"non-gray {prop} {c!r} in style on <{tag}>")
@@ -103,8 +109,10 @@ class Doc(HTMLParser):
                     self.add(f"figure text {a['font-size']} is smaller than 7.4")
             except ValueError:
                 pass
-        if tag == "img" and not a.get("alt"):
-            self.add("<img> without alt text")
+        if tag == "img":
+            self.has_images = True
+            if not a.get("alt"):
+                self.add("<img> without alt text")
         if tag in ("strong",):
             self.add("<strong> used; bold is only for lead-ins and caption labels")
         if tag == "b" and "p" in self.stack and self.p_text_seen and self.caption_mode is None:
@@ -196,6 +204,7 @@ def check_source(path):
     doc = Doc()
     doc.feed(src)
     out = list(doc.findings)
+    check_source.color_expected = doc.has_images or doc.uses_accent
 
     for block in re.findall(r"<style[^>]*>(.*?)</style>", src, re.S | re.I):
         for c in re.findall(r"#[0-9a-fA-F]{6}\b|#[0-9a-fA-F]{3}\b|rgba?\([^)]*\)", block):
@@ -270,11 +279,16 @@ def check_pdf(pdf):
             r, g, b = s[j], s[j + 1], s[j + 2]
             if max(r, g, b) - min(r, g, b) > 24:
                 colored += 1
-        if colored > 3:
+        if colored > 3 and not getattr(check_source, "color_expected", False):
             out.append((0, f"page {i}: color in the printed page"))
         # A heading as the last text on a page, above the footer.
         blocks = [b for b in page.get_text("dict")["blocks"] if b.get("type") == 0]
         body = [b for b in blocks if b["bbox"][3] < page.rect.height - 50]
+        for b in blocks:
+            if b["bbox"][0] < 20:
+                text = " ".join(s["text"] for l in b["lines"] for s in l["spans"]).strip()
+                if text:
+                    out.append((0, f"page {i}: text clipped at the left margin: {text[:30]!r}"))
         if body and i < len(doc):
             last = max(body, key=lambda b: b["bbox"][3])
             spans = [s for l in last["lines"] for s in l["spans"] if s["text"].strip()]

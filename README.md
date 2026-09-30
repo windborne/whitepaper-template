@@ -15,6 +15,9 @@ The full specimen is [specimen.pdf](specimen.pdf).
 | `style.css` | The stylesheet. Page size, margins, footer, type, tables, and figure styles. |
 | `specimen.html` | Every style shown once with placeholder text. Copy from it as needed. |
 | `build.sh` | Prints an HTML file to PDF and writes page previews. |
+| `SKILL.md` | The guide an AI follows to write and typeset a document in this style. |
+| `check.py` | Checks a document against the guide: color, fonts, figure numbering, punctuation, AI tells, stranded headings. |
+| `examples/` | A complete whitepaper written to the guide. |
 
 ## Use
 
@@ -30,7 +33,7 @@ Then print it:
 ./build.sh my-document.html
 ```
 
-`build.sh` needs Chrome or Chromium. Page previews in `preview/` need `pdftoppm` (Poppler). Fonts (Newsreader, IBM Plex Sans and IBM Plex Mono) load from Google Fonts, so printing needs a network connection. Page size, margins, and footer text are set in the `@page` rule at the top of `style.css`.
+`build.sh` needs Chrome or Chromium. Page previews in `preview/` need `pdftoppm` (Poppler). Fonts (Newsreader, IBM Plex Sans, IBM Plex Mono and STIX Two Math) load from Google Fonts, so printing needs a network connection. Set `CHROME` to use a particular browser binary. Page size, margins, and footer text are set in the `@page` rule at the top of `style.css`.
 
 Figures are inline SVG, which keeps them editable as text and sharp in the PDF. The specimen's figures show line weights, arrowheads, hatching, dimensions, callouts, a detail view, and a chart.
 
@@ -49,4 +52,11 @@ Figures are inline SVG, which keeps them editable as text and sharp in the PDF. 
 | `.sidebar` | Block set off with a left rule |
 | `table`, `td.num`, `td.icon`, `caption`, `.legend` | Ruled tables, numeric columns, icon columns, captions, legends |
 | `table.keep`, `.keep` | Keep a short table or block on one page |
-| `figure`, `figcaption` | Figures and captions |
+| `.banner` | Confidentiality line above the title block (running head: see `style.css`) |
+| `.summary`, `.opener` | Summary under the title, alone or beside a first-page figure |
+| `figure`, `figcaption`, `.note` | Figures, captions, and a small italic note such as "Not to scale." |
+| `figure.right`, `.figrow` | A figure floated beside the text; figures side by side or small multiples |
+| `.eq`, `.eqn` | Display equations in MathML, numbered at the right |
+| `code`, `pre` | Inline code and code blocks |
+| `table.rating` | Harvey-ball matrix with centered columns |
+| `.part`, `.appendix` | The "Appendices" part title and lettered appendices, each on a new page |

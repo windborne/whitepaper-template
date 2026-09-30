@@ -4,9 +4,14 @@
 <meta charset="utf-8">
 <title>Whitepaper Template Specimen</title>
 <link rel="stylesheet" href="style.css">
+<style>
+  @page { @top-right { content: "CONFIDENTIAL"; } }
+  @page :first { @top-right { content: ""; } }
+</style>
 </head>
 <body>
 
+<div class="banner"><b>CONFIDENTIAL.</b> Do not distribute without authorization from a WindBorne representative.</div>
 <div class="titleblock">
   <div class="meta"><span>ORGANIZATION &nbsp;|&nbsp; DOCUMENT TYPE</span><span>DRAFT, MONTH YEAR</span></div>
   <h1>Whitepaper Template Specimen</h1>
@@ -104,7 +109,7 @@
 </figure>
 
 <figure>
-<svg viewBox="0 40 700 252" xmlns="http://www.w3.org/2000/svg" font-family="'IBM Plex Sans', sans-serif" font-size="8.6">
+<svg viewBox="0 40 700 236" xmlns="http://www.w3.org/2000/svg" font-family="'IBM Plex Sans', sans-serif" font-size="8.6">
   <defs>
     <pattern id="hatch" width="5" height="5" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><line x1="0" y1="0" x2="0" y2="5" stroke="#111" stroke-width="0.5"/></pattern>
     <marker id="dim" viewBox="0 0 10 10" refX="10" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0 2 L10 5 L0 8 Z" fill="#111"/></marker>
@@ -159,8 +164,8 @@
   <text x="615" y="93" fill="#111">R10 fillet</text>
   <text x="545" y="236" text-anchor="middle" fill="#111" font-weight="700" font-size="8.2" letter-spacing="0.4">DETAIL A (3:1)</text>
 
-  <text x="0" y="286" fill="#666" font-size="7.4" font-style="italic">Dimensions in millimeters.</text>
 </svg>
+<div class="note">Dimensions in millimeters.</div>
 <figcaption><b>Figure 2.</b> Drawing conventions. Hatching marks a cut surface and gray marks a second material. Dimensions use extension lines and filled arrowheads, and a dashed callout leads to a magnified detail.</figcaption>
 </figure>
 
@@ -184,8 +189,8 @@
     <line x1="0" y1="64" x2="480" y2="64" stroke="#888" stroke-width="0.6" stroke-dasharray="1.5 2.5"/>
     <text x="486" y="67" fill="#555" font-style="italic">reference</text>
     <!-- model curve -->
-    <path d="M0 156 C80 130 160 86 240 64 C320 45 400 37 480 34" fill="none" stroke="#111" stroke-width="1.5"/>
-    <text x="486" y="37" fill="#111" font-weight="600">model</text>
+    <path d="M0 156 C80 130 160 86 240 64 C320 45 400 37 480 34" fill="none" stroke="var(--accent)" stroke-width="1.5"/>
+    <text x="486" y="37" fill="var(--accent)" font-weight="600">model</text>
     <!-- observations -->
     <g fill="#fff" stroke="#111" stroke-width="0.9">
       <circle cx="48" cy="146" r="2.6"/><circle cx="110" cy="122" r="2.6"/><circle cx="170" cy="96" r="2.6"/><circle cx="230" cy="72" r="2.6"/><circle cx="300" cy="50" r="2.6"/><circle cx="360" cy="46" r="2.6"/><circle cx="430" cy="34" r="2.6"/>
@@ -194,12 +199,13 @@
     <text x="343" y="95" fill="#111">observations</text>
     <path d="M140 118 L120 138 H112" stroke="#111" stroke-width="0.4" fill="none"/>
     <text x="109" y="141" text-anchor="end" fill="#111">uncertainty</text>
-    <text x="240" y="-4" text-anchor="middle" fill="#555" font-style="italic" font-size="8">Notional.</text>
   </g>
 </svg>
-<figcaption><b>Figure 3.</b> A chart with direct labels instead of a legend: a curve, an uncertainty band in gray, open-circle points, and a dotted reference line. The chart is marked “Notional.” because its data are illustrative.</figcaption>
+<div class="note">Notional. To be measured in the first trial.</div>
+<figcaption><b>Figure 3.</b> A chart with direct labels instead of a legend: a curve in the accent color because it is the subject, an uncertainty band in gray, open-circle points, and a dotted reference line. The note says the data are illustrative and what would make them real.</figcaption>
 </figure>
 
+<div class="keep">
 <h2><span class="n">4</span>Tables</h2>
 <p>Table 1 shows a numeric table and the second table shows Harvey balls with a legend.</p>
 <table class="keep">
@@ -211,6 +217,7 @@
   </tbody>
   <caption><b>Table 1.</b> Booktabs-style rules with right-aligned tabular figures.</caption>
 </table>
+</div>
 
 <table style="margin-top:10pt">
   <thead><tr><th></th><th>Item</th><th>Notes</th></tr></thead>

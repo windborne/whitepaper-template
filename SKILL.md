@@ -25,7 +25,10 @@ The visual rules apply to documents meant to be read as pages: papers, whitepape
 
 The target is a well-made engineering report or a university press book, not a web page or a slide deck.
 
-- **Grayscale only.** Black ink (`#111`), grays from the stylesheet (`#333`, `#555`, `#777`, `#bbb`, `#d9d9d9`, `#e6e6e6`), and white. No color anywhere, including charts, links and icons. A distinction that needs color should use line weight, dash pattern, hatching or a direct label instead.
+- **Grayscale by default.** Black ink (`#111`), grays from the stylesheet (`#333`, `#555`, `#777`, `#bbb`, `#d9d9d9`, `#e6e6e6`), and white. Text, rules, tables, links and icons are never colored. A distinction in a figure should come from line weight, dash pattern, hatching or a direct label before it comes from color.
+- **One accent, for the subject.** A figure may use the accent (`var(--accent)`, with `var(--accent-2)` as its tint) for the one thing the document is about, such as our own sensors on a map, the proposed program among its comparisons, or the measured series against the reference. The same meaning throughout the document, never a second hue, and never for decoration or emphasis in text.
+- **Photographs keep their color.** A photo of the real thing, such as a balloon against the sky, is printed as it is. Screenshots and other people's charts are grayscale unless color carries meaning.
+- **More color only when asked or needed.** If the person asks for color, or a reader could not read the figure without it (a color map, a many-series chart), use a small ordered palette and say so in the caption. Keep the rest of the document grayscale.
 - **Two type families.** Newsreader for body text, headings and captions. IBM Plex Sans for tables, figure labels, the title block meta line and footers. IBM Plex Mono for code. Nothing else.
 - **Sizes are fixed by the stylesheet.** Body 9.4 pt justified and hyphenated, h1 19 pt, h2 10.6 pt bold, h3 body size bold, h4 body size italic, captions and notes 8 pt. Never set a font size inline.
 - **Rules, not boxes.** Set things apart with thin horizontal rules (`.ruled`), a left rule (`.sidebar`, `blockquote`), or space. No filled panels, cards, drop shadows, rounded corners, gradients or background tints behind text.
@@ -34,7 +37,11 @@ The target is a well-made engineering report or a university press book, not a w
 
 ## 3. Document types and their structure
 
-Every document opens with the `.titleblock`: the meta line (organization and document type on the left; status and date on the right, e.g. `DRAFT, SEPTEMBER 2026`), the title, an optional subtitle, and the byline. Titles say what the document is about in plain words; subtitles say what it concludes or proposes.
+Every document opens with the `.titleblock`: the meta line (organization and document type on the left, status and date on the right, e.g. `DRAFT, SEPTEMBER 2026`), the title, an optional subtitle, and the byline with name, role and organization. Titles say what the document is about in plain words. Subtitles say what it concludes or proposes.
+
+**The first page stands alone.** A reader who only sees page one should know the claim, the ask and the evidence. The pattern that works: the summary paragraph beside the strongest figure (`.opener`), a short numbered list with bold lead-ins of what the reader gets, a run-in paragraph on the ask or the program, and a small table of today against what we are building toward. Sections start on page two.
+
+**Confidential documents** carry a `.banner` line above the title block (`<b>CONFIDENTIAL.</b> Do not distribute without authorization from a WindBorne representative.`), a running head on later pages (in the document's own style block: `@page { @top-right { content: "CONFIDENTIAL"; } }`), and the same words in the footer.
 
 | Type | Length | Sections, in order |
 |---|---|---|
@@ -50,7 +57,8 @@ Rules that apply to all of them:
 - **Number sections** (`<span class="n">1</span>`) only when the text refers to them by number. Otherwise leave headings plain. Section titles are short noun phrases in sentence case: "Launch cadence", not "Understanding Launch Cadence: Key Considerations".
 - **Headings go no deeper than h3** in most documents. If you need h4 often, the section should be split.
 - **No "Introduction" that restates the title** and no "Conclusion" that restates the summary. End with what happens next or with the open question, never with a recap.
-- **Appendices** hold material a specialist needs and a decision-maker does not: derivations, full tables, test logs. Use `<section class="appendix">` so each starts on a new page, and letter them: "Appendix A. Derivation of the drift model", with sections A.1, A.2.
+- **Subsections** are numbered 2.1, 2.2 when the sections are numbered. Below that, use italic run-in labels (`.runin`) on paragraphs rather than a fourth heading level.
+- **Appendices** hold material a specialist needs and a decision-maker does not: derivations, full tables, test logs, where we are today, notes on sizing. Open them with `<section class="part"><h1>Appendices</h1>` and give each its own `<section class="appendix">` and a lettered h2: "Appendix A. Why it has to be a weather program". The body text refers to them by letter.
 
 ## 4. Writing voice
 
@@ -128,7 +136,11 @@ Dashed (`4 3`) for return paths, future or planned items; dotted (`1.5 3`, gray 
 
 **Captions.** Below the figure: `<b>Figure 3.</b>` then one or two sentences that say what the figure shows and what to notice, as a full sentence. The caption does not repeat the panel titles. Refer to every figure in the text before it appears ("Figure 3 shows…"), and number figures in order of first mention.
 
-**Placement.** A figure sits after the paragraph that first cites it, or at the top of the next page. It never splits (`break-inside: avoid` is set). Two small related figures go side by side in `.figrow`.
+**Placement.** A figure sits after the paragraph that first cites it, or at the top of the next page. It never splits (`break-inside: avoid` is set). Two small related figures go side by side in `.figrow`. A tall, narrow figure such as a plan-view map goes in `figure.right`, floated with the text running beside it. Small multiples (the same map at four densities, panels a to d) share one `.figrow` and one caption.
+
+**Figure notes.** A short italic line under the drawing, `<div class="note">`, carries the view and the status: "Plan view. Notional.", "Not to scale.", "Dimensions in millimeters." On a notional chart say what would make it real: "Notional. To be measured in the first demonstration."
+
+**One size for figure text.** Every figure in a document uses the same label size (8.6 at viewBox 700) and the same secondary size (8). A figure that needs smaller type to fit has too much in it: split it, or move detail to a table.
 
 ## 8. Images, equations, code
 
@@ -146,7 +158,7 @@ Refer to them as "equation (1)". Define every symbol in the sentence after the e
 
 ## 9. Citations and notes
 
-- Cite with note markers, `<sup class="fn">1</sup>`, after the punctuation of the sentence, and list sources in `.notes` at the end of the document (or of each appendix).
+- Cite with note markers, `<sup class="fn">1</sup>`, after the punctuation of the sentence, and list sources in `.notes` at the end of the document, after the appendices.
 - Note format: Author or Organization, "Title," *Publication or Venue*, identifier, date. Check the original and cite its exact title, author and date, never a paraphrase from a search snippet. Add a URL only when the source is public and stable.
 - Each factual claim that a reader could question gets a source or is labeled as an estimate. Never invent a source, a number, a quote or a name. If a fact is missing, leave a visible `[TK: what is needed]` placeholder and say so when handing over.
 - Explanatory notes are allowed but rare. If a note is longer than two lines, it belongs in the text or an appendix.
@@ -163,12 +175,12 @@ Refer to them as "equation (1)". Define every symbol in the sentence after the e
 Look at every page image and confirm:
 
 - [ ] The summary states the conclusion, the key number and the ask.
-- [ ] Nothing is in color. Photos read in grayscale.
+- [ ] No color except photographs and the one accent, and the accent means the same thing in every figure.
 - [ ] No heading, caption or single line is stranded at a page bottom or top. No figure or table is split.
 - [ ] Every figure and table is numbered in order, cited in the text before it appears, and has a caption that is a sentence.
 - [ ] Figure labels do not collide with lines or each other, and nothing is clipped at the viewBox edge.
 - [ ] Line weights and fills follow section 7, with no more than three grays in a figure.
 - [ ] Every number has a unit and a source or an "estimate" or "Notional." label.
 - [ ] `check.py` reports nothing, or each remaining report is explained.
-- [ ] The last page is reasonably full, and the footer text is set.
+- [ ] The last page is reasonably full, and the footer text is set. Note numbers of two digits are not clipped.
 - [ ] Reading the text aloud, nothing sounds like a press release or a chatbot.
