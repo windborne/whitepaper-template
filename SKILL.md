@@ -24,7 +24,7 @@ Read the whole guide before starting. The rules are short because each one matte
 The target is a well-made engineering report or a university press book, not a web page or a slide deck.
 
 - **Grayscale only.** Black ink (`#111`), grays from the stylesheet (`#333`, `#555`, `#777`, `#bbb`, `#d9d9d9`, `#e6e6e6`), and white. No color anywhere, including charts, links and icons. A distinction that needs color should use line weight, dash pattern, hatching or a direct label instead.
-- **Two type families.** Source Serif 4 for body text, headings and captions. Source Sans 3 for tables, figure labels, the title block meta line and footers. Source Code Pro for code. Nothing else.
+- **Two type families.** Newsreader for body text, headings and captions. IBM Plex Sans for tables, figure labels, the title block meta line and footers. IBM Plex Mono for code. Nothing else.
 - **Sizes are fixed by the stylesheet.** Body 9.4 pt justified and hyphenated; h1 19 pt; h2 10.6 pt bold; h3 body size bold; h4 body size italic; captions and notes 8 pt. Never set a font size inline.
 - **Rules, not boxes.** Set things apart with thin horizontal rules (`.ruled`), a left rule (`.sidebar`, `blockquote`), or space. No filled panels, cards, drop shadows, rounded corners, gradients or background tints behind text.
 - **Emphasis is rare.** Italic for a term being defined or a title. Bold only for list lead-ins and caption labels. No bold phrases scattered through paragraphs, no underlines, no all-caps sentences.
@@ -93,7 +93,7 @@ Readers now spot machine-written text quickly and discount it. Remove these on s
 
 Every figure is inline SVG drawn to the conventions below, so it prints sharp and stays editable. Treat figure drawing as drafting, not illustration.
 
-**Canvas.** `viewBox` width 700 for a full-width figure. On a letter page one user unit then prints at about 0.71 pt, so a label of 8.6 prints at about 6 pt; all sizes below are in user units. A half-width figure uses a viewBox about 340 wide so its type prints at the same size. Set `font-family="'Source Sans 3', sans-serif"` on the `<svg>`. Leave no empty band above or below the drawing: fit the viewBox to the content.
+**Canvas.** `viewBox` width 700 for a full-width figure. On a letter page one user unit then prints at about 0.71 pt, so a label of 8.6 prints at about 6 pt; all sizes below are in user units. A half-width figure uses a viewBox about 340 wide so its type prints at the same size. Figure text is IBM Plex Sans; the stylesheet sets it on every `<svg>` inside a `<figure>`. Leave no empty band above or below the drawing: fit the viewBox to the content.
 
 **Line weights** (stroke-width in user units), each with one job:
 
