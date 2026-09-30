@@ -7,7 +7,9 @@ description: Write and typeset papers, whitepapers, reports and memos as print-q
 
 This guide tells you, the AI, how to produce a document that looks like a careful person designed and wrote it. The documents are written in plain HTML, styled by `style.css`, and printed to PDF with headless Chrome by `build.sh`. `specimen.html` shows every style once; `examples/` has a complete document to copy from.
 
-Read the whole guide before starting. The rules are short because each one matters.
+Read the whole guide before starting. The rules are short because each one matters. Tell the person you are following this guide, and name any part you choose not to follow and why.
+
+The visual rules apply to documents meant to be read as pages: papers, whitepapers, reports, memos, one-pagers, and the figures in them. Do not apply them to web apps, dashboards or slides unless asked. The writing rules apply anywhere.
 
 ## 1. Workflow
 
@@ -25,7 +27,7 @@ The target is a well-made engineering report or a university press book, not a w
 
 - **Grayscale only.** Black ink (`#111`), grays from the stylesheet (`#333`, `#555`, `#777`, `#bbb`, `#d9d9d9`, `#e6e6e6`), and white. No color anywhere, including charts, links and icons. A distinction that needs color should use line weight, dash pattern, hatching or a direct label instead.
 - **Two type families.** Newsreader for body text, headings and captions. IBM Plex Sans for tables, figure labels, the title block meta line and footers. IBM Plex Mono for code. Nothing else.
-- **Sizes are fixed by the stylesheet.** Body 9.4 pt justified and hyphenated; h1 19 pt; h2 10.6 pt bold; h3 body size bold; h4 body size italic; captions and notes 8 pt. Never set a font size inline.
+- **Sizes are fixed by the stylesheet.** Body 9.4 pt justified and hyphenated, h1 19 pt, h2 10.6 pt bold, h3 body size bold, h4 body size italic, captions and notes 8 pt. Never set a font size inline.
 - **Rules, not boxes.** Set things apart with thin horizontal rules (`.ruled`), a left rule (`.sidebar`, `blockquote`), or space. No filled panels, cards, drop shadows, rounded corners, gradients or background tints behind text.
 - **Emphasis is rare.** Italic for a term being defined or a title. Bold only for list lead-ins and caption labels. No bold phrases scattered through paragraphs, no underlines, no all-caps sentences.
 - **No decoration.** No emoji, icon fonts, clip art, stock photos, decorative dividers, "key takeaway" callouts or pull quotes that repeat the text.
@@ -45,40 +47,44 @@ Every document opens with the `.titleblock`: the meta line (organization and doc
 Rules that apply to all of them:
 
 - **Summary first.** A `.summary` paragraph or two directly under the title block, saying the conclusion, the key number and the ask. A reader who stops there should have the point.
-- **Number sections** (`<span class="n">1</span>`) in anything longer than three pages. Section titles are short noun phrases in sentence case: "Launch cadence", not "Understanding Launch Cadence: Key Considerations".
+- **Number sections** (`<span class="n">1</span>`) only when the text refers to them by number. Otherwise leave headings plain. Section titles are short noun phrases in sentence case: "Launch cadence", not "Understanding Launch Cadence: Key Considerations".
 - **Headings go no deeper than h3** in most documents. If you need h4 often, the section should be split.
-- **No "Introduction" that restates the title** and no "Conclusion" that restates the summary. End with what happens next.
+- **No "Introduction" that restates the title** and no "Conclusion" that restates the summary. End with what happens next or with the open question, never with a recap.
 - **Appendices** hold material a specialist needs and a decision-maker does not: derivations, full tables, test logs. Use `<section class="appendix">` so each starts on a new page, and letter them: "Appendix A. Derivation of the drift model", with sections A.1, A.2.
 
 ## 4. Writing voice
 
 Write the way a senior engineer writes to a respected colleague: plain, specific, and sure of what is known and what is not.
 
-- **Lead with the claim.** Each paragraph opens with its point; the rest supports it.
+- **Lead with the problem.** Open the document with the problem or a direct question, and state the claim early. Each paragraph opens with its point and the rest supports it.
+- **One concrete example.** Explain a hard idea with a single analogy or worked example, and name the real people, tools and numbers involved. Use the reader's own vocabulary for the problem, and where a citable source states it, their own words.
+- **Name things once.** When a concept needs a name, define it once in plain words and use that name consistently.
+- **Say what you think.** State opinions and recommendations directly. Say plainly what is unknown, unproven, or planned rather than done.
 - **Be specific.** Numbers with units, named systems, dates, sources. "Cut forecast error by 11 percent over 40 days of trials" beats "significantly improved accuracy".
-- **Short words, varied sentences.** Mostly short sentences, some long ones where the idea needs it. Active voice. Say "we" for the authoring organization.
+- **Short sentences, short paragraphs.** A few sentences per paragraph. Use a period where a semicolon or a dash would go. Active voice. Say "we" for the authoring organization.
 - **Paragraphs over bullets.** Use a list only for items that are truly parallel: steps, requirements, options. Never turn an argument into bullets. Lists of two items belong in a sentence.
 - **State limits plainly.** Say what was not tested, what is estimated and what is illustrative. Mark illustrative figures "Notional."
 - **Numbers in text:** numerals for all measurements and for counts of 10 and above, with a non-breaking space between number and unit (`12&nbsp;km`). Thousands separators on numbers of five or more digits. Use the true minus sign (−) and en dash for ranges (4–6 km). Percent in running text as "percent" or `%` consistently.
-- **Punctuation:** curly quotes and apostrophes, en dashes for ranges. Use em dashes rarely; at most one pair per page. A comma, colon, parentheses or a new sentence usually works better.
+- **Punctuation:** curly quotes and apostrophes, en dashes for ranges. No em dashes. A comma, parentheses or a new sentence does the job.
 
 ### Avoiding AI tells
 
 Readers now spot machine-written text quickly and discount it. Remove these on sight:
 
 - **Stock phrases:** delve, leverage (as a verb), robust, seamless, cutting-edge, game-changer, unlock, empower, harness, landscape, realm, tapestry, navigate (figuratively), pivotal, crucial, paramount, holistic, synergy, "in today's fast-paced world", "it's worth noting", "it is important to note", "plays a vital role", "a testament to", "at the end of the day", "in conclusion".
-- **Structures:** "It's not just X, it's Y." "Whether you're A or B…" Rule-of-three lists used for rhythm rather than content. A closing sentence that sums up the paragraph it ends. Rhetorical questions as section openers. Colon-split headings ("Scale: Why It Matters").
-- **Formatting habits:** bold phrases inside paragraphs, bullets with bold lead-ins where prose would do, emoji, headings on every paragraph, title case everywhere, many em dashes.
+- **Structures:** catchy slogans. "It's not just X, it's Y." "Whether you're A or B…" Reflexive groups of three, used for rhythm rather than content. A closing sentence that sums up the paragraph it ends. Rhetorical questions as section openers. Colon-split headings ("Scale: Why It Matters").
+- **Formatting habits:** bold phrases inside paragraphs, bold lead-ins on every paragraph, emoji, headings on every paragraph, title case everywhere, em dashes.
+- **Visual tells:** colored pills, tags and status chips. Numbered badges or icons beside headings. Stat tiles, KPI rows and big numbers standing alone. Three matching cards in a row. Gradients, rounded shaded panels and drop shadows. Decorative icons and crossed-out icons.
 - **Hedging and inflation:** stacked qualifiers ("potentially could help to"), and praise words (innovative, powerful, revolutionary, unprecedented) standing in for evidence. Delete the adjective and give the number.
 
 `check.py` flags the most common of these. Passing it is necessary, not sufficient: read the text aloud in your head and cut anything a careful person would not have written.
 
 ## 5. Typography details
 
-- Body text is justified with hyphenation; headings, captions, tables and notes are ragged right. The stylesheet handles this.
+- Body text is justified with hyphenation. Headings, captions, tables and notes are ragged right. The stylesheet handles this.
 - Keep a heading with the paragraph after it (`break-after: avoid` is set). Never leave a heading or a single line at the bottom of a page, or a single line at the top.
 - Use real small caps (`.smallcaps`) for acronyms of four or more letters only if the document is dense with them; otherwise set acronyms as normal capitals. Spell out an acronym at first use unless every reader knows it.
-- One space after periods. No double line breaks for spacing; use the stylesheet's margins.
+- One space after periods. No double line breaks for spacing. Use the stylesheet's margins.
 - Run-in labels (`.runin`) for a short series of paragraphs that each discuss one named item.
 
 ## 6. Tables
@@ -116,7 +122,9 @@ Dashed (`4 3`) for return paths, future or planned items; dotted (`1.5 3`, gray 
 
 **Charts.** Axes 0.7 with outward ticks and labeled units; no gridlines, or very light ones (`#ddd`, 0.3) only when readers must read values. The data series is the heaviest line. Uncertainty as a gray band, observations as open circles, a reference level as a dotted gray line, all labeled directly. Start the value axis at zero for bars. No 3-D, no pie charts, no dual axes. Mark illustrative data "Notional." above the plot area.
 
-**Diagrams.** A block diagram shows one idea: flow left to right or top to bottom, one heavier outline on the component the text is about, a dashed return path for feedback. A concept or CONOP figure can combine a simple side-view line drawing (terrain line, vehicle silhouettes as outlines) with numbered step markers that the text refers to in order.
+**Diagrams.** A block diagram shows one idea: flow left to right or top to bottom, one heavier outline on the component the text is about, a dashed return path for feedback. Show one example of each thing, not several. A concept or CONOP figure can combine a simple side-view line drawing (terrain line, vehicle silhouettes as outlines) with numbered step markers that the text refers to in order. Add "Not to scale." in small italic when proportions are schematic.
+
+**Real objects.** Draw what the reader recognizes from their own work. For a balloon, an aircraft, an antenna or a building, trace a reference such as a public-domain three-view drawing from Wikimedia Commons rather than approximating it freehand. Add enough detail to be recognizable, then stop. When downloading a reference, use a generic identifier in the request and never a person's name or email address.
 
 **Captions.** Below the figure: `<b>Figure 3.</b>` then one or two sentences that say what the figure shows and what to notice, as a full sentence. The caption does not repeat the panel titles. Refer to every figure in the text before it appears ("Figure 3 shows…"), and number figures in order of first mention.
 
@@ -139,7 +147,7 @@ Refer to them as "equation (1)". Define every symbol in the sentence after the e
 ## 9. Citations and notes
 
 - Cite with note markers, `<sup class="fn">1</sup>`, after the punctuation of the sentence, and list sources in `.notes` at the end of the document (or of each appendix).
-- Note format: Author or Organization, "Title," *Publication or Venue*, identifier, date. Add a URL only when the source is public and stable.
+- Note format: Author or Organization, "Title," *Publication or Venue*, identifier, date. Check the original and cite its exact title, author and date, never a paraphrase from a search snippet. Add a URL only when the source is public and stable.
 - Each factual claim that a reader could question gets a source or is labeled as an estimate. Never invent a source, a number, a quote or a name. If a fact is missing, leave a visible `[TK: what is needed]` placeholder and say so when handing over.
 - Explanatory notes are allowed but rare. If a note is longer than two lines, it belongs in the text or an appendix.
 
@@ -159,7 +167,7 @@ Look at every page image and confirm:
 - [ ] No heading, caption or single line is stranded at a page bottom or top. No figure or table is split.
 - [ ] Every figure and table is numbered in order, cited in the text before it appears, and has a caption that is a sentence.
 - [ ] Figure labels do not collide with lines or each other, and nothing is clipped at the viewBox edge.
-- [ ] Line weights and fills follow section 7; there are no more than three grays in a figure.
+- [ ] Line weights and fills follow section 7, with no more than three grays in a figure.
 - [ ] Every number has a unit and a source or an "estimate" or "Notional." label.
 - [ ] `check.py` reports nothing, or each remaining report is explained.
 - [ ] The last page is reasonably full, and the footer text is set.
