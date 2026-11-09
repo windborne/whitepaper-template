@@ -1,243 +1,99 @@
-<!doctype html>
-<html lang="en">
-<head>
-<meta charset="utf-8">
-<title>Whitepaper Template Specimen</title>
-<link rel="stylesheet" href="style.css">
-</head>
-<body>
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="color-scheme" content="light"><title>A house style for technical whitepapers</title><link rel="stylesheet" href="fonts.css"><link rel="stylesheet" href="style.css"></head>
+<body data-document="specimen"><div class="preview-bar"><div class="documents"><a class="brand-link" href="https://windbornesystems.com/blog" aria-label="WindBorne blog"><img src="assets/windborne.svg" alt="WindBorne"></a><nav class="document-tabs editor-only" aria-label="Document examples"><a href="specimen.html" aria-current="page">Template</a><a href="conop.html">Article</a></nav>
+</div><div class="actions"><a class="download-link" href="specimen.pdf" data-pdf-link><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 15V3"></path><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><path d="m7 10 5 5 5-5"></path></svg><span>Download PDF</span></a><details class="options editor-only"><summary><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14.364 13.634a2 2 0 0 0-.506.854l-.837 2.87a.5.5 0 0 0 .62.62l2.87-.837a2 2 0 0 0 .854-.506l4.013-4.009a1 1 0 0 0-3.004-3.004z"></path><path d="M14.487 7.858A1 1 0 0 1 14 7V2"></path><path d="M20 19.645V20a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h8a2.4 2.4 0 0 1 1.704.706l2.516 2.516"></path><path d="M8 18h1"></path></svg><span>Document settings</span></summary><div class="options-panel"><div class="settings-title">Document settings</div><label class="toggle-setting"><span>Abstract background</span><input type="checkbox" role="switch" id="abstract-style" aria-label="Abstract background"></label><label class="setting-field">Author details<select id="author-details" aria-label="Author details"><option value="none">Name only</option><option value="title" selected>Name and title</option><option value="organization">Name and organization</option><option value="full">Name, title and organization</option></select></label><label class="setting-field">Category (optional)<select id="category" aria-label="Category (optional)"><option value="" selected>None</option><option value="Research Paper">Research Paper</option><option value="Technical Report">Technical Report</option><option value="Concept of Operations">Concept of Operations</option><option value="Case Study">Case Study</option><option value="White Paper">White Paper</option><option value="Analysis">Analysis</option><option value="Proposal">Proposal</option><option value="__custom__">Add new option…</option></select></label><div class="custom-label-editor" hidden><label class="setting-field">Custom label<input id="custom-category" maxlength="80" placeholder="Enter a document label"></label><button type="button" class="add-label">Add label</button></div><label class="setting-field distribution-setting">Distribution (optional)<select id="distribution" aria-label="Distribution (optional)"><option value="">None</option><option>Public</option><option>Internal</option><option>Proprietary</option><option selected>Confidential</option></select></label><label class="setting-field">Example authors<select id="authors-demo" aria-label="Example authors"><option value="single">One author</option><option value="many">Multiple authors</option></select></label><label class="setting-field">PDF table of contents<select id="print-contents-option" aria-label="PDF table of contents"><option value="none">None</option><option value="one">One column (headers and subheaders)</option><option value="two" selected>Two columns (headers only)</option></select></label><div class="settings-actions"><a class="reader-link" href="?mode=public">View reader layout</a><button class="print-trigger" type="button">Print current version</button></div><p class="pdf-help">Download PDF opens a generated PDF with your current settings. The PDF includes resolved contents page numbers.</p>
+</div></details>
+</div></div><div class="paper-layout"><aside class="toc" aria-label="Document contents"><div class="toc-label">On this page</div><ol></ol></aside>
+<main class="paper"><header class="paper-header"><h1>A house style for technical whitepapers</h1>
+<p class="subtitle">A component specimen for web articles and printed research documents.</p>
+<dl class="metadata "><div><dt class="author-label">Author</dt><dd class="author-value">WindBorne</dd></div><div><dt>Date</dt><dd class="date">Nov. 2026</dd></div><div class="category-field" hidden><dt>Category</dt><dd></dd></div><div class="distribution-field" hidden><dt>Distribution</dt><dd></dd></div></dl>
+</header>
+<details class="mobile-toc"><summary>On this page</summary><ol></ol></details>
+<nav class="print-contents" aria-label="Printed table of contents"><h2>CONTENTS</h2>
+<ol></ol></nav>
+<section class="summary" aria-label="Summary"><p>This specimen demonstrates the approved typography, metadata, contents, figures, tables, equations and references. Its example values and diagrams are illustrative. Use it to select components; start a new paper from the shorter starter.</p>
+</section>
+<article class="prose"><h2 id="start-with-the-reader">Start with the reader</h2>
 
-<div class="titleblock">
-  <div class="meta"><span>ORGANIZATION &nbsp;|&nbsp; DOCUMENT TYPE</span><span>DRAFT, MONTH YEAR</span></div>
-  <h1>Whitepaper Template Specimen</h1>
-  <div class="subtitle">Each style in style.css, shown once with placeholder text</div>
-  <div class="byline">Author Name</div>
-</div>
+<p>A technical whitepaper needs to support two kinds of reading. A specialist may read the argument closely, checking assumptions and following the evidence. A decision-maker may begin with the summary, inspect a figure, and move directly to limitations or next steps. Both readers need a clear hierarchy and reliable references.</p>
 
-<h2><span class="n">1</span>Type</h2>
-<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Body text is set in Newsreader, justified and hyphenated.<sup class="fn">1</sup> Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Numbers set inline read as 12.5 km, 3,400 units, and 0.25°.</p>
-<p><span class="runin">Run-in label.</span> Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Text can use <i>italics</i>, <span class="smallcaps">small caps</span>, and <a href="#">links</a>, sparingly. Bold is kept for list lead-ins and caption labels.<sup class="fn">2</sup></p>
+<p>This example demonstrates the revised house style. The central prose column stays comfortable to read, while figures and tables have room to carry detail. Headings and paragraphs use Newsreader. Captions, tables and metadata use IBM Plex Sans.</p>
 
-<h3>Third-level heading</h3>
-<p>Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium.</p>
-<h4>Fourth-level heading</h4>
-<p>Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt.</p>
+<h2 id="one-source-two-reading-modes">One source, two reading modes</h2>
 
-<h2><span class="n">2</span>Lists and blocks</h2>
-<div style="display:flex; gap:18pt">
-<ul style="flex:1">
-  <li>Neque porro quisquam est qui dolorem</li>
-  <li>Ipsum quia dolor sit amet consectetur</li>
-  <li>Adipisci velit sed quia non numquam</li>
-</ul>
-<ol style="flex:1">
-  <li>Ut enim ad minima veniam</li>
-  <li>Quis nostrum exercitationem</li>
-  <li>Ullam corporis suscipit laboriosam</li>
-</ol>
-</div>
-<ol class="lead">
-  <li><b>Bold lead-in,</b> nisi ut aliquid ex ea commodi consequatur. Quis autem vel eum iure reprehenderit qui in ea voluptate.</li>
-  <li><b>Another lead-in,</b> velit esse quam nihil molestiae consequatur, vel illum qui dolorem eum fugiat quo voluptas nulla pariatur.</li>
-</ol>
+<p>The web article provides a contents list and captions alongside figures when space allows. On small screens, the contents list collapses and captions move below their figures. The printed version uses a single column, captions below each figure, and page numbers.</p>
 
-<blockquote>At vero eos et accusamus et iusto odio dignissimos ducimus qui blanditiis praesentium voluptatum deleniti atque corrupti.<span class="source">Named Person, Title, Publication, Year</span></blockquote>
+<figure id="figure-1"><button class="figure-art" type="button" aria-label="Open Figure 1 in lightbox" aria-haspopup="dialog"><svg viewBox="0 0 700 190" xmlns="http://www.w3.org/2000/svg" font-family="IBM Plex Sans, sans-serif" font-size="14"><defs><marker id="flow-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 1 L9 5 L0 9" fill="none" stroke="#333" stroke-width="1.3"></path></marker></defs><g fill="white" stroke="#747b6f"><rect x="0" y="60" width="220" height="70"></rect><rect x="390" y="10" width="300" height="70"></rect><rect x="390" y="110" width="300" height="70"></rect></g><g text-anchor="middle" fill="#242923"><text x="110" y="88" font-weight="600">One HTML source</text><text x="110" y="110" font-size="12">Text · figures · references</text><text x="540" y="39" font-weight="600">Web article</text><text x="540" y="60" font-size="12">Contents navigation · side captions</text><text x="540" y="139" font-weight="600">Print PDF</text><text x="540" y="160" font-size="12">Page flow · captions below figures</text></g><g stroke="#333" fill="none" marker-end="url(#flow-arrow)"><path d="M220 95 H300 V45 H385"></path><path d="M300 95 V145 H385"></path></g></svg></button><figcaption><b>Figure 1.</b> The document keeps one content source. Layout changes support the way each version is read. Vector artwork stays sharp in print and in the web lightbox.</figcaption></figure>
 
-<div class="ruled">
-  <div class="label">Ruled block</div>
-  <p>Temporibus autem quibusdam et aut officiis debitis aut rerum necessitatibus saepe eveniet ut et voluptates repudiandae sint et molestiae non recusandae.</p>
-</div>
 
-<div class="sidebar">
-  <p>Side-ruled block. Itaque earum rerum hic tenetur a sapiente delectus, ut aut reiciendis voluptatibus maiores alias consequatur aut perferendis doloribus asperiores repellat.</p>
-</div>
+<h2 id="a-flexible-opening">A flexible opening</h2>
 
-<h2><span class="n">3</span>Figures</h2>
-<p>Figures are inline SVG: thin black strokes, gray fills, square corners, and labels on leader lines. Figure 1 shows line work, Figure 2 drawing conventions, and Figure 3 a chart. Aliquam erat volutpat, nam dui mi tincidunt quis accumsan porttitor facilisis luctus metus.</p>
+<p>The metadata row always includes authors and a date. Without an optional label, those fields divide the row equally. A long author list receives approximately seventy percent of the width, leaving the rest for the date. Names wrap rather than shrinking.</p>
 
-<figure>
-<svg viewBox="0 0 700 170" xmlns="http://www.w3.org/2000/svg" font-family="'IBM Plex Sans', sans-serif" font-size="8.6">
-  <defs>
-    <marker id="chev" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 1 L9 5 L0 9" fill="none" stroke="#111" stroke-width="1.4"/></marker>
-  </defs>
-  <text x="0" y="11" font-weight="700" font-size="8.6" letter-spacing="0.5">(a) LINE WEIGHTS AND PATTERNS</text>
-  <g stroke="#111" fill="none">
-    <line x1="0" y1="32" x2="150" y2="32" stroke-width="0.4"/>
-    <line x1="0" y1="52" x2="150" y2="52" stroke-width="0.7"/>
-    <line x1="0" y1="72" x2="150" y2="72" stroke-width="1.0"/>
-    <line x1="0" y1="92" x2="150" y2="92" stroke-width="1.6"/>
-    <line x1="0" y1="118" x2="150" y2="118" stroke-width="0.7" stroke-dasharray="4 3"/>
-    <line x1="0" y1="138" x2="150" y2="138" stroke="#888" stroke-width="0.6" stroke-dasharray="1.5 3"/>
-    <line x1="0" y1="158" x2="150" y2="158" stroke-width="0.5" stroke-dasharray="10 2.5 2 2.5"/>
-  </g>
-  <g fill="#333" font-size="8">
-    <text x="160" y="35">0.4 pt hairline</text>
-    <text x="160" y="55">0.7 pt outline</text>
-    <text x="160" y="75">1.0 pt emphasis</text>
-    <text x="160" y="95">1.6 pt heavy</text>
-    <text x="160" y="121">dashed</text>
-    <text x="160" y="141">dotted reference</text>
-    <text x="160" y="161">center line</text>
-  </g>
+<p>An optional category identifies the document as a Research Paper, Technical Report, Concept of Operations, Case Study, White Paper, Analysis or Proposal. A custom label can describe a one-off document. Distribution is a separate optional field: Public, Internal, Proprietary or Confidential. Internal, Proprietary and Confidential also appear in the footer; Public does not.</p>
 
-  <text x="300" y="11" font-weight="700" font-size="8.6" letter-spacing="0.5">(b) BOXES AND CONNECTORS</text>
-  <g fill="#fff" stroke="#111" stroke-width="0.8">
-    <rect x="300" y="40" width="100" height="36"/>
-    <rect x="450" y="40" width="100" height="36"/>
-    <rect x="600" y="40" width="100" height="36" stroke-width="1.6"/>
-  </g>
-  <g text-anchor="middle" fill="#111" font-size="9">
-    <text x="350" y="56">Block A</text><text x="350" y="68" fill="#555" font-size="8">short description</text>
-    <text x="500" y="56">Block B</text><text x="500" y="68" fill="#555" font-size="8">short description</text>
-    <text x="650" y="56" font-weight="700">Block C</text><text x="650" y="68" fill="#555" font-size="8">heavier outline</text>
-  </g>
-  <g stroke="#111" stroke-width="0.8" fill="none">
-    <path d="M400 58 H447" marker-end="url(#chev)"/>
-    <path d="M550 58 H597" marker-end="url(#chev)"/>
-    <path d="M650 76 V110 H350 V79" stroke-dasharray="4 3" marker-end="url(#chev)"/>
-  </g>
-  <g stroke="#111" stroke-width="1" fill="none"><path d="M421 46 l6 6 l-6 5 l6 6 l-6 5"/></g>
-  <text x="424" y="92" text-anchor="middle" font-size="8" font-style="italic" fill="#333">interruption mark</text>
-  <text x="500" y="124" text-anchor="middle" font-size="8" font-style="italic" fill="#333">dashed return path</text>
-</svg>
-<figcaption><b>Figure 1.</b> Line work. (a) Stroke weights and patterns, each with one job. (b) Square boxes, open chevron arrowheads, a heavier outline for emphasis, and italic annotations.</figcaption>
-</figure>
+<p>The summary can sit on a very light background or remain unshaded. Both versions use the same typography and text. The distinction should be tested with the actual length of a document’s summary.</p>
 
-<figure>
-<svg viewBox="0 40 700 236" xmlns="http://www.w3.org/2000/svg" font-family="'IBM Plex Sans', sans-serif" font-size="8.6">
-  <defs>
-    <pattern id="hatch" width="5" height="5" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><line x1="0" y1="0" x2="0" y2="5" stroke="#111" stroke-width="0.5"/></pattern>
-    <marker id="dim" viewBox="0 0 10 10" refX="10" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0 2 L10 5 L0 8 Z" fill="#111"/></marker>
-    <clipPath id="det"><circle cx="545" cy="140" r="78"/></clipPath>
-  </defs>
+<h2 id="make-technical-information-legible">Make technical information legible</h2>
 
-  <!-- part B, a second material in gray -->
-  <rect x="170" y="160" width="70" height="40" fill="#d9d9d9" stroke="#111" stroke-width="0.8"/>
-  <!-- part A, sectioned -->
-  <path d="M80 60 L120 60 L120 190 Q120 200 130 200 L300 200 L300 240 L80 240 Z" fill="url(#hatch)" stroke="#111" stroke-width="1"/>
-  <circle cx="255" cy="220" r="8" fill="#fff" stroke="#111" stroke-width="0.8"/>
-  <g stroke="#111" stroke-width="0.4" stroke-dasharray="6 2 1.5 2">
-    <line x1="240" y1="220" x2="270" y2="220"/><line x1="255" y1="205" x2="255" y2="235"/>
-  </g>
+<p>A reader should be able to interpret a chart or table without repeatedly searching the prose for definitions. Put units in column headings, identify illustrative data, and give captions enough information to explain what the reader should notice.</p>
 
-  <!-- dimensions -->
-  <g stroke="#111" stroke-width="0.4">
-    <line x1="80" y1="244" x2="80" y2="270"/><line x1="300" y1="244" x2="300" y2="270"/>
-    <line x1="80" y1="264" x2="300" y2="264" marker-start="url(#dim)" marker-end="url(#dim)"/>
-    <line x1="76" y1="60" x2="50" y2="60"/><line x1="76" y1="240" x2="50" y2="240"/>
-    <line x1="56" y1="60" x2="56" y2="240" marker-start="url(#dim)" marker-end="url(#dim)"/>
-  </g>
-  <rect x="176" y="258" width="28" height="11" fill="#fff"/>
-  <text x="190" y="267" text-anchor="middle" fill="#111" font-size="8.4">220</text>
-  <rect x="50" y="136" width="12" height="26" fill="#fff"/>
-  <text transform="translate(59,150) rotate(-90)" text-anchor="middle" fill="#111" font-size="8.4">180</text>
+<div class="table-block"><div class="table-wrap" tabindex="0" role="region" aria-label="Data table"><table><thead><tr><th>Element</th><th>On the web</th><th>In the PDF</th></tr>
+</thead>
+<tbody><tr><td>Contents</td><td>Sticky navigation on wide screens; collapsible on smaller screens</td><td>Optional one- or two-column index</td></tr>
+<tr><td>Captions</td><td>Beside figures when space allows</td><td>Below figures</td></tr>
+<tr><td>Prose</td><td>Controlled reading width</td><td>Narrower than the full figure width</td></tr>
+<tr><td>Tables</td><td>Scrollable when needed on small screens</td><td>Headers repeat; rows stay together</td></tr>
+<tr><td>Metadata</td><td>Responsive author, date and optional label fields</td><td>Same information, sized for the page</td></tr>
+</tbody>
+<caption><b>Table 1.</b> Reading behavior changes between formats while the document’s content remains the same.</caption></table>
 
-  <!-- leader labels -->
-  <g stroke="#111" stroke-width="0.4" fill="none">
-    <path d="M104 110 L150 90 H158"/>
-    <path d="M214 164 L232 128 H240"/>
-    <path d="M261 214 L290 180 H298"/>
-  </g>
-  <g fill="#111">
-    <text x="161" y="93">Part A, sectioned</text>
-    <text x="243" y="131">Part B</text>
-    <text x="301" y="183">Ø16 hole with center lines</text>
-  </g>
+</div><div class="table-side-caption" aria-hidden="true"><span><b>Table 1.</b> Reading behavior changes between formats while the document’s content remains the same.</span></div></div><h3 id="measure-figure-text-at-its-final-size">Measure figure text at its final size</h3>
 
-  <!-- callout to detail -->
-  <circle cx="124" cy="196" r="15" fill="none" stroke="#111" stroke-width="0.6" stroke-dasharray="2 2"/>
-  <text x="104" y="178" fill="#111" font-weight="700">A</text>
-  <path d="M139 196 L467 150" stroke="#111" stroke-width="0.5" stroke-dasharray="2 2" fill="none"/>
+<p>An SVG’s drawing units are not printed points. For a figure with printed width <i>W</i> and viewBox width <i>V</i>, a label sized <i>f</i> in drawing units prints at:</p>
 
-  <!-- detail A, 3:1 -->
-  <g clip-path="url(#det)">
-    <rect x="460" y="55" width="180" height="180" fill="#fff"/>
-    <path d="M400 40 L545 40 L545 110 Q545 140 575 140 L720 140 L720 260 L400 260 Z" fill="url(#hatch)" stroke="#111" stroke-width="1.2"/>
-  </g>
-  <circle cx="545" cy="140" r="78" fill="none" stroke="#111" stroke-width="0.6" stroke-dasharray="2 2"/>
-  <path d="M556 128 L600 90 H612" stroke="#111" stroke-width="0.4" fill="none"/>
-  <text x="615" y="93" fill="#111">R10 fillet</text>
-  <text x="545" y="236" text-anchor="middle" fill="#111" font-weight="700" font-size="8.2" letter-spacing="0.4">DETAIL A (3:1)</text>
+<div class="eq"><math display="block"><msub><mi>f</mi><mtext>print</mtext></msub><mo>=</mo><mfrac><mi>W</mi><mi>V</mi></mfrac><mi>f</mi></math><span class="eqn">(1)</span></div>
+<p>At a printed width of 496.8 points and a viewBox width of 700 units, a 12-unit label prints at approximately 8.5 points. Check the rendered PDF at reading size before deciding that a label is large enough.</p>
 
-</svg>
-<div class="note">Dimensions in millimeters.</div>
-<figcaption><b>Figure 2.</b> Drawing conventions. Hatching marks a cut surface and gray marks a second material. Dimensions use extension lines and filled arrowheads, and a dashed callout leads to a magnified detail.</figcaption>
-</figure>
+<h2 id="draft-figures">Draft figures with a visual hierarchy</h2>
+<p>Figure 2 demonstrates dimensions, hatching and a detail view. Figure 3 demonstrates direct chart labels, line styles and a gray band. All geometry and values are illustrative; none represents measured system performance.</p>
+<figure id="figure-drafting"><button class="figure-art" type="button" aria-label="Open Figure 2 in lightbox" aria-haspopup="dialog"><svg viewBox="0 0 700 225" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Notional cross section with hatched substrate, dimension and detail callout" font-family="IBM Plex Sans" font-size="13"><defs><pattern id="hatch" width="6" height="6" patternUnits="userSpaceOnUse"><path d="M0 6L6 0" stroke="#999" stroke-width=".5"></path></pattern></defs><g fill="#242923"><text x="12" y="22" font-weight="600">(a) CROSS SECTION</text><text x="470" y="22" font-weight="600">(b) DETAIL A</text></g><rect x="25" y="100" width="360" height="50" fill="url(#hatch)" stroke="#444" stroke-width=".8"></rect><rect x="25" y="80" width="360" height="20" fill="#ddd" stroke="#444" stroke-width=".8"></rect><path d="M25 155V195M385 155V195M25 185H385M25 185l8 -4v8zM385 185l-8 -4v8z" stroke="#444" fill="#444" stroke-width=".5"></path><text x="205" y="177" text-anchor="middle">360 mm (notional)</text><circle cx="350" cy="90" r="17" fill="none" stroke="#444" stroke-width=".8"></circle><path d="M365 80L430 55H475" stroke="#555" fill="none" stroke-width=".5"></path><text x="395" y="74">A</text><rect x="485" y="80" width="195" height="65" fill="url(#hatch)" stroke="#444" stroke-width=".8"></rect><rect x="485" y="65" width="195" height="15" fill="#ddd" stroke="#444" stroke-width="1.5"></rect><path d="M582 65V42H665" fill="none" stroke="#555" stroke-width=".5"></path><text x="670" y="46" text-anchor="end">Outer layer</text><text x="485" y="177">Detail enlarged; not to scale.</text><text x="12" y="218" font-style="italic" fill="#596151">Notional geometry. Dimensions are illustrative.</text></svg></button><figcaption><b>Figure 2.</b> Hatching distinguishes a substrate in grayscale. Thin dimension and leader lines remain subordinate to the emphasized outer layer; the enlarged detail explains the interface.</figcaption></figure>
+<figure id="figure-series"><button class="figure-art" type="button" aria-label="Open synthetic series chart" aria-haspopup="dialog"><svg viewBox="0 0 700 260" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Synthetic response falls from 0.8 to 0.3 over four test intervals" font-family="IBM Plex Sans" font-size="13"><text x="55" y="20" fill="#596151" font-style="italic">Synthetic values. Layout test only.</text><path d="M55 40V215H520" fill="none" stroke="#444" stroke-width=".8"></path><g fill="#596151"><text x="40" y="59" text-anchor="end">1.0</text><text x="40" y="137" text-anchor="end">0.5</text><text x="40" y="219" text-anchor="end">0.0</text><text x="55" y="237">0</text><text x="165" y="237">1</text><text x="275" y="237">2</text><text x="385" y="237">3</text><text x="495" y="237">4</text><text x="280" y="258" text-anchor="middle">Test interval</text></g><path d="M55 87L165 111L275 143L385 158L495 167L495 181L385 172L275 157L165 125L55 101Z" fill="#e5e5e5"></path><path d="M55 94L165 118L275 150L385 165L495 174" fill="none" stroke="#242923" stroke-width="1.6"></path><path d="M55 120H495" fill="none" stroke="#777" stroke-dasharray="2 4" stroke-width=".8"></path><text x="535" y="124">Reference</text><text x="535" y="179" font-weight="600">Response</text><g fill="white" stroke="#242923" stroke-width="1"><circle cx="55" cy="94" r="3"></circle><circle cx="165" cy="118" r="3"></circle><circle cx="275" cy="150" r="3"></circle><circle cx="385" cy="165" r="3"></circle><circle cx="495" cy="174" r="3"></circle></g></svg></button><figcaption><b>Figure 3.</b> Direct labels identify the synthetic series and reference. Open circles, a gray band and a dotted line remain distinguishable without color. The band is a graphic example, not an estimated confidence interval.</figcaption></figure>
 
-<figure>
-<svg viewBox="0 0 700 200" xmlns="http://www.w3.org/2000/svg" font-family="'IBM Plex Sans', sans-serif" font-size="8.4">
-  <g transform="translate(70,16)">
-    <!-- uncertainty band -->
-    <path d="M0 150 C80 120 160 70 240 50 C320 32 400 26 480 24 L480 44 C400 48 320 58 240 78 C160 102 80 140 0 162 Z" fill="#e3e3e3"/>
-    <!-- axes -->
-    <line x1="0" y1="0" x2="0" y2="160" stroke="#111" stroke-width="0.7"/>
-    <line x1="0" y1="160" x2="480" y2="160" stroke="#111" stroke-width="0.7"/>
-    <g stroke="#111" stroke-width="0.6">
-      <line x1="0" y1="160" x2="0" y2="164"/><line x1="96" y1="160" x2="96" y2="164"/><line x1="192" y1="160" x2="192" y2="164"/><line x1="288" y1="160" x2="288" y2="164"/><line x1="384" y1="160" x2="384" y2="164"/><line x1="480" y1="160" x2="480" y2="164"/>
-      <line x1="-4" y1="160" x2="0" y2="160"/><line x1="-4" y1="120" x2="0" y2="120"/><line x1="-4" y1="80" x2="0" y2="80"/><line x1="-4" y1="40" x2="0" y2="40"/><line x1="-4" y1="0" x2="0" y2="0"/>
-    </g>
-    <g fill="#333" font-size="8" text-anchor="middle"><text x="0" y="175">0</text><text x="96" y="175">2</text><text x="192" y="175">4</text><text x="288" y="175">6</text><text x="384" y="175">8</text><text x="480" y="175">10</text></g>
-    <g fill="#333" font-size="8" text-anchor="end"><text x="-7" y="163">0</text><text x="-7" y="123">25</text><text x="-7" y="83">50</text><text x="-7" y="43">75</text><text x="-7" y="3">100</text></g>
-    <text x="240" y="192" text-anchor="middle" fill="#333">Horizontal axis (units)</text>
-    <text transform="translate(-30,80) rotate(-90)" text-anchor="middle" fill="#333">Vertical axis (units)</text>
-    <!-- reference line -->
-    <line x1="0" y1="64" x2="480" y2="64" stroke="#888" stroke-width="0.6" stroke-dasharray="1.5 2.5"/>
-    <text x="486" y="67" fill="#555" font-style="italic">reference</text>
-    <!-- model curve -->
-    <path d="M0 156 C80 130 160 86 240 64 C320 45 400 37 480 34" fill="none" stroke="var(--accent)" stroke-width="1.5"/>
-    <text x="486" y="37" fill="var(--accent)" font-weight="600">model</text>
-    <!-- observations -->
-    <g fill="#fff" stroke="#111" stroke-width="0.9">
-      <circle cx="48" cy="146" r="2.6"/><circle cx="110" cy="122" r="2.6"/><circle cx="170" cy="96" r="2.6"/><circle cx="230" cy="72" r="2.6"/><circle cx="300" cy="50" r="2.6"/><circle cx="360" cy="46" r="2.6"/><circle cx="430" cy="34" r="2.6"/>
-    </g>
-    <path d="M300 50 L330 92 H340" stroke="#111" stroke-width="0.4" fill="none"/>
-    <text x="343" y="95" fill="#111">observations</text>
-    <path d="M140 118 L120 138 H112" stroke="#111" stroke-width="0.4" fill="none"/>
-    <text x="109" y="141" text-anchor="end" fill="#111">uncertainty</text>
-  </g>
-</svg>
-<div class="note">Notional. To be measured in the first trial.</div>
-<figcaption><b>Figure 3.</b> A chart with direct labels instead of a legend: a curve in the accent color because it is the subject, an uncertainty band in gray, open-circle points, and a dotted reference line. The note says the data are illustrative and what would make them real.</figcaption>
-</figure>
+<h2 id="tables-and-lists">Tables, lists and supporting notes</h2>
+<p>Table 2 uses grouped headings, aligned decimals and a narrow status column. Status marks need a text key. Large tables may continue across pages with repeated headers.</p>
 
-<div class="keep">
-<h2><span class="n">4</span>Tables</h2>
-<p>Table 1 shows a numeric table and the second table shows Harvey balls with a legend.</p>
-<table class="keep">
-  <thead><tr><th>Item</th><th>Description</th><th class="num">Value</th><th class="num">Change</th></tr></thead>
-  <tbody>
-    <tr><td>Item one</td><td>Lorem ipsum dolor sit amet</td><td class="num">1,240</td><td class="num">+3.1%</td></tr>
-    <tr><td>Item two</td><td>Consectetur adipiscing elit</td><td class="num">860</td><td class="num">−0.4%</td></tr>
-    <tr><td>Item three</td><td>Sed do eiusmod tempor</td><td class="num">17,905</td><td class="num">+12.0%</td></tr>
-  </tbody>
-  <caption><b>Table 1.</b> Booktabs-style rules with right-aligned tabular figures.</caption>
+<div class="table-block"><div class="table-wrap" tabindex="0" role="region" aria-label="Illustrative comparison"><table><caption><b>Table 2.</b> Synthetic component comparison. Values demonstrate layout only.</caption><thead><tr><th rowspan="2" scope="col">Configuration</th><th colspan="2" scope="colgroup">Elapsed time (s)</th><th rowspan="2" scope="col">Readiness</th></tr>
+<tr><th class="num" scope="col">Median</th><th class="num" scope="col">95th percentile</th></tr>
+</thead>
+<tbody><tr><th scope="row">Reference</th><td class="num">12.40</td><td class="num">17.80</td><td>○ Not tested</td></tr>
+<tr><th scope="row">Candidate A</th><td class="num">10.20</td><td class="num">15.30</td><td>◐ Partial</td></tr>
+<tr><th scope="row">Candidate B</th><td class="num">11.60</td><td class="num">16.10</td><td>● Complete</td></tr>
+</tbody>
 </table>
-</div>
+</div></div>
+<p class="table-note">Note: readiness is an illustrative qualitative scale, not a confidence estimate.</p>
 
-<table style="margin-top:10pt">
-  <thead><tr><th></th><th>Item</th><th>Notes</th></tr></thead>
-  <tbody>
-    <tr><td class="icon"><svg width="12" height="12"><circle cx="6" cy="6" r="5" fill="#111" stroke="#111"/></svg></td><td>Item one</td><td>Ut enim ad minim veniam, quis nostrud exercitation.</td></tr>
-    <tr><td class="icon"><svg width="12" height="12"><circle cx="6" cy="6" r="5" fill="#fff" stroke="#111"/><path d="M6 1 A5 5 0 1 1 1 6 L6 6 Z" fill="#111"/></svg></td><td>Item two</td><td>Duis aute irure dolor in reprehenderit.</td></tr>
-    <tr><td class="icon"><svg width="12" height="12"><circle cx="6" cy="6" r="5" fill="#fff" stroke="#111"/><path d="M6 1 A5 5 0 0 1 6 11 Z" fill="#111"/></svg></td><td>Item three</td><td>Excepteur sint occaecat cupidatat non proident.</td></tr>
-    <tr><td class="icon"><svg width="12" height="12"><circle cx="6" cy="6" r="5" fill="#fff" stroke="#111"/><path d="M6 1 A5 5 0 0 1 11 6 L6 6 Z" fill="#111"/></svg></td><td>Item four</td><td>Sed ut perspiciatis unde omnis iste natus.</td></tr>
-    <tr><td class="icon"><svg width="12" height="12"><circle cx="6" cy="6" r="5" fill="#fff" stroke="#111"/></svg></td><td>Item five</td><td>Nemo enim ipsam voluptatem quia voluptas.</td></tr>
-  </tbody>
-</table>
-<div class="legend">
-  <span><svg width="10" height="10"><circle cx="5" cy="5" r="4.2" fill="#111"/></svg> full</span>
-  <span><svg width="10" height="10"><circle cx="5" cy="5" r="4.2" fill="#fff" stroke="#111"/><path d="M5 0.8 A4.2 4.2 0 1 1 0.8 5 L5 5 Z" fill="#111"/></svg> three quarters</span>
-  <span><svg width="10" height="10"><circle cx="5" cy="5" r="4.2" fill="#fff" stroke="#111"/><path d="M5 0.8 A4.2 4.2 0 0 1 5 9.2 Z" fill="#111"/></svg> half</span>
-  <span><svg width="10" height="10"><circle cx="5" cy="5" r="4.2" fill="#fff" stroke="#111"/><path d="M5 0.8 A4.2 4.2 0 0 1 9.2 5 L5 5 Z" fill="#111"/></svg> quarter</span>
-  <span><svg width="10" height="10"><circle cx="5" cy="5" r="4.2" fill="#fff" stroke="#111"/></svg> empty</span>
+<ul><li>Use bullets for parallel requirements or alternatives.</li><li>Keep units with values and explain every symbol.</li></ul><ol><li>Prepare inputs.</li><li>Run the documented procedure.</li><li>Inspect the output and record limitations.</li></ol>
+<div class="example"><div class="lbl">Worked example</div><p>A record arrives after a fixed cutoff. Preserve its timestamp, report the lateness, and distinguish the late record from a missing record.</p>
 </div>
-
-<div class="notes">
-  <ol>
-    <li>Author Name, “Exact Title of the Source,” <i>Publication</i>, Day Month Year.</li>
-    <li>Organization, <i>Document Title</i>, identifier, Month Year.</li>
-  </ol>
-</div>
-
+<pre><code>record = {"time": "2026-11-09T12:00:00Z", "value": 12.4}
+assert record["value"] is not None</code></pre>
+<h2 id="raster-images">Raster images and scientific fields</h2>
+<p>Figure 4 uses a PNG to demonstrate a raster field. Preserve meaningful color and scales in real scientific maps; supply alt text and enough resolution for the final print size. This example is a synthetic grayscale field with arbitrary coordinates, not a measured weather product.</p>
+<figure id="figure-raster"><button class="figure-art" type="button" aria-label="Open Figure 4 in lightbox" aria-haspopup="dialog"><img src="assets/synthetic-field.png" alt="Synthetic grayscale field varying smoothly across arbitrary horizontal and vertical coordinates"></button><figcaption><b>Figure 4.</b> A raster image retains its original aspect ratio. The 1,400-pixel image provides about 200 pixels per printed inch at this width. These coordinates and tones have no geographic or physical interpretation.</figcaption></figure>
+<h2 id="sources-and-appendices">Sources and appendices</h2>
+<p>Reference markers link to the source list and back to the point of use.<sup class="fn" id="cite-1"><a href="#ref-1">1</a></sup> The long-report fixture exercises pagination with synthetic records.<sup class="fn" id="cite-2"><a href="#ref-2">2</a></sup></p>
+<section class="appendix"><h3 id="appendix-a">Appendix A. Supporting detail</h3>
+<p>Appendices follow normal page flow. Add a deliberate page break only when a particular document calls for a separate major part.</p>
+</section>
+<section class="notes"><h2 id="references">References</h2>
+<ol><li id="ref-1">WindBorne, <i>Whitepaper template specimen</i>, local component reference, Nov. 2026. Companion source: <code>specimen.html</code>. <a class="ref-back" href="#cite-1" aria-label="Back to citation 1">↩</a></li><li id="ref-2">WindBorne, <i>Long-report layout fixture</i>, synthetic test data and procedure descriptions, Nov. 2026. This is a testing artifact, not a research publication. Companion source: <code>stress-report.html</code>. <a class="ref-back" href="#cite-2" aria-label="Back to citation 2">↩</a></li></ol></section>
+</article>
+<footer class="doc-end">WindBorne Systems.</footer>
+</main>
+</div><dialog aria-label="Enlarged figure"><button class="dialog-close" type="button">Close</button><div class="enlarged-art"></div><div class="enlarged-caption"></div></dialog><!-- EDIT: authors, organization and saved defaults -->
+<script type="application/json" id="document-config">{"authors": [{"name": "WindBorne", "title": "", "organization": ""}], "organization": "WindBorne Systems", "defaults": {"abstract": "plain", "contents": "two", "details": "title", "category": "", "distribution": "Confidential"}}</script>
+<script src="controls.js"></script>
 </body>
 </html>

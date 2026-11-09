@@ -1,0 +1,13 @@
+{
+  "name": "windborne-whitepaper-template",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "start": "node server.cjs",
+    "build": "node render.cjs",
+    "check": "node check.cjs"
+  },
+  "dependencies": {
+    "playwright": "1.62.1"
+  }
+}
