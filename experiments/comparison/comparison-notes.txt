@@ -1,0 +1,15 @@
+WINDBORNE WHITEPAPER COMPARISON
+
+{
+  "source": "whitepaper-template@4cd5248 examples/whitepaper.html",
+  "blog": "windborne-web@70a09bc ResearchArticle.astro + article-print.css",
+  "adjustments": [
+    "All three use US Letter.",
+    "01 uses the current print stylesheet unchanged, with embedded fonts.",
+    "02 translates blog print typography, caption rail, metadata and overview to the sample; wide tables span the caption rail.",
+    "03 uses Newsreader 10.75pt/1.52 with IBM Plex section headings and below-figure captions.",
+    "Text and figure geometry are retained. Typography measurements discussed in the sample describe its original template, not each treatment.",
+    "The specimen text is existing sample content, not independently verified research."
+  ],
+  "body_sha256": "6bbf99be5f863a103a85c0b754d406b9096b59c711319bfa06db5076f143051d"
+}

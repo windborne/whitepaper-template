@@ -1,5 +1,7 @@
 # Whitepaper template
 
+An in-progress [editorial web and print treatment](experiments/hybrid-v2/README.md) is available alongside this original template. It includes the new specimen, a real CONOP example, optional metadata and contents, and [the earlier design comparison](experiments/comparison/index.html). The original files below remain the baseline.
+
 A grayscale print stylesheet for writing documents in HTML and printing them to PDF, with a specimen page that shows each style once. Use it for papers, reports, memos, notes, or anything else that ends up as a PDF.
 
 ![Specimen, page 1](preview/specimen-1.png)
