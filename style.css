@@ -182,3 +182,11 @@ figure{display:grid;grid-template-columns:minmax(0,1fr) var(--rail);gap:var(--ga
 .settings-save{column-gap:6px}
 .settings-save .help-tooltip{top:auto;bottom:calc(100% + 7px)}
 .settings-save .save-status{margin-left:6px}
+
+/* Opt-in photo treatments: scientific charts and tables keep their own sizing. */
+@media print {
+ figure.figure-photo .figure-art{width:100%}
+ figure.figure-photo img{width:auto;max-width:100%;height:auto;max-height:var(--photo-max-height,4in);margin:0;object-fit:contain}
+ figure.figure-portrait{--photo-max-height:3in;display:grid;grid-template-columns:minmax(0,35fr) minmax(0,65fr);gap:18pt;align-items:start}
+ figure.figure-portrait figcaption{margin:0;max-width:none}
+}

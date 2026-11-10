@@ -33,6 +33,7 @@ const {chromium}=require('playwright');const {execFileSync,spawn}=require('node:
    if(await page.locator('.notes h2').count())assert.deepEqual(await page.evaluate(()=>['fontFamily','fontSize','fontWeight','letterSpacing','color'].map(k=>getComputedStyle(document.querySelector('.notes h2'))[k])),await page.evaluate(()=>['fontFamily','fontSize','fontWeight','letterSpacing','color'].map(k=>getComputedStyle(document.querySelector('.print-contents h2'))[k])));
    assert.deepEqual(errors,[]);await page.close();console.log('Layout and behavior passed: '+name);
   }
+  await require('./check-print-figures.cjs')(browser);
   await require('./check-lightbox.cjs')(browser,origin);
   await require('./check-help.cjs')(browser,origin);
   await require('./check-settings.cjs')(browser,origin);

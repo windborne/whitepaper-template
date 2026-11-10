@@ -88,3 +88,13 @@ An element taller than the available page cannot be kept intact; the renderer de
 The local editor starts at `article.html?mode=edit`, with the starter copy preloaded in Article and the component specimen under Template. The CONOP remains a separate worked example. When editing a differently named draft, Template links back to that same Article. Settings save into the editable source, while PDF viewing always reflects the current controls. View reader layout opens a new tab with a snapshot of those choices, preserving the editing tab. Manuscript text and metadata are edited in HTML, not in the settings panel. Static published readers hide editing controls and link their matching PDF.
 
 Settings help is limited to PDF table of contents, Distribution and Save settings. Info buttons expose short explanations on hover, keyboard focus or tap; Escape dismisses help before closing the panel.
+
+## Print photographs
+
+Photo sizing is opt-in; do not classify every tall image as a photograph. Add `figure-photo` to a photographic figure to give the image a preferred maximum print height of 4in, preserving its aspect ratio and using less width when necessary. This is a ceiling, not a target. Never stretch or crop automatically.
+
+For a square or portrait photo (height ≥ width), the recommended maximum is **3in**, with the caption to the right. Use `class="figure-photo figure-portrait"`. The print layout reserves 35% of the available width for the image at left, with an 18pt gutter and a top-aligned caption at right. An unusually narrow image may occupy less than that column. This treatment defaults to the 3in ceiling. A square photo may be smaller to fit the 35% column. Override `--photo-max-height` only for a deliberate, reviewed exception. The existing web caption layout remains in use.
+
+These photo rules do not apply to charts, heatmaps, diagrams or tables. Keep chart labels readable: use a larger figure or split a genuinely oversized chart into meaningful panels with repeated labels. Tables continue across pages with repeating headers. The export preflight measures at the printable page width; it checks indivisible units, not the height of an entire table.
+
+During PDF export, non-landscape images without this treatment produce a non-blocking layout recommendation in the terminal/server log. Review the image’s purpose before applying it. Mark scientific figures with `data-figure-kind="chart"`, `"heatmap"`, `"diagram"` or `"map"` on the `figure` to explicitly exempt them. The flag never resizes artwork automatically and never changes the PDF content.

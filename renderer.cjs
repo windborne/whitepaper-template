@@ -10,6 +10,17 @@ function validateSettings(input={}){
  if(input.category!==undefined&&(typeof input.category!=='string'||input.category.length>80||/[\x00-\x1f\x7f]/.test(input.category)||input.category==='__custom__'))throw Error('Invalid category');
  return {...input};
 }
+async function imageRecommendations(page){
+ return page.evaluate(()=>[...document.querySelectorAll('.prose figure')].flatMap((figure,index)=>{
+  const image=figure.querySelector('img');
+  if(!image||!image.naturalWidth||image.naturalHeight<image.naturalWidth)return [];
+  if(['chart','heatmap','diagram','map'].includes(figure.dataset.figureKind))return [];
+  const box=image.getBoundingClientRect(),caption=figure.querySelector('figcaption')?.getBoundingClientRect();
+  const treated=figure.classList.contains('figure-photo')&&figure.classList.contains('figure-portrait')&&box.height<=3*96+1&&caption&&caption.left>=box.right;
+  if(treated)return [];
+  return [(figure.id||'Figure '+(index+1))+': square/portrait image — recommend a maximum print height of 3in with caption on the right (figure-photo figure-portrait). If this is a chart, heatmap, diagram or map, mark data-figure-kind and preserve its required readable size.'];
+ }));
+}
 async function render(input,output,settings={}){
  settings=validateSettings(settings);
  const browser=await chromium.launch({headless:true,...(process.env.CHROME?{executablePath:process.env.CHROME}:{})});
@@ -20,7 +31,11 @@ async function render(input,output,settings={}){
   const url=pathToFileURL(path.resolve(input));for(const [k,v] of Object.entries(settings))url.searchParams.set(k,v);
   await page.goto(url.href);await page.evaluate(()=>document.fonts.ready);
   await page.evaluate(()=>{document.body.dataset.pdfBuild='true'});await page.emulateMedia({media:'print'});
+  // Match the US Letter content width in style.css before checking page-fit.
+  // Measuring responsive figures at the desktop viewport falsely rejects valid artwork.
+  await page.setViewportSize({width:Math.floor((8.5-0.8-0.8)*96),height:Math.floor(9.62*96)});
   if(errors.length)throw Error(errors.join('\n'));
+  for(const note of await imageRecommendations(page))console.warn('Layout recommendation: '+note);
   const effective=await page.evaluate(()=>exportSettings());
   const oversized=await page.evaluate(()=>{const max=9.62*96;return [...document.querySelectorAll('figure,tr,.eq')].filter(e=>e.getBoundingClientRect().height>max).map(e=>e.id||e.tagName)});
   if(oversized.length)throw Error('Oversized print unit; split or redesign it before exporting: '+oversized.join(', '));
@@ -37,4 +52,4 @@ async function render(input,output,settings={}){
   return effective;
  }finally{await browser.close()}
 }
-module.exports={render,validateSettings,defaults};
+module.exports={render,validateSettings,defaults,imageRecommendations};
