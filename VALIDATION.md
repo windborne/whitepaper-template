@@ -39,3 +39,5 @@ Every page was rendered for visual review. The CONOP still has space before its 
 Settings persistence is tested on a disposable draft: saving and reopening, preserving all article content and author records, discarding unsaved changes, escaping custom labels, detecting stale-tab conflicts, rejecting invalid or cross-origin writes, and refusing to save published reader files. The first-run route and the three Lucide icons are also checked.
 
 Reader preview is checked as a separate tab: it carries unsaved choices, hides editor controls, and leaves the original editor URL and unsaved state intact. Settings help is checked on hover, keyboard focus, Escape and touch.
+
+Lightbox resizing checks cover raster and SVG artwork while an open dialog shrinks and expands from 320px to 1500px. They verify aspect ratios and that the image, caption and close control stay within the dialog without horizontal overflow.
