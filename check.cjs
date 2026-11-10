@@ -6,12 +6,12 @@ const {chromium}=require('playwright');const {execFileSync,spawn}=require('node:
  await Promise.race([once(server.stdout,'data'),once(server,'exit').then(()=>{throw Error('Test server failed to start')})]);
  const browser=await chromium.launch({headless:true,...(process.env.CHROME?{executablePath:process.env.CHROME}:{})});
  try{
-  for(const name of ['starter','specimen','conop','stress-report']){
+  for(const name of ['starter','article','specimen','conop','stress-report']){
    const page=await browser.newPage(),errors=[];page.on('pageerror',e=>errors.push(e.message));await page.goto(origin+'/'+name+'.html');await page.evaluate(()=>document.fonts.ready);
    for(const width of [1500,1264,1101,1100,768,390]){await page.setViewportSize({width,height:900});assert.equal(await page.evaluate(()=>document.documentElement.scrollWidth>innerWidth),false,`${name}: overflow at ${width}`)}
    await page.setViewportSize({width:1500,height:1000});
    assert.equal(await page.locator('.print-contents').isVisible(),false);
-   assert.equal(await page.locator('#abstract-style').isChecked(),false);assert.equal(await page.locator('#print-contents-option').inputValue(),'two');
+   const initial=await page.evaluate(()=>({abstract:config.defaults?.abstract||'plain',contents:config.defaults?.contents||'two'}));assert.equal(await page.locator('#abstract-style').isChecked(),initial.abstract==='shaded');assert.equal(await page.locator('#print-contents-option').inputValue(),initial.contents);
    assert.equal(await page.locator('.toc a').count(),await page.locator('.prose h2').count());
    await page.evaluate(()=>setPrintContents('one'));assert.equal(await page.locator('.print-contents li').count(),await page.locator('.prose h2,.prose h3').count());
    await page.evaluate(()=>setPrintContents('two'));assert.equal(await page.locator('.print-contents li').count(),await page.locator('.prose h2').count());assert.equal(await page.locator('.print-contents .subsection').count(),0);
@@ -31,6 +31,8 @@ const {chromium}=require('playwright');const {execFileSync,spawn}=require('node:
    if(await page.locator('.notes h2').count())assert.deepEqual(await page.evaluate(()=>['fontFamily','fontSize','fontWeight','letterSpacing','color'].map(k=>getComputedStyle(document.querySelector('.notes h2'))[k])),await page.evaluate(()=>['fontFamily','fontSize','fontWeight','letterSpacing','color'].map(k=>getComputedStyle(document.querySelector('.print-contents h2'))[k])));
    assert.deepEqual(errors,[]);await page.close();console.log('Layout and behavior passed: '+name);
   }
+  await require('./check-settings.cjs')(browser,origin);
+  const entry=await browser.newPage();await entry.goto(origin+'/');assert.equal(await entry.locator('body').getAttribute('data-document'),'article');assert.match(await entry.locator('.document-tabs a').nth(1).getAttribute('href'),/^article.html/);assert.equal(await entry.getByRole('link',{name:'View PDF',exact:true}).count(),1);assert.equal(await entry.locator('[data-lucide="file-text"]').count(),1);assert.equal(await entry.locator('[data-lucide="pencil-line"]').count(),1);assert.equal(await entry.locator('[data-lucide="save"]').count(),1);await entry.close();
   const page=await browser.newPage();await page.goto(origin+'/conop.html?abstract=shaded&contents=one&category=Custom%20Field%20Brief&distribution=Internal&details=full');
   const popup=page.waitForEvent('popup');await page.locator('[data-pdf-link]').click();const viewer=await popup;await viewer.waitForURL('**/generated/**',{timeout:120000});
   const pdf=await page.request.get(viewer.url());assert.equal(pdf.headers()['content-type'],'application/pdf');const bytes=await pdf.body();assert.equal(bytes.subarray(0,5).toString(),'%PDF-');

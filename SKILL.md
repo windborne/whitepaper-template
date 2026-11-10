@@ -10,10 +10,10 @@ Use the approved template in this repository for an editorial, readable technica
 ## Start here
 
 1. Read [DESIGN.md](DESIGN.md) for typography, components, optional treatments and web/print differences.
-2. Copy `starter.html` to a new `.html` file in this directory. Keep `style.css`, `fonts.css` and `controls.js` beside it. Use `specimen.html` for component markup; `conop.html` shows a real source document and `stress-report.html` is explicitly synthetic layout-test content.
+2. For a first draft, use `article.html`, which is preloaded with the starter copy. For an additional document, copy `starter.html` to a new `.html` file in this directory. Keep `style.css`, `fonts.css` and `controls.js` beside it. Use `specimen.html` for component markup; `conop.html` shows a real source document and `stress-report.html` is explicitly synthetic layout-test content.
 3. Replace the title, subtitle, date, abstract and article. Update `document-config` with actual authors, organization and chosen defaults; update the body `data-document` to the filename without `.html`. Do not copy the specimen's sample authors, synthetic values or example references into an actual paper.
 4. Use semantic `h2` sections and `h3` subsections with stable unique IDs. Navigation and both print contents layouts are generated from those headings. Section headings remain unnumbered in the body.
-5. Run the document server or renderer using [README.md](README.md). Export the actual selected settings. Inspect every rendered PDF page and the web layout at desktop and mobile widths. Follow [VALIDATION.md](VALIDATION.md); automated checks do not replace visual review.
+5. Run the document server using [README.md](README.md) and open `http://127.0.0.1:8743/article.html?mode=edit` (or the new draft’s filename) for the user. The Article tab is the working draft; Template is the component reference, and the CONOP remains a separate example. Save settings writes selected options into the draft’s HTML; View PDF renders the current choices, including unsaved ones. The command-line renderer also remains available. Export the actual selected settings. Inspect every rendered PDF page and the web layout at desktop and mobile widths. Follow [VALIDATION.md](VALIDATION.md); automated checks do not replace visual review.
 6. Deliver the PDF and editable HTML with its shared assets. For a static website, use the publishing command in the README so the linked PDF matches the document settings.
 
 ## Recommended defaults

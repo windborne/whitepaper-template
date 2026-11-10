@@ -1,9 +1,15 @@
 const config=JSON.parse(document.getElementById('document-config').textContent);
+let saveButton,saveStatus,savedDefaults,saving=false,saveFeedback='';
 const params=new URLSearchParams(config.published?'':location.search);const kind=document.body.dataset.document;
 const localDocument=location.protocol==='file:'||['127.0.0.1','localhost','::1'].includes(location.hostname);
 const editing=!config.published&&(params.get('mode')==='edit'||(params.get('mode')!=='public'&&localDocument));
 document.body.classList.toggle('editing-mode',editing);
-document.querySelectorAll('.document-tabs a').forEach(a=>{if(new URL(a.href).pathname===location.pathname)a.setAttribute('aria-current','page');else a.removeAttribute('aria-current')});
+const documentName=location.pathname.split('/').pop()||kind+'.html';
+const requestedArticle=params.get('article');
+const articleName=documentName==='specimen.html'?(requestedArticle&&/^[a-zA-Z0-9][a-zA-Z0-9_-]*\.html$/.test(requestedArticle)&&requestedArticle!=='specimen.html'?requestedArticle:'article.html'):documentName;
+const tabs=[...document.querySelectorAll('.document-tabs a')];
+tabs[0].href='specimen.html?'+new URLSearchParams({mode:'edit',article:articleName});tabs[1].href=articleName+'?mode=edit';
+document.querySelectorAll('.document-tabs a').forEach(a=>{if(new URL(a.href).pathname.split('/').pop()===documentName)a.setAttribute('aria-current','page');else a.removeAttribute('aria-current')});
 const abstract=document.getElementById('abstract-style'),printContents=document.getElementById('print-contents-option'),category=document.getElementById('category'),authors=document.getElementById('authors-demo'),authorDetails=document.getElementById('author-details');
 const meta=document.querySelector('.metadata'),cat=document.querySelector('.category-field');
 const distribution=document.getElementById('distribution'),distributionField=document.querySelector('.distribution-field'),customEditor=document.querySelector('.custom-label-editor'),customInput=document.getElementById('custom-category');
@@ -12,7 +18,7 @@ const footerStyle=document.createElement('style');document.head.append(footerSty
 const baseAuthors=config.authors;
 const exampleAuthors=[{name:'Author One',title:'Research scientist',organization:'WindBorne'},{name:'Author Two',title:'Machine learning engineer',organization:'WindBorne'},{name:'Author Three',title:'Research engineer',organization:'WindBorne'}];
 let currentAuthors=baseAuthors;
-function updateReaderLink(){const q=new URLSearchParams({mode:'public',abstract:abstract.checked?'shaded':'plain',contents:printContents.value,category:selectedCategory,details:authorDetails.value});if(authors)q.set('authors',authors.value);q.set('distribution',distribution.value);document.querySelector('.reader-link').href=location.pathname+'?'+q.toString()}
+function updateReaderLink(){const q=new URLSearchParams({mode:'public',abstract:abstract.checked?'shaded':'plain',contents:printContents.value,category:selectedCategory,details:authorDetails.value});if(authors)q.set('authors',authors.value);q.set('distribution',distribution.value);document.querySelector('.reader-link').href=location.pathname+'?'+q.toString();refreshSaveState(true)}
 function updatePDFLink(){document.querySelector('[data-pdf-link]').href=config.pdf||kind+'.pdf';updateReaderLink()}
 function populateNavigation(){
  const source=[...document.querySelectorAll('.prose h2,.prose h3')];
@@ -77,6 +83,30 @@ addEventListener('beforeprint',()=>{if(!document.body.dataset.pdfBuild)document.
 async function printCurrent(){await document.fonts.ready;window.print()}
 document.querySelector('.print-trigger').onclick=printCurrent;
 function exportSettings(){return {abstract:abstract.checked?'shaded':'plain',contents:printContents.value,category:selectedCategory,distribution:distribution.value,details:authorDetails.value,authors:authors?.value||'single'}}
+// Save only document settings; the article's content stays in the HTML source.
+function refreshSaveState(clearFeedback=false){
+ if(!saveButton)return;
+ if(clearFeedback&&!saving)saveFeedback='';
+ const current=exportSettings();const dirty=Object.keys(current).some(key=>current[key]!==savedDefaults[key]);
+ saveButton.disabled=saving||!dirty;saveButton.setAttribute('aria-busy',String(saving));
+ saveButton.querySelector('span').textContent=saving?'Saving…':'Save settings';
+ saveStatus.textContent=saving?'':saveFeedback||(dirty?'Unsaved changes':'');
+}
+savedDefaults={authors:'single',...defaults};
+saveButton=document.querySelector('.save-settings');saveStatus=document.querySelector('.save-status');
+saveButton.addEventListener('click',async()=>{
+ if(saving||saveButton.disabled)return;
+ const snapshot=exportSettings();saving=true;saveFeedback='';refreshSaveState();
+ try{
+  const response=await fetch('/api/settings',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({document:documentName,settings:snapshot,expected:savedDefaults})});
+  if(!response.ok){const message=await response.text();throw Error(response.status===409?message:response.status===400?message:'Could not save. Open this document through the local editor and try again.')}
+  const result=await response.json();savedDefaults=result.settings;config.defaults={...result.settings};
+  const url=new URL(location.href);Object.keys(snapshot).forEach(key=>url.searchParams.delete(key));history.replaceState(null,'',url);
+  saveFeedback=Object.keys(snapshot).some(key=>exportSettings()[key]!==snapshot[key])?'Saved; newer changes unsaved':'Saved';
+ }catch(error){saveFeedback=error instanceof TypeError?'Could not save. Open this document through the local editor and try again.':error.message}
+ finally{saving=false;refreshSaveState()}
+});
+refreshSaveState();
 const status=document.createElement('p');status.className='export-status';status.setAttribute('role','status');status.hidden=true;document.querySelector('.options-panel').append(status);
 let exporting=false;
 document.querySelector('[data-pdf-link]').addEventListener('click',async e=>{
@@ -87,7 +117,7 @@ document.querySelector('[data-pdf-link]').addEventListener('click',async e=>{
  const viewer=window.open('about:blank','_blank');if(viewer)viewer.document.body.textContent='Preparing PDF…';
  exporting=true;link.setAttribute('aria-busy','true');link.querySelector('span').textContent='Preparing PDF…';
  try{
-  const response=await fetch('/api/export',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({document:location.pathname.split('/').pop(),settings:exportSettings()})});
+  const response=await fetch('/api/export',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({document:documentName,settings:exportSettings()})});
   if(!response.ok)throw Error('Export unavailable');const result=await response.json();
   if(viewer)viewer.location.replace(result.url);else location.assign(result.url);
   status.hidden=true;
@@ -96,7 +126,7 @@ document.querySelector('[data-pdf-link]').addEventListener('click',async e=>{
   // A published static document carries an exact baked PDF, never a mismatched preset.
   const exact=config.publishedSettings&&Object.entries(exportSettings()).every(([key,value])=>config.publishedSettings[key]===value);
   if(exact){location.assign(config.pdf||kind+'.pdf');return}
-  status.textContent='PDF generation needs the local document server. Run npm start, open this document there, then choose Download PDF. You can also use Print current version.';status.hidden=false;
+  status.textContent='PDF generation needs the local document server. Run npm start, open this document there, then choose View PDF. You can also use Print current version.';status.hidden=false;
   if(!editing)alert(status.textContent);else document.querySelector('.options').open=true;
  }finally{exporting=false;link.removeAttribute('aria-busy');link.querySelector('span').textContent=original}
 });

@@ -41,7 +41,7 @@ The editable metadata date is abbreviated, e.g. `Sep. 23, 2026` or `Sep. 2026`. 
 
 ## Optional treatments
 
-Settings are ordered alphabetically: Abstract background, Author details, Category (optional), Distribution (optional), PDF table of contents. The specimen also has Example authors for demonstration.
+Settings are ordered alphabetically: Abstract background, Author details, Category (optional), Distribution (optional), PDF table of contents. The specimen also has Example authors for demonstration. Below the options, Save settings (Lucide save) persists changes in this document’s HTML. It is disabled until settings change, reports Saved on success and keeps unsaved choices visible on failure. The top bar uses View PDF (Lucide file-text) and Document settings (Lucide pencil-line).
 
 - Authors: singular label for one author; plural for several. Name-only uses comma-separated names. Any title/organization details put each author on a separate line. Without optional fields the metadata uses a 50/50 split, or about 70/30 for a long byline.
 - Category: None, Research Paper, Technical Report, Concept of Operations, Case Study, White Paper, Analysis, Proposal, or a custom label (80 characters maximum).
@@ -54,7 +54,7 @@ Settings are ordered alphabetically: Abstract background, Author details, Catego
 
 | Component | Web | PDF |
 |---|---|---|
-| Header bar | White, blog logo link, Download PDF | Hidden |
+| Header bar | White, blog logo link, View PDF | Hidden |
 | Editing controls | Local editor or `?mode=edit`; hidden in `?mode=public` | Hidden |
 | Navigation | Sticky numbered sidebar; collapsible on mobile | Optional opening contents |
 | Captions | Right rail on desktop; below on small screens | Below each figure or table |
@@ -82,3 +82,7 @@ Use thin horizontal table rules, no vertical cell borders, aligned numbers with 
 Ordinary figure/caption units, table rows, equations and contents rows stay intact. Headings keep with the next content. Paragraphs and list items have three-line widow/orphan protection. Tables split between rows and repeat their headers. Whole sections, tables, abstracts, contents lists, examples and appendices are not forced onto one page. There are no automatic appendix page breaks or chained keeps around figures/equations.
 
 An element taller than the available page cannot be kept intact; the renderer detects oversized figures, rows and equations and requests a structural fix. Reduce excess drawing canvas, simplify or divide the material. Never clip, hide, or shrink the entire report to fit. Inspect every final page because text length, figures and long references can still produce sparse endings.
+
+## First-run editor
+
+The local editor starts at `article.html?mode=edit`, with the starter copy preloaded in Article and the component specimen under Template. The CONOP remains a separate worked example. When editing a differently named draft, Template links back to that same Article. Settings save into the editable source, while PDF viewing always reflects the current controls. Static published readers hide editing controls and link their matching PDF.

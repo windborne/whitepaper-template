@@ -163,3 +163,11 @@ figure{display:grid;grid-template-columns:minmax(0,1fr) var(--rail);gap:var(--ga
 .table-note{font:12px/1.5 var(--sans);color:var(--muted)}
 .prose code{overflow-wrap:anywhere}
 @media print{.table-wrap tbody th{padding:5.5pt 7pt 5.5pt 0}.table-note{font:8.5pt/1.45 var(--sans)}.table-wrap table{table-layout:auto}}
+
+/* Explicit, document-level settings persistence. */
+.settings-save{display:flex;align-items:center;gap:12px;margin-top:22px;flex-wrap:wrap}
+.preview-bar .save-settings{display:inline-flex;align-items:center;gap:7px;border:1px solid var(--line);padding:8px 10px;font:12px/1.4 var(--sans);color:var(--ink);background:#fff;cursor:pointer}
+.preview-bar .save-settings:disabled{opacity:.5;cursor:default}
+.preview-bar .save-settings:not(:disabled):hover{border-color:var(--muted);background:var(--shade)}
+.save-settings:focus-visible{outline:2px solid var(--accent);outline-offset:3px}
+.save-status{font:11px/1.4 var(--sans);color:var(--muted);flex:1;min-width:80px}
