@@ -131,7 +131,23 @@ document.querySelector('[data-pdf-link]').addEventListener('click',async e=>{
  }finally{exporting=false;link.removeAttribute('aria-busy');link.querySelector('span').textContent=original}
 });
 
-const settings=document.querySelector('.options');document.addEventListener('click',e=>{if(!settings.contains(e.target))settings.open=false});settings.addEventListener('keydown',e=>{if(e.key==='Escape'){settings.open=false;settings.querySelector('summary').focus()}});
+// Help works on hover, keyboard focus and tap; Escape dismisses help first.
+const helpControllers=[];
+function closeOpenHelp(){const open=helpControllers.filter(c=>c.isOpen());open.forEach(c=>c.close());return open.length>0}
+document.querySelectorAll('[data-help]').forEach(group=>{
+ const button=group.querySelector('.help-trigger'),tooltip=group.querySelector('.help-tooltip');let pinned=false,timer;
+ const close=()=>{clearTimeout(timer);pinned=false;tooltip.hidden=true;button.setAttribute('aria-expanded','false')};
+ const show=()=>{clearTimeout(timer);helpControllers.forEach(c=>{if(c.button!==button)c.close()});tooltip.hidden=false;button.setAttribute('aria-expanded','true')};
+ const leave=()=>{clearTimeout(timer);timer=setTimeout(()=>{if(!pinned&&document.activeElement!==button)close()},120)};
+ helpControllers.push({button,close,isOpen:()=>!tooltip.hidden});
+ button.addEventListener('pointerenter',e=>{if(e.pointerType==='mouse')show()});button.addEventListener('pointerleave',leave);
+ tooltip.addEventListener('pointerenter',()=>clearTimeout(timer));tooltip.addEventListener('pointerleave',leave);
+ button.addEventListener('focus',show);button.addEventListener('blur',()=>{if(!pinned)close()});
+ button.addEventListener('click',()=>{if(pinned)close();else{show();pinned=true}});
+ document.addEventListener('click',e=>{if(!group.contains(e.target))close()});
+});
+const settings=document.querySelector('.options');document.addEventListener('click',e=>{if(!settings.contains(e.target))settings.open=false});settings.addEventListener('keydown',e=>{if(e.key==='Escape'){if(closeOpenHelp()){e.preventDefault();e.stopPropagation();return}settings.open=false;settings.querySelector('summary').focus()}});
+settings.addEventListener('toggle',()=>{if(!settings.open)closeOpenHelp()});
 const toc=[...document.querySelectorAll('.toc a')];const headings=toc.map(a=>document.getElementById(a.hash.slice(1))).filter(Boolean);let scheduled=false;
 function update(){const threshold=parseFloat(getComputedStyle(document.documentElement).scrollPaddingTop)+4;let current=headings[0];for(const h of headings){if(h.getBoundingClientRect().top<=threshold)current=h}if(innerHeight+scrollY>=document.documentElement.scrollHeight-3)current=headings.at(-1);toc.forEach(a=>{if(a.hash==='#'+current?.id)a.setAttribute('aria-current','location');else a.removeAttribute('aria-current')});scheduled=false}
 function scheduleUpdate(){if(!scheduled){scheduled=true;requestAnimationFrame(update)}}addEventListener('scroll',scheduleUpdate,{passive:true});addEventListener('resize',scheduleUpdate);addEventListener('hashchange',scheduleUpdate);document.fonts.ready.then(scheduleUpdate);if(headings.length)update();

@@ -171,3 +171,14 @@ figure{display:grid;grid-template-columns:minmax(0,1fr) var(--rail);gap:var(--ga
 .preview-bar .save-settings:not(:disabled):hover{border-color:var(--muted);background:var(--shade)}
 .save-settings:focus-visible{outline:2px solid var(--accent);outline-offset:3px}
 .save-status{font:11px/1.4 var(--sans);color:var(--muted);flex:1;min-width:80px}
+
+/* Focusable and tappable help for the three non-obvious settings. */
+.has-help{position:relative}
+.setting-label-row{display:flex;align-items:center;gap:6px;min-height:20px}
+.options-panel .setting-label-row label{margin:0;font:inherit;letter-spacing:0}
+.preview-bar .help-trigger{display:inline-flex;align-items:center;justify-content:center;width:24px;height:24px;padding:4px;flex:none;color:var(--muted);border:0;background:transparent;cursor:pointer}
+.preview-bar .help-trigger:hover,.preview-bar .help-trigger[aria-expanded="true"]{color:var(--ink)}
+.help-tooltip{position:absolute;z-index:5;top:28px;left:0;right:0;background:var(--ink);color:#fff;padding:10px 12px;font:12px/1.45 var(--sans);letter-spacing:0;box-shadow:0 3px 10px #0002;cursor:default}
+.settings-save{column-gap:6px}
+.settings-save .help-tooltip{top:auto;bottom:calc(100% + 7px)}
+.settings-save .save-status{margin-left:6px}

@@ -86,3 +86,5 @@ An element taller than the available page cannot be kept intact; the renderer de
 ## First-run editor
 
 The local editor starts at `article.html?mode=edit`, with the starter copy preloaded in Article and the component specimen under Template. The CONOP remains a separate worked example. When editing a differently named draft, Template links back to that same Article. Settings save into the editable source, while PDF viewing always reflects the current controls. Static published readers hide editing controls and link their matching PDF.
+
+Settings help is limited to PDF table of contents, Distribution and Save settings. Info buttons expose short explanations on hover, keyboard focus or tap; Escape dismisses help before closing the panel.
