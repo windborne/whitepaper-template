@@ -46,4 +46,6 @@ Print figure preflight is tested at the actual Letter content width. A synthetic
 
 Optional labels are tested for conditional controls, mutually exclusive metadata, safe free text, save/reload, reader preview and generated PDF output. Prepared for is omitted from footers. Legacy category links remain supported; long event names wrap on narrow screens.
 
-The opt-in portrait photo is checked in equal print columns with a centered image and vertically centered caption. Web checks cover its compact centered layout and below-image caption, plus whole-image lightbox fitting at desktop, mobile portrait and mobile landscape sizes. Scientific figures retain their separate sizing.
+The opt-in portrait photo is checked in equal print columns with a centered image and vertically centered caption. Web checks cover its compact centered layout and responsive side caption, plus whole-image lightbox fitting at desktop, mobile portrait and mobile landscape sizes. Scientific figures retain their separate sizing.
+
+For a source-document conversion, inventory every section, table, figure, caption, note and reference before formatting. Compare text and numeric table values independently against the source; check ligatures, subscripts and cross-page paragraph joins. Do not present selected-excerpt tests as complete documents. Update all internal references when renumbering.

@@ -185,9 +185,7 @@ figure{display:grid;grid-template-columns:minmax(0,1fr) var(--rail);gap:var(--ga
 
 /* Opt-in photo treatments: scientific charts and tables keep their own sizing. */
 @media screen {
- figure.figure-photo.figure-portrait{display:block;width:min(100%,360px);margin-left:auto;margin-right:auto}
  figure.figure-photo.figure-portrait img{width:auto;max-width:100%;height:auto;max-height:min(360px,50vh);margin:0 auto;object-fit:contain}
- figure.figure-photo.figure-portrait figcaption{border:0;padding:0;margin:14px 0 0;text-align:left}
  dialog.photo-lightbox .enlarged-art img{width:auto;max-width:100%;height:auto;max-height:max(120px,calc(94vh - 220px));margin:0 auto;object-fit:contain}
 }
 @media print {

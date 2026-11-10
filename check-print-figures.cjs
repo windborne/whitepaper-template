@@ -23,8 +23,8 @@ module.exports=async function checkPrintFigures(browser){
   await page.emulateMedia({media:'screen'});
   for(const [width,height] of [[1500,900],[390,844],[320,568],[844,390]]){
    await page.setViewportSize({width,height});
-   const inline=await page.locator('.figure-photo').evaluate(f=>{const i=f.querySelector('img').getBoundingClientRect(),c=f.querySelector('figcaption').getBoundingClientRect(),r=f.getBoundingClientRect();return {height:i.height,center:Math.abs(i.left+i.width/2-r.left-r.width/2),below:c.top>=i.bottom}});
-   assert.ok(inline.height<=Math.min(360,height/2)+1&&inline.center<1&&inline.below,'Compact photo must be centered and bounded with caption below');
+   const inline=await page.locator('.figure-photo').evaluate(f=>{const i=f.querySelector('img').getBoundingClientRect(),c=f.querySelector('figcaption').getBoundingClientRect(),r=f.querySelector('.figure-art').getBoundingClientRect();return {height:i.height,center:Math.abs(i.left+i.width/2-r.left-r.width/2),captionPlaced:innerWidth>1100?c.left>=r.right:c.top>=i.bottom}});
+   assert.ok(inline.height<=Math.min(360,height/2)+1&&inline.center<1&&inline.captionPlaced,'Compact photo must be centered and bounded with the standard responsive caption');
    await page.locator('.figure-photo .figure-art').click();
    const expanded=await page.locator('dialog').evaluate(d=>{const i=d.querySelector('img').getBoundingClientRect(),c=d.querySelector('.dialog-close').getBoundingClientRect();return {height:i.height,inside:i.top>=0&&i.bottom<=innerHeight&&i.left>=0&&i.right<=innerWidth,close:c.top>=0&&c.bottom<=innerHeight,ratio:i.width/i.height}});
    assert.ok(expanded.inside&&expanded.close&&Math.abs(expanded.ratio-240/640)<.01,'Lightbox photo must fit viewport and preserve aspect ratio');
