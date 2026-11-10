@@ -91,11 +91,11 @@ The local editor starts at `article.html?mode=edit`, with the starter copy prelo
 
 Settings help is limited to PDF table of contents, Distribution and Save settings. Info buttons expose short explanations on hover, keyboard focus or tap; Escape dismisses help before closing the panel.
 
-## Print photographs
+## Photographs
 
 Photo sizing is opt-in; do not classify every tall image as a photograph. Add `figure-photo` to a photographic figure to give the image a preferred maximum print height of 4in, preserving its aspect ratio and using less width when necessary. This is a ceiling, not a target. Never stretch or crop automatically.
 
-For a square or portrait photo (height ≥ width), the recommended maximum is **3in**, with the caption to the right. Use `class="figure-photo figure-portrait"`. The print layout reserves 35% of the available width for the image at left, with an 18pt gutter and a top-aligned caption at right. An unusually narrow image may occupy less than that column. This treatment defaults to the 3in ceiling. A square photo may be smaller to fit the 35% column. Override `--photo-max-height` only for a deliberate, reviewed exception. The existing web caption layout remains in use.
+For a square or portrait photo (height ≥ width), the recommended maximum is **3in**, with the caption to the right. Use `class="figure-photo figure-portrait"`. In print, use two equal columns within the body-text width, with an 18pt gutter. Center the photograph horizontally in the left column. Left-align the caption in the right column and center it vertically beside the photo. For a longer explanatory caption, add `photo-caption-top` to align both columns at the top. An unusually narrow image may occupy less than that column. This treatment defaults to the 3in ceiling. A square photo may be smaller to fit its column. Override `--photo-max-height` only for a deliberate, reviewed exception. On the web, center this photo in a compact block no wider than 360px, with a maximum image height of 360px or half the viewport height, whichever is smaller. Its caption sits below, left-aligned within that block. The lightbox uses the available viewport height rather than the inline photo ceiling; it preserves aspect ratio and keeps the whole photo visible on mobile. Other figures retain their existing side captions and lightbox sizing.
 
 These photo rules do not apply to charts, heatmaps, diagrams or tables. Keep chart labels readable: use a larger figure or split a genuinely oversized chart into meaningful panels with repeated labels. Tables continue across pages with repeating headers. The export preflight measures at the printable page width; it checks indivisible units, not the height of an entire table.
 

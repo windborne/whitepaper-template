@@ -45,3 +45,5 @@ Lightbox resizing checks cover raster and SVG artwork while an open dialog shrin
 Print figure preflight is tested at the actual Letter content width. A synthetic portrait verifies the opt-in 3in square/portrait photo ceiling and side caption; an uncapped tall chart still renders, and a 70-row table spans pages with every row present once and repeated headers.
 
 Optional labels are tested for conditional controls, mutually exclusive metadata, safe free text, save/reload, reader preview and generated PDF output. Prepared for is omitted from footers. Legacy category links remain supported; long event names wrap on narrow screens.
+
+The opt-in portrait photo is checked in equal print columns with a centered image and vertically centered caption. Web checks cover its compact centered layout and below-image caption, plus whole-image lightbox fitting at desktop, mobile portrait and mobile landscape sizes. Scientific figures retain their separate sizing.

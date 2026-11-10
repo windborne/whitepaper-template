@@ -8,8 +8,8 @@ module.exports=async function checkPrintFigures(browser){
  await fs.writeFile(file,source,{flag:'wx'});const page=await browser.newPage();
  try{
   await page.goto(pathToFileURL(file).href);await page.evaluate(()=>document.fonts.ready);await page.emulateMedia({media:'print'});await page.setViewportSize({width:662,height:924});
-  const sizes=await page.evaluate(()=>{const image=document.querySelector('.figure-photo img').getBoundingClientRect(),caption=document.querySelector('.figure-photo figcaption').getBoundingClientRect(),chart=document.querySelector('#chart img').getBoundingClientRect(),table=document.querySelector('table').getBoundingClientRect();return {photo:image.height,captionRight:caption.left>image.right,captionTop:Math.abs(caption.top-image.top),chart:chart.height,table:table.height}});
-  assert.ok(sizes.photo<=288&&sizes.photo>250);assert.ok(sizes.captionRight&&sizes.captionTop<1);assert.ok(sizes.chart>384,'Chart inherited the photo ceiling');assert.ok(sizes.table>924,'Fixture must span pages');
+  const sizes=await page.evaluate(()=>{const image=document.querySelector('.figure-photo img').getBoundingClientRect(),caption=document.querySelector('.figure-photo figcaption').getBoundingClientRect(),chart=document.querySelector('#chart img').getBoundingClientRect(),table=document.querySelector('table').getBoundingClientRect();return {photo:image.height,captionRight:caption.left>image.right,captionCenter:Math.abs((caption.top+caption.height/2)-(image.top+image.height/2)),imageCenter:Math.abs((image.left+image.width/2)-(document.querySelector('.figure-photo .figure-art').getBoundingClientRect().left+document.querySelector('.figure-photo .figure-art').getBoundingClientRect().width/2)),chart:chart.height,table:table.height}});
+  assert.ok(sizes.photo<=288&&sizes.photo>250);assert.ok(sizes.captionRight&&sizes.captionCenter<1&&sizes.imageCenter<1);assert.ok(sizes.chart>384,'Chart inherited the photo ceiling');assert.ok(sizes.table>924,'Fixture must span pages');
   assert.deepEqual(await imageRecommendations(page),[]);
   await page.locator('.figure-photo').evaluate(e=>e.classList.remove('figure-portrait'));
   assert.equal((await imageRecommendations(page)).length,1,'Untreated portrait should receive an advisory');
@@ -18,8 +18,21 @@ module.exports=async function checkPrintFigures(browser){
   assert.equal((await imageRecommendations(page)).length,1,'Square images should receive an advisory');
   await page.locator('.figure-photo').evaluate(e=>e.classList.add('figure-portrait'));
   assert.deepEqual(await imageRecommendations(page),[]);
+  await page.locator('.figure-photo img').evaluate((e,src)=>{e.src=src},svg(240,640));
+  await page.locator('.figure-photo img').evaluate(e=>e.decode());
+  await page.emulateMedia({media:'screen'});
+  for(const [width,height] of [[1500,900],[390,844],[320,568],[844,390]]){
+   await page.setViewportSize({width,height});
+   const inline=await page.locator('.figure-photo').evaluate(f=>{const i=f.querySelector('img').getBoundingClientRect(),c=f.querySelector('figcaption').getBoundingClientRect(),r=f.getBoundingClientRect();return {height:i.height,center:Math.abs(i.left+i.width/2-r.left-r.width/2),below:c.top>=i.bottom}});
+   assert.ok(inline.height<=Math.min(360,height/2)+1&&inline.center<1&&inline.below,'Compact photo must be centered and bounded with caption below');
+   await page.locator('.figure-photo .figure-art').click();
+   const expanded=await page.locator('dialog').evaluate(d=>{const i=d.querySelector('img').getBoundingClientRect(),c=d.querySelector('.dialog-close').getBoundingClientRect();return {height:i.height,inside:i.top>=0&&i.bottom<=innerHeight&&i.left>=0&&i.right<=innerWidth,close:c.top>=0&&c.bottom<=innerHeight,ratio:i.width/i.height}});
+   assert.ok(expanded.inside&&expanded.close&&Math.abs(expanded.ratio-240/640)<.01,'Lightbox photo must fit viewport and preserve aspect ratio');
+   if(height>=800)assert.ok(expanded.height>inline.height,'Lightbox should enlarge the compact photo');
+   await page.getByRole('button',{name:'Close',exact:true}).click();
+  }
   await render(file,pdf,{contents:'none'});
   execFileSync(process.env.PYTHON||'python3',['-c',`from pypdf import PdfReader\nr=PdfReader(${JSON.stringify(pdf)})\nt='\\n'.join(p.extract_text() for p in r.pages)\nassert len(r.pages)>2\nassert all(t.count('ROW-%03d'%n)==1 for n in range(1,71))\nassert t.count('Record')>=2`]);
-  console.log('Print sizing passed: bounded portrait, uncapped tall chart, 70-row table with repeated headers');
+  console.log('Photo layout passed: centered print columns, compact web image, mobile lightbox; chart and 70-row table remain uncapped');
  }finally{await page.close();await fs.rm(file,{force:true});await fs.rm(pdf,{force:true})}
 };
