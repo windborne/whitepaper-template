@@ -6,7 +6,7 @@ const {chromium}=require('playwright');const {execFileSync,spawn}=require('node:
  await Promise.race([once(server.stdout,'data'),once(server,'exit').then(()=>{throw Error('Test server failed to start')})]);
  const browser=await chromium.launch({headless:true,...(process.env.CHROME?{executablePath:process.env.CHROME}:{})});
  try{
-  for(const name of ['starter','article','specimen','conop','stress-report']){
+  for(const name of ['starter','article','specimen','stress-report']){
    const page=await browser.newPage(),errors=[];page.on('pageerror',e=>errors.push(e.message));await page.goto(origin+'/'+name+'.html');await page.evaluate(()=>document.fonts.ready);
    for(const width of [1500,1264,1101,1100,768,390]){await page.setViewportSize({width,height:900});assert.equal(await page.evaluate(()=>document.documentElement.scrollWidth>innerWidth),false,`${name}: overflow at ${width}`)}
    await page.setViewportSize({width:1500,height:1000});
@@ -41,13 +41,13 @@ const {chromium}=require('playwright');const {execFileSync,spawn}=require('node:
   await require('./check-captions.cjs')(browser,origin);
   await require('./check-footer.cjs')(browser,origin);
   const entry=await browser.newPage();await entry.goto(origin+'/');assert.equal(await entry.locator('body').getAttribute('data-document'),'article');assert.match(await entry.locator('.document-tabs a').nth(1).getAttribute('href'),/^article.html/);assert.equal(await entry.getByRole('link',{name:'View PDF',exact:true}).count(),1);assert.equal(await entry.locator('[data-lucide="file-text"]').count(),1);assert.equal(await entry.locator('[data-lucide="pencil-line"]').count(),1);assert.equal(await entry.locator('[data-lucide="save"]').count(),1);await entry.close();
-  const page=await browser.newPage();await page.goto(origin+'/conop.html?abstract=shaded&contents=one&category=Custom%20Field%20Brief&distribution=Internal&details=full');
+  const page=await browser.newPage();await page.goto(origin+'/stress-report.html?abstract=shaded&contents=one&category=Custom%20Field%20Brief&distribution=Internal&details=full');
   const popup=page.waitForEvent('popup');await page.locator('[data-pdf-link]').click();const viewer=await popup;await viewer.waitForURL('**/generated/**',{timeout:120000});
   const pdf=await page.request.get(viewer.url());assert.equal(pdf.headers()['content-type'],'application/pdf');const bytes=await pdf.body();assert.equal(bytes.subarray(0,5).toString(),'%PDF-');
   await fs.mkdir(path.join(__dirname,'.cache'),{recursive:true});await fs.writeFile(path.join(__dirname,'.cache/custom-export.pdf'),bytes);
-  execFileSync(process.env.PYTHON||'python3',['-c',`from pypdf import PdfReader; r=PdfReader('.cache/custom-export.pdf'); t='\\n'.join(p.extract_text() for p in r.pages); assert 'Custom Field Brief' in t and 'Internal use only.' in t and 'John Dean, Co-founder and CEO, WindBorne' in t; assert 'For authorized recipients only' not in t; assert len(r.named_destinations)>0`],{cwd:__dirname});
+  execFileSync(process.env.PYTHON||'python3',['-c',`from pypdf import PdfReader; r=PdfReader('.cache/custom-export.pdf'); t='\\n'.join(p.extract_text() for p in r.pages); assert 'Custom Field Brief' in t and 'Internal use only.' in t and 'Morgan Example' in t; assert 'For authorized recipients only' not in t; assert len(r.named_destinations)>0`],{cwd:__dirname});
   console.log('Custom settings open a generated PDF in the viewer');
-  for(const [request,status]of [[{document:'../conop.html',settings:{}},400],[{document:'conop.html',settings:{contents:'bad'}},400]]){const r=await fetch(origin+'/api/export',{method:'POST',headers:{Origin:origin,'Content-Type':'application/json'},body:JSON.stringify(request)});assert.equal(r.status,status)}
+  for(const [request,status]of [[{document:'../stress-report.html',settings:{}},400],[{document:'stress-report.html',settings:{contents:'bad'}},400]]){const r=await fetch(origin+'/api/export',{method:'POST',headers:{Origin:origin,'Content-Type':'application/json'},body:JSON.stringify(request)});assert.equal(r.status,status)}
   assert.equal((await fetch(origin+'/api/export',{method:'POST',headers:{Origin:'https://example.com','Content-Type':'application/json'},body:'{}'})).status,403);
   assert.equal((await fetch(origin+'/.git/config')).status,404);
   console.log('Export request validation passed');

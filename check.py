@@ -15,7 +15,7 @@ class Document(HTMLParser):
   if tag=='script':self.in_config=False
  def handle_data(self,data):
   if self.in_config:self.config+=data
-for file in sys.argv[1:] or ['starter.html','article.html','specimen.html','conop.html','stress-report.html']:
+for file in sys.argv[1:] or ['starter.html','article.html','specimen.html','stress-report.html']:
  p=Document();p.feed(Path(file).read_text());p.errors += ['Duplicate ID: '+v for v in set(p.ids) if p.ids.count(v)>1]
  p.errors += ['Broken internal link: #'+v for v in p.links if v not in p.ids]
  try:

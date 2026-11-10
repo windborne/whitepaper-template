@@ -7,16 +7,16 @@ The renderer waits for bundled fonts, applies the chosen settings, and resolves 
 ```sh
 PYTHON=.venv/bin/python npm run check
 PYTHON=.venv/bin/python npm run build
-pdftoppm -r 120 -png conop.pdf preview/conop
+pdftoppm -r 120 -png specimen.pdf preview/specimen
 ```
 
-Create `preview/` before rendering page images. `npm run check` opens its own loopback test server on port 18743. It checks five documents at 1500, 1264, 1101, 1100, 768 and 390px; internal links; one/two-column heading inclusion; settings; bylines; footer wording; keyboard lightbox/focus return; print visibility; matching print CONTENTS/REFERENCES typography; and a custom-settings export opening an actual PDF in a new viewer tab. It also verifies that cross-origin export requests, invalid options and repository-internal file requests are rejected.
+Create `preview/` before rendering page images. `npm run check` opens its own loopback test server on port 18743. It checks four documents at 1500, 1264, 1101, 1100, 768 and 390px; internal links; one/two-column heading inclusion; settings; bylines; footer wording; keyboard lightbox/focus return; print visibility; matching print CONTENTS/REFERENCES typography; and a custom-settings export opening an actual PDF in a new viewer tab. It also verifies that cross-origin export requests, invalid options and repository-internal file requests are rejected.
 
 The structural checker uses Python's standard library and checks JSON metadata, duplicate IDs, internal anchors and image alt text. It intentionally does not police prose by a keyword blacklist.
 
 ## Stress fixture
 
-`stress-report.html` is a synthetic long technical report, not a second research publication. It covers six named example authors with long titles, nested headings, a sum/fraction/root equation, a labelled chart, 64 synthetic table rows, repeated table headers, long identifiers, an appendix and 12 reference/audit entries. The specimen adds a grouped table header, qualitative status symbols, hatching, dimensions, an enlarged detail, a raster field, lists, code and a worked example. The CONOP remains the real-content application.
+`stress-report.html` is a synthetic long technical report, not a second research publication. It covers six named example authors with long titles, nested headings, a sum/fraction/root equation, a labelled chart, 64 synthetic table rows, repeated table headers, long identifiers, an appendix and 12 reference/audit entries. The specimen adds a grouped table header, qualitative status symbols, hatching, dimensions, an enlarged detail, a raster field, lists, code and a worked example.
 
 Before release, inspect all rendered pages and verify:
 
@@ -32,9 +32,9 @@ The original and blog-like reference treatments are preserved. Their old typogra
 
 ## Verified checkpoint — November 9, 2026
 
-Current default builds: starter and working article 1 page each, specimen 5 pages, supplied CONOP 6 pages and synthetic long report 7 pages. All 64 inventory records were verified in order with repeating headers; all four PDFs passed text-bound checks. The CONOP's normalized article and abstract text, including tables, captions and references, match the supplied design-checkpoint source. The small print REFERENCES label matches CONTENTS. The full interaction/export checks and skill validator passed. A static publication was tested with a custom category, Public distribution, three detailed authors, shaded abstract and one-column contents.
+Current public builds contain starter and working article (1 page each), the component specimen (5 pages), and the synthetic long report (7 pages). The 64 inventory records are verified in order with repeating headers. The small print REFERENCES label matches CONTENTS. Interaction/export tests cover a custom category, distribution, detailed authors, shaded abstract and one-column contents.
 
-Every page was rendered for visual review. The CONOP still has space before its large concept diagram because the figure and caption remain together; no whole-section keep is involved. The CONOP currently ends with a short references-only sixth page after missing table labels were added. This is a remaining copy-fitting opportunity, not a forced section break; preserve the source content and body typography when refining it. Each new manuscript still needs a page-by-page review.
+Every new manuscript needs a page-by-page review. Real source-document conversion checks belong in a separate private workspace; do not add those manuscripts or preview images to this public repository.
 
 Settings persistence is tested on a disposable draft: saving and reopening, preserving all article content and author records, discarding unsaved changes, escaping custom labels, detecting stale-tab conflicts, rejecting invalid or cross-origin writes, and refusing to save published reader files. The first-run route and the three Lucide icons are also checked.
 

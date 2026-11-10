@@ -6,7 +6,7 @@ module.exports=async function checkCaptions(browser,origin){
  const figures=[`<em>Entire original caption.</em>`,`<b>Figure 2.</b> Partial <em>species name</em>.`,null,`<i>Figure A-1. Appendix caption.</i>`].map(c=>'<figure>'+svg+(c===null?'':'<figcaption>'+c+'</figcaption>')+'</figure>').join('');
  const tables=[null,'<em>Table 2. Entire table caption.</em>','Another table.','Table A-1. Appendix values.'].map(c=>'<div class="table-block"><div class="table-wrap"><table>'+(c===null?'':'<caption>'+c+'</caption>')+'<thead><tr><th>Value</th></tr></thead><tbody><tr><td>1</td></tr></tbody></table></div></div>').join('');
  source=source.replace(/<article class="prose">[\s\S]*?<\/article>/,'<article class="prose"><h2 id="test">Caption fixture</h2>'+figures+tables+'</article>');
- source=source.replace(/(<script type="application\/json" id="document-config">)(.*?)(<\/script>)/,(_,a,b,c)=>a+JSON.stringify({...JSON.parse(b),reviewTabs:[{label:'Template',document:'specimen.html'},{label:'Sample 1',document:name},{label:'Sample 2',document:'conop.html'},{label:'Sample 3',document:'stress-report.html'}]})+c);
+ source=source.replace(/(<script type="application\/json" id="document-config">)(.*?)(<\/script>)/,(_,a,b,c)=>a+JSON.stringify({...JSON.parse(b),reviewTabs:[{label:'Template',document:'specimen.html'},{label:'Sample 1',document:name},{label:'Sample 2',document:'article.html'},{label:'Sample 3',document:'stress-report.html'}]})+c);
  await fs.writeFile(file,source,{flag:'wx'});const page=await browser.newPage();
  try{
   await page.goto(origin+'/'+name+'?mode=edit');

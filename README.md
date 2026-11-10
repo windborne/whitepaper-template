@@ -65,7 +65,7 @@ Contents numbering is separate: every top-level entry, including References and 
 
 Recommended defaults: plain abstract, two-column PDF contents (headers only), author name and title, no optional label, Confidential. One-column contents includes headers and subheaders. PDF contents never appears in the web body and does not affect the web nav sidebar. See [DESIGN.md](DESIGN.md) for typography, options, footer language and page-flow rules. Unless a custom first-page footer is supplied, Confidential documents show the recommended full notice at the bottom of the web article and on the first PDF page; later PDF pages use the short footer. Distribution markings do not provide access control.
 
-`conop.html` is a worked example using supplied source material; its technical claims are not independently verified here. `stress-report.html` is a synthetic layout fixture, not research evidence. Keep both separate from your draft.
+`stress-report.html` is a synthetic layout fixture, not research evidence. Keep it separate from your draft. Public examples contain placeholder or synthetic material; use real reports only in a separate private workspace.
 
 ## Command-line export
 
@@ -77,7 +77,7 @@ PYTHON=.venv/bin/python node render.cjs my-paper.html my-paper.pdf \
 
 In Document settings, **Label (optional)** offers None, Category or Prepared for. Category reveals the existing category choices and Add new option; Prepared for reveals a free-text field with the placeholder “Conference/event name”. These share one header slot. Category appears in the footer; Prepared for does not. Both save and export with the document. For command-line export, use `--settings '{"label":"prepared-for","preparedFor":"AMS Annual Meeting 2027"}'`.
 
-Omitted settings inherit the document's saved defaults. `npm run build` renders the working article, clean starter, specimen, CONOP and synthetic report. `./build.sh my-paper.html` is a compatibility wrapper. `npm run check` tests layout and interaction behavior; [VALIDATION.md](VALIDATION.md) describes PDF review and stress coverage.
+Omitted settings inherit the document's saved defaults. `npm run build` renders the working article, clean starter, specimen and synthetic report. `./build.sh my-paper.html` is a compatibility wrapper. `npm run check` tests layout and interaction behavior; [VALIDATION.md](VALIDATION.md) describes PDF review and stress coverage.
 
 The local server accepts only local, same-origin JSON export and settings-save requests for root-level HTML documents. Saving updates only the document configuration, preserves article content, and detects conflicting settings from another tab. Published reader files are read-only. It serves no arbitrary filesystem paths or repository secrets. It is an authoring utility, not a production hosting service.
 
@@ -99,10 +99,10 @@ The standard editor has Template and Article tabs. For a private review bundle, 
 ## Contents of the repository
 
 - `SKILL.md`, `AI-PROMPT.md`, `DESIGN.md`: reusable AI instructions and visual rules.
-- `article.html`, `starter.html`, `specimen.html`, `conop.html`, `stress-report.html`: editable sources and companion PDFs.
+- `article.html`, `starter.html`, `specimen.html`, `stress-report.html`: editable sources and companion PDFs.
 - `style.css`, `fonts.css`, `controls.js`: shared design, offline fonts and interactions.
 - `renderer.cjs`, `render.cjs`, `server.cjs`, `settings-store.cjs`, `publish.cjs`: deterministic PDF export, local editor and static packaging.
 - `check.cjs`, `check-settings.cjs`, `check-help.cjs`, `check.py`, `VALIDATION.md`: behavioral checks, content checks and review guidance.
-- `experiments/comparison`: preserved earlier design comparisons; `experiments/original`: original print-only template. `experiments/hybrid-v2` retains the design checkpoint. Start new work at the repository root.
+- `experiments/comparison`: preserved earlier design comparisons; `experiments/original`: original print-only template. Start new work at the repository root.
 
 Fonts carry their licenses in `licenses/`; Lucide's license is in `LICENSE-LUCIDE`. WindBorne's name and logo are brand assets, not a grant of trademark rights. Keep font and icon licenses with redistributed assets.

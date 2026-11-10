@@ -4,3 +4,10 @@ __pycache__/
 .DS_Store
 .cache/
 preview/
+
+# Real-document review material belongs outside this public checkout.
+conop*
+experiments/hybrid-v2/
+private/
+document-review/
+document-audit/
