@@ -122,3 +122,5 @@ When these sections are present, use body → References → Appendices → Glos
 This is an authoring decision, not automatic browser reordering. Use `<section class="glossary"><h2 id="glossary">Glossary</h2><dl>…</dl></section>` with `dt` terms and `dd` definitions. Define unfamiliar terms at first use too; a glossary supplements the prose. Glossary gets an ordinary section heading and continuous navigation/contents number, like References and appendices. Do not invent definitions unsupported by the manuscript.
 
 When References is followed by another section, a subtle bottom rule separates the reference list from that section on web and in print. The rule uses the reference/body text width, adds no forced page break, and is absent when References is last.
+
+The optional abstract background uses WindBorne brand Gray 75 (`#F2F1F0`), a quiet warm-neutral reading surface from the Storybook color ramp. The same shade token is used for subtle reference highlights.
