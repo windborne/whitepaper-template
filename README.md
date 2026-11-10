@@ -42,8 +42,8 @@ Open **[the draft editor](http://127.0.0.1:8743/article.html?mode=edit)**. Keep 
 |---|---|
 | **Save settings** | Writes the current choices into this document's HTML. The button is disabled until something changes; **Saved** confirms success. It does not edit article text or generate a PDF. |
 | **View PDF** | Generates a PDF using the current choices, including unsaved ones, and opens it in a new viewer tab. Use the viewer's download/save control to keep a copy. |
-| **View reader layout** | Opens a new tab with editing controls hidden and your current choices applied. Your original editing tab stays open. This is a local preview, not a published website. |
-| **Print current version** | Opens browser print. Use View PDF for the finished export with resolved contents page numbers. |
+| **View web reader layout** | Opens a new tab with editing controls hidden and your current choices applied. Your original editing tab stays open. This is a local preview, not a published website. |
+| **Print current PDF version** | Opens browser print. Use View PDF for the finished export with resolved contents page numbers. |
 
 **First-page footer (optional)** accepts a complete custom footer (up to 400 characters), including the organization name. Blank uses the recommended distribution-based wording: Confidential includes the standard permission notice; other distributions use the short footer. Custom text replaces that recommendation on the first PDF page and at the end of the web article. Later PDF pages retain the standard organization/category/distribution footer. It is independent of Distribution: changing Distribution does not overwrite custom wording. Clear the field to return to the recommendation. Save settings persists it; View PDF and reader preview include unsaved changes. The configuration/CLI key is `firstPageFooter`.
 

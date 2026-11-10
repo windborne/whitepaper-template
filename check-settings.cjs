@@ -22,7 +22,7 @@ module.exports=async function checkSettings(browser,origin){
   assert.equal(await page.locator('.doc-end').textContent(),selected.firstPageFooter);
   // Reader preview is a separate tab and preserves unsaved editor choices.
   const editorUrl=page.url(),readerOpened=page.waitForEvent('popup');
-  await page.getByRole('link',{name:'View reader layout',exact:true}).click();
+  await page.getByRole('link',{name:'View web reader layout',exact:true}).click();
   const reader=await readerOpened;await reader.waitForLoadState('load');
   assert.equal(new URL(reader.url()).searchParams.get('mode'),'public');
   assert.deepEqual(await reader.evaluate(()=>exportSettings()),selected);

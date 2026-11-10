@@ -89,7 +89,7 @@ An element taller than the available page cannot be kept intact; the renderer de
 
 ## First-run editor
 
-The local editor starts at `article.html?mode=edit`, with the starter copy preloaded in Article and the component specimen under Template. When editing a differently named draft, Template links back to that same Article. Settings save into the editable source, while PDF viewing always reflects the current controls. View reader layout opens a new tab with a snapshot of those choices, preserving the editing tab. Manuscript text and metadata are edited in HTML, not in the settings panel. Static published readers hide editing controls and link their matching PDF.
+The local editor starts at `article.html?mode=edit`, with the starter copy preloaded in Article and the component specimen under Template. When editing a differently named draft, Template links back to that same Article. Settings save into the editable source, while PDF viewing always reflects the current controls. View web reader layout opens a new tab with a snapshot of those choices, preserving the editing tab. Manuscript text and metadata are edited in HTML, not in the settings panel. Static published readers hide editing controls and link their matching PDF.
 
 Settings help covers PDF table of contents, Distribution, First-page footer and Save settings. Info buttons expose short explanations on hover, keyboard focus or tap; Escape dismisses help before closing the panel.
 

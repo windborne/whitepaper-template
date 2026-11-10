@@ -204,7 +204,7 @@ document.querySelector('[data-pdf-link]').addEventListener('click',async e=>{
   // A published static document carries an exact baked PDF, never a mismatched preset.
   const exact=config.publishedSettings&&Object.entries(exportSettings()).every(([key,value])=>config.publishedSettings[key]===value);
   if(exact){location.assign(config.pdf||kind+'.pdf');return}
-  status.textContent='PDF generation needs the local document server. Run npm start, open this document there, then choose View PDF. You can also use Print current version.';status.hidden=false;
+  status.textContent='PDF generation needs the local document server. Run npm start, open this document there, then choose View PDF. You can also use Print current PDF version.';status.hidden=false;
   if(!editing)alert(status.textContent);else document.querySelector('.options').open=true;
  }finally{exporting=false;link.removeAttribute('aria-busy');link.querySelector('span').textContent=original}
 });
