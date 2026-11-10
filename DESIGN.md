@@ -31,28 +31,43 @@ Each HTML includes a `script` with `id="document-config"` and `type="application
 {
   "authors": [{"name": "Author Name", "title": "Research scientist", "organization": "WindBorne"}],
   "organization": "WindBorne Systems",
-  "defaults": {"abstract": "plain", "contents": "two", "details": "title", "label": "none", "category": "", "preparedFor": "", "distribution": "Confidential", "firstPageFooter": ""}
+  "defaults": {"abstract": "plain", "contents": "two", "details": "title", "category": "", "preparedFor": "", "distribution": "Internal", "firstPageFooter": ""}
 }
 ```
 
-Use `plain` or `shaded`; `none`, `one` or `two` for contents; `none` (name only), `title`, `organization` or `full` for author details. Use `none`, `category` or `prepared-for` for `label`. Store the category in `category`, or the free text in `preparedFor` (160 characters maximum); inactive values are saved as empty strings. Blank distribution means None. Existing documents with a category and no label mode are treated as Category for compatibility. Escape JSON correctly, including `<` as `\u003c` if it occurs in a value inside the script element. Organization is configurable; the WindBorne web logo remains a brand asset and is not a license to imply affiliation.
+Use `plain` or `shaded`; `none`, `one` or `two` for contents; `none` (name only), `title`, `organization` or `full` for author details. Store independent optional values in `category` (80 characters maximum) and `preparedFor` (160 characters maximum). Empty strings mean None/blank. The deprecated `label` mode is ignored on import and removed on save; it no longer hides either populated field. Distribution is required: Public, Internal, Restricted or Proprietary; an omitted setting defaults to Internal. Blank and legacy Confidential values are rejected, not silently reclassified. Review those older documents with their Data Owner and update their configuration before export. Escape JSON correctly, including `<` as `\u003c` if it occurs in a value inside the script element. Organization is configurable; the WindBorne web logo remains a brand asset and is not a license to imply affiliation.
 
-The editable metadata date is abbreviated, e.g. `Sep. 23, 2026` or `Sep. 2026`. Do not reformat dates inside source quotations or reference titles.
+In header metadata, abbreviate the month with a period when a day is included, e.g. `Nov. 9, 2026`; use the full month name for month/year only, e.g. `November 2026`. This applies with two, three or four metadata fields. Do not reformat dates inside source quotations or reference titles.
 
 ## Optional treatments
 
-Settings are ordered alphabetically: Abstract background, Author details, Distribution (optional), First-page footer (optional), Label (optional), PDF table of contents. Category or Prepared for appears immediately below Label when selected. The specimen also has Example authors for demonstration. Below the options, Save settings (Lucide save) persists changes in this document’s HTML. It is disabled until settings change, reports Saved on success and keeps unsaved choices visible on failure. The top bar uses View PDF (Lucide file-text) and Document settings (Lucide pencil-line).
+Settings are ordered alphabetically: Abstract background, Author details, Category (optional), Distribution, PDF table of contents, Prepared for (optional). Category is always visible and includes None (the default); Prepared for is an always-visible text field, blank by default, with “Conference/event name” as placeholder. The specimen also has Example authors for demonstration. Below the options, Save settings (Lucide save) persists changes in this document’s HTML. It is disabled until settings change, reports Saved on success and keeps unsaved choices visible on failure. The top bar uses View PDF (Lucide file-text) and Document settings (Lucide pencil-line).
+
+With four metadata fields, use two columns: Author / Date, then Prepared for / Category. With only one optional field, use three columns where space permits. Omit empty fields; never display the placeholder as content. This applies to web and PDF; long values wrap. Distribution is footer-only.
 
 - Authors: singular label for one author; plural for several. Name-only uses comma-separated names. Any title/organization details put each author on a separate line. Without optional fields the metadata uses a 50/50 split, or about 70/30 for a long byline.
-- Label (optional): None, Category, Prepared for. None hides the metadata slot. Category and Prepared for are mutually exclusive.
-- Category: Research Paper, Technical Report, Concept of Operations, Case Study, White Paper, Analysis, Proposal, or a custom label (80 characters maximum).
-- Distribution: None, Public, Internal, Proprietary, Confidential. Public appears in metadata but adds no footer wording. None hides the metadata field. Internal becomes “Internal use only.” in the footer; Proprietary becomes “Proprietary information.”; Confidential stays “Confidential.”
-- Prepared for: free text with “Conference/event name” as a placeholder, never a prefilled value. Suitable for conferences, events, organizations or audiences; omit it from the footer.
-- Footer: `WindBorne Systems. [Category.] [Distribution wording.]` The first page has no page number. A confidential first page adds “For authorized recipients only. Do not copy or distribute without WindBorne Systems’ permission.” Subsequent PDF pages have the short footer and page number. The continuous web article ends with the full confidentiality notice when Distribution is Confidential; other distribution choices retain their short footer.
+- Category (optional): None (default), Research Paper, Technical Report, Concept of Operations, Case Study, White Paper, Analysis, Proposal, or a custom label (80 characters maximum).
+- Distribution: required; Public, Internal (default), Restricted, Proprietary. Footer-only: never put it in the header metadata. Later PDF pages use uppercase PUBLIC, INTERNAL, RESTRICTED or PROPRIETARY; first-page wording is listed below. Every choice button has an info tooltip explaining when to use it.
+- Prepared for (optional): independent free text with “Conference/event name” as a placeholder, never a prefilled value. Suitable for conferences, events, organizations or audiences; omit it from the footer.
+- Footer: `WindBorne Systems. [Full month YYYY.] [UPPERCASE DISTRIBUTION.]` PDF pages after page one use this short text, deriving month/year from the document date and omitting Category. Page one uses the separate notice treatment below. The first page has no page number; subsequent pages do. Custom notices use the same organization/classification prefix, as described below. The web article ends with the first-page footer treatment. Prepared for is never included in the footer. The first-page notices are proposed template wording derived from the handling rules, not quotations or approved legal language.
 - Abstract background: off by default; on uses a pale tint without changing the text measure. No visible Summary or Abstract heading is added.
 - PDF contents: None; One column (headers and subheaders); Two columns (headers only). Enabling contents from None turns abstract shading off; a subsequent manual choice can restore it. Changing between enabled layouts preserves that manual choice.
 
-**First-page footer (optional)** accepts a complete custom footer (up to 400 characters), including the organization name. Blank uses the recommended distribution-based wording: Confidential includes the standard permission notice; other distributions use the short footer. Custom text replaces that recommendation on the first PDF page and at the end of the web article. Later PDF pages retain the standard organization/category/distribution footer. It is independent of Distribution: changing Distribution does not overwrite custom wording. Clear the field to return to the recommendation. Save settings persists it; View PDF and reader preview include unsaved changes. The configuration/CLI key is `firstPageFooter`.
+**Custom first-page footer (source only):** set `defaults.firstPageFooter` in the HTML document-config (or the `firstPageFooter` CLI setting) to a short notice, up to 400 characters. There is no footer text field in Document settings. The renderer prefixes the organization, distribution wording and optional category, then the notice: `WindBorne Systems. PROPRIETARY. <notice>`. Legacy values beginning with the organization and classification are accepted without duplicating that prefix. Blank uses the automatic notice. The web article ends with the same treatment. Later PDF pages keep the standard organization/month-year/distribution footer. Changing Distribution updates the prefix without rewriting saved custom wording. Save settings preserves the override. Aim for one line at the existing footer type size; long custom notices wrap rather than shrink or clip.
+
+
+## Automatic first-page notices
+
+These are proposed template wording derived from the classification handling rules, not quotations from the policy or approved legal language. They appear on the first PDF page and at the end of the web article. The organization comes first, then the classification, optional Category and notice; later PDF pages retain the short footer.
+
+| Distribution | First-page wording after the organization (without Category) |
+|---|---|
+| Public | For public distribution. |
+| Internal | Internal use only. Not approved for public release. |
+| Restricted | RESTRICTED. External sharing requires Data Owner approval and a contract/NDA. |
+| Proprietary | PROPRIETARY. External release requires an NDA and written COO/delegate approval. |
+
+A source-authored `defaults.firstPageFooter` takes precedence over these notices. Preserve existing document-specific wording, including regulatory disclaimers; do not replace it during migration. Place the classification after the organization and before the notice, never after the blurb. These notices do not replace additional CUI, export-control or contractual markings and permissions.
 
 ## Web and print
 
@@ -91,7 +106,7 @@ An element taller than the available page cannot be kept intact; the renderer de
 
 The local editor starts at `article.html?mode=edit`, with the starter copy preloaded in Article and the component specimen under Template. When editing a differently named draft, Template links back to that same Article. Settings save into the editable source, while PDF viewing always reflects the current controls. View web reader layout opens a new tab with a snapshot of those choices, preserving the editing tab. Manuscript text and metadata are edited in HTML, not in the settings panel. Static published readers hide editing controls and link their matching PDF.
 
-Settings help covers PDF table of contents, Distribution, First-page footer and Save settings. Info buttons expose short explanations on hover, keyboard focus or tap; Escape dismisses help before closing the panel.
+Settings help covers PDF table of contents, Distribution and Save settings. Info buttons expose short explanations on hover, keyboard focus or tap; Escape dismisses help before closing the panel.
 
 ## Photographs
 

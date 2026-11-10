@@ -17,7 +17,7 @@ async function saveSettings(file,settings,expected){
  if(config.published)throw Object.assign(Error('Published documents are read-only. Save settings in the editable source.'),{status:400});
  const current=resolveDefaults(config.defaults);
  if(!same(current,expected))throw Object.assign(Error('Settings changed in another editor. Reload the document before saving.'),{status:409});
- config.defaults={...config.defaults,...settings};
+ config.defaults={...config.defaults,...settings};delete config.defaults.label;
  const updated=original.replace(pattern,(_,open,body,close)=>open+JSON.stringify(config).replaceAll('<','\\u003c')+close);
  const temp=path.join(path.dirname(file),'.settings-'+crypto.randomUUID()+'.tmp');
  try{

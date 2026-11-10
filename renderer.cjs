@@ -1,18 +1,18 @@
 const {chromium}=require('playwright');
 const {execFileSync}=require('node:child_process');
 const fs=require('node:fs/promises'),path=require('node:path'),{pathToFileURL}=require('node:url');
-const defaults={abstract:'plain',contents:'two',details:'title',category:'',label:'none',preparedFor:'',distribution:'Confidential',authors:'single',firstPageFooter:''};
+const defaults={abstract:'plain',contents:'two',details:'title',category:'',preparedFor:'',distribution:'Internal',authors:'single',firstPageFooter:''};
 function validateSettings(input={}){
  if(!input||typeof input!=='object'||Array.isArray(input))throw Error('Settings must be an object');
- const enums={label:['none','category','prepared-for'],abstract:['plain','shaded'],contents:['none','one','two'],details:['none','title','organization','full'],distribution:['','Public','Internal','Proprietary','Confidential'],authors:['single','many']};
- for(const key of Object.keys(input))if(!Object.hasOwn(defaults,key))throw Error('Unknown setting: '+key);
+ const enums={label:['none','category','prepared-for'],abstract:['plain','shaded'],contents:['none','one','two'],details:['none','title','organization','full'],distribution:['Public','Internal','Restricted','Proprietary'],authors:['single','many']};
+ for(const key of Object.keys(input))if(key!=='label'&&!Object.hasOwn(defaults,key))throw Error('Unknown setting: '+key);
  for(const [key,values] of Object.entries(enums))if(input[key]!==undefined&&!values.includes(input[key]))throw Error('Invalid '+key);
  if(input.category!==undefined&&(typeof input.category!=='string'||input.category.length>80||/[\x00-\x1f\x7f]/.test(input.category)||input.category==='__custom__'))throw Error('Invalid category');
  if(input.preparedFor!==undefined&&(typeof input.preparedFor!=='string'||input.preparedFor.length>160||/[\x00-\x1f\x7f]/.test(input.preparedFor)))throw Error('Invalid preparedFor');
  if(input.firstPageFooter!==undefined&&(typeof input.firstPageFooter!=='string'||input.firstPageFooter.length>400||/[\x00-\x1f\x7f]/.test(input.firstPageFooter)))throw Error('Invalid firstPageFooter');
- return {...input};
+ const result={...input};delete result.label;return result;
 }
-function resolveDefaults(input={}){return {...defaults,...input,label:input.label??(input.preparedFor?'prepared-for':input.category?'category':'none')}}
+function resolveDefaults(input={}){return {...defaults,...validateSettings(input)}}
 async function imageRecommendations(page){
  return page.evaluate(()=>[...document.querySelectorAll('.prose figure')].flatMap((figure,index)=>{
   const image=figure.querySelector('img');

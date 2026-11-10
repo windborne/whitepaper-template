@@ -3,7 +3,7 @@ const assert=require('node:assert/strict'),fs=require('node:fs/promises'),path=r
 const {resolveDefaults}=require('./renderer.cjs');
 module.exports=async function checkSettings(browser,origin){
  const name='save-test-'+crypto.randomUUID()+'.html',file=path.join(__dirname,name);
- const source=(await fs.readFile(path.join(__dirname,'starter.html'),'utf8')).replace('data-document="starter"','data-document="'+name.slice(0,-5)+'"');
+ const source=(await fs.readFile(path.join(__dirname,'starter.html'),'utf8')).replace('data-document="starter"','data-document="'+name.slice(0,-5)+'"').replace('"distribution": "Internal"','"distribution": "Internal", "firstPageFooter": "WindBorne Systems. Custom first-page notice for reviewers."');
  const configPattern=/(<script\b[^>]*\bid="document-config"[^>]*>)([\s\S]*?)(<\/script>)/;
  const config=text=>JSON.parse(text.match(configPattern)[2]);
  const baseline=resolveDefaults(config(source).defaults);
@@ -11,15 +11,14 @@ module.exports=async function checkSettings(browser,origin){
  const post=data=>fetch(origin+'/api/settings',{method:'POST',headers:{Origin:origin,'Content-Type':'application/json'},body:JSON.stringify(data)});
  try{
   // Query choices are unsaved, and must not survive as overrides after saving.
-  await page.goto(origin+'/'+name+'?mode=edit&distribution=Internal');await stale.goto(origin+'/'+name);
+  await page.goto(origin+'/'+name+'?mode=edit&distribution=Public');await stale.goto(origin+'/'+name);
   await page.locator('.options > summary').click();
   assert.equal(await page.locator('.save-settings').isEnabled(),true);
-  await page.locator('#label-type').selectOption('category');
   await page.locator('#category').selectOption('__custom__');await page.locator('#custom-category').fill('Field </script> report');await page.locator('.add-label').click();
   await page.locator('#author-details').selectOption('full');await page.locator('#print-contents-option').selectOption('one');await page.locator('#abstract-style').check();
-  await page.locator('#first-page-footer').fill('WindBorne Systems. Custom first-page notice for reviewers.');
+  assert.equal(await page.locator('#first-page-footer').count(),0);
   const selected=await page.evaluate(()=>exportSettings());
-  assert.equal(await page.locator('.doc-end').textContent(),selected.firstPageFooter);
+  assert.equal(await page.locator('.doc-end').textContent(),'WindBorne Systems. Field </script> report. Custom first-page notice for reviewers.');
   // Reader preview is a separate tab and preserves unsaved editor choices.
   const editorUrl=page.url(),readerOpened=page.waitForEvent('popup');
   await page.getByRole('link',{name:'View web reader layout',exact:true}).click();
@@ -41,10 +40,10 @@ module.exports=async function checkSettings(browser,origin){
   assert.equal(await page.getByRole('link',{name:'Article',exact:true}).getAttribute('href'),name+'?mode=edit');
   await page.getByRole('link',{name:'Article',exact:true}).click();await page.waitForURL('**/'+name+'?mode=edit');
   assert.deepEqual(await page.evaluate(()=>exportSettings()),selected);await page.locator('.options > summary').click();
-  await page.locator('#distribution').selectOption('Public');await page.reload();assert.deepEqual(await page.evaluate(()=>exportSettings()),selected,'Unsaved settings leaked into file');
+  await page.locator('#distribution').selectOption('Public',{force:true});await page.reload();assert.deepEqual(await page.evaluate(()=>exportSettings()),selected,'Unsaved settings leaked into file');
   const conflict=await post({document:name,settings:{...selected,distribution:'Proprietary'},expected:baseline});assert.equal(conflict.status,409);assert.equal(await fs.readFile(file,'utf8'),after);
   // Actual stale-tab feedback is visible and retains the user's unsaved choice.
-  await stale.locator('.options > summary').click();await stale.locator('#distribution').selectOption('Public');const conflictResponse=stale.waitForResponse(r=>r.url().endsWith('/api/settings'));await stale.locator('.save-settings').click();assert.equal((await conflictResponse).status(),409);await stale.waitForFunction(()=>document.querySelector('.save-status').textContent.includes('another editor'));assert.equal(await stale.locator('#distribution').inputValue(),'Public');
+  await stale.locator('.options > summary').click();await stale.locator('#distribution').selectOption('Public',{force:true});const conflictResponse=stale.waitForResponse(r=>r.url().endsWith('/api/settings'));await stale.locator('.save-settings').click();assert.equal((await conflictResponse).status(),409);await stale.waitForFunction(()=>document.querySelector('.save-status').textContent.includes('another editor'));assert.equal(await stale.locator('#distribution').inputValue(),'Public');
   for(const bad of [{document:'../starter.html',settings:selected,expected:selected},{document:name,settings:{...selected,contents:'invalid'},expected:selected},{document:name,settings:{distribution:'Public'},expected:selected}])assert.equal((await post(bad)).status,400);
   assert.equal((await fetch(origin+'/api/settings',{method:'POST',headers:{Origin:'https://example.com','Content-Type':'application/json'},body:JSON.stringify({document:name,settings:selected,expected:selected})})).status,403);
   assert.equal(await fs.readFile(file,'utf8'),after);

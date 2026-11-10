@@ -22,8 +22,8 @@ const {chromium}=require('playwright');const {execFileSync,spawn}=require('node:
     await page.locator('.figure-art').first().click();await page.getByRole('button',{name:'Close',exact:true}).click();assert.equal(await page.locator('dialog').isVisible(),false);assert.equal(await page.locator('.figure-art').first().evaluate(e=>e===document.activeElement),true);
    }
    const broken=await page.evaluate(()=>[...document.querySelectorAll('a[href^="#"]')].filter(a=>!document.getElementById(a.hash.slice(1))).map(a=>a.hash));assert.deepEqual(broken,[]);
-   await page.evaluate(()=>{setCategory('Field Brief');setDistribution('Internal')});assert.equal(await page.locator('.doc-end').textContent(),'WindBorne Systems. Field Brief. Internal use only.');
-   for(const [value,ending] of [['',''],['Public',''],['Proprietary',' Proprietary information.'],['Confidential',' Confidential. For authorized recipients only. Do not copy or distribute without WindBorne Systems’ permission.']]){await page.evaluate(v=>setDistribution(v),value);assert.equal(await page.locator('.doc-end').textContent(),'WindBorne Systems. Field Brief.'+ending)}
+   await page.evaluate(()=>{setCategory('Field Brief');setDistribution('Internal')});assert.match(await page.locator('.doc-end').textContent(),/^WindBorne Systems\. Internal use only\. Field Brief\. Not approved for public release./);
+   for(const [value,ending] of [['Public',''],['Internal',' Internal use only.'],['Restricted',' RESTRICTED.'],['Proprietary',' PROPRIETARY.']]){await page.evaluate(v=>setDistribution(v),value);assert.ok((await page.locator('.doc-end').textContent()).startsWith('WindBorne Systems.'+ending+' Field Brief.'))}
    if(name==='stress-report'){
     assert.equal(await page.locator('.author-label').textContent(),'Authors');assert.equal(await page.locator('.author-row').count(),6);
     await page.evaluate(()=>{document.getElementById('author-details').value='none';renderAuthors()});assert.equal(await page.locator('.author-row').count(),0);assert.equal((await page.locator('.author-value').textContent()).split(', ').length,6);

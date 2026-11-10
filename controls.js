@@ -19,20 +19,11 @@ if(editing&&reviewTabs.length){
 document.querySelectorAll('.document-tabs a').forEach(a=>{if(new URL(a.href).pathname.split('/').pop()===documentName)a.setAttribute('aria-current','page');else a.removeAttribute('aria-current')});
 const abstract=document.getElementById('abstract-style'),printContents=document.getElementById('print-contents-option'),category=document.getElementById('category'),authors=document.getElementById('authors-demo'),authorDetails=document.getElementById('author-details');
 const meta=document.querySelector('.metadata'),cat=document.querySelector('.category-field');
-const distribution=document.getElementById('distribution'),distributionField=document.querySelector('.distribution-field'),customEditor=document.querySelector('.custom-label-editor'),customInput=document.getElementById('custom-category');
-const labelType=document.getElementById('label-type'),preparedFor=document.getElementById('prepared-for');
-// Optional complete replacement for the first PDF page and the web article footer.
-const footerField=document.createElement('div');footerField.className='setting-field has-help footer-setting';footerField.dataset.help='';
-footerField.innerHTML='<div class="setting-label-row"><label for="first-page-footer">First-page footer (optional)</label></div><textarea id="first-page-footer" rows="3" maxlength="400" aria-describedby="help-first-page-footer"></textarea>';
-const footerHelp=document.querySelector('#distribution').closest('[data-help]').querySelector('.help-trigger').cloneNode(true);
-footerHelp.setAttribute('aria-label','About First-page footer');footerHelp.setAttribute('aria-describedby','help-first-page-footer');footerHelp.setAttribute('aria-controls','help-first-page-footer');
-footerField.querySelector('.setting-label-row').append(footerHelp);
-const footerTip=document.createElement('span');footerTip.className='help-tooltip';footerTip.id='help-first-page-footer';footerTip.setAttribute('role','tooltip');footerTip.hidden=true;
-footerTip.textContent='Leave blank for the recommended notice. Custom text replaces the entire first-page footer, including the organization name, and appears at the end of the web article. Later PDF pages keep the standard footer. Maximum 400 characters.';
-footerField.append(footerTip);labelType.closest('.setting-field').before(footerField);
-const firstPageFooter=document.getElementById('first-page-footer');
-firstPageFooter.value=params.has('firstPageFooter')?params.get('firstPageFooter'):(config.defaults?.firstPageFooter||'');
-function customFooterText(){return firstPageFooter.value.replace(/\s+/g,' ').trim()}
+const distribution=document.getElementById('distribution'),customEditor=document.querySelector('.custom-label-editor'),customInput=document.getElementById('custom-category');
+const preparedFor=document.getElementById('prepared-for'),preparedField=document.querySelector('.prepared-for-field');
+// Agent-authored source override; intentionally absent from document settings.
+const firstPageFooter=params.has('firstPageFooter')?params.get('firstPageFooter'):(config.defaults?.firstPageFooter||'');
+function customFooterText(){return firstPageFooter.replace(/\s+/g,' ').trim()}
 let selectedCategory='',selectedPreparedFor='';
 const footerStyle=document.createElement('style');document.head.append(footerStyle);
 const baseAuthors=config.authors;
@@ -112,55 +103,65 @@ function arrangeContents(mode){
 }
 function setPrintContents(value){const wasOn=document.body.classList.contains('with-print-contents');const mode=value==='on'?'one':['one','two'].includes(value)?value:'none';printContents.value=mode;document.body.dataset.contentsLayout=mode;document.body.classList.toggle('with-print-contents',mode!=='none');arrangeContents(mode);if(mode!=='none'&&!wasOn)setAbstract('plain');updatePDFLink()}
 function setAbstract(value){abstract.checked=value!=='plain';document.body.classList.toggle('abstract-plain',!abstract.checked);updatePDFLink()}
-function renderLabel(){
- const mode=labelType.value,value=mode==='category'?selectedCategory:mode==='prepared-for'?selectedPreparedFor:'';
- document.querySelector('.category-setting').hidden=mode!=='category';
- document.querySelector('.prepared-for-setting').hidden=mode!=='prepared-for';
- if(mode!=='category')customEditor.hidden=true;
- cat.hidden=!value;meta.classList.toggle('has-category',!!value);
- cat.querySelector('dt').textContent=mode==='prepared-for'?'Prepared for':'Category';cat.querySelector('dd').textContent=value;
+function renderMetadata(){
+ cat.hidden=!selectedCategory;cat.querySelector('dd').textContent=selectedCategory;
+ preparedField.hidden=!selectedPreparedFor;preparedField.querySelector('dd').textContent=selectedPreparedFor;
+ meta.classList.toggle('has-category',!!selectedCategory);meta.classList.toggle('has-prepared-for',!!selectedPreparedFor);
  updateFooter();updateReaderLink();
-}
-function setLabel(value){
- labelType.value=['category','prepared-for'].includes(value)?value:'none';
- if(labelType.value==='category'&&!selectedCategory){selectedCategory='Research Paper';category.value=selectedCategory}
- renderLabel();
 }
 function setCategory(value){value=String(value||'').trim().slice(0,80);if(value==='__custom__')return;selectedCategory=value;
  if(value&&![...category.options].some(o=>o.value===value)){const option=new Option(value,value);category.add(option,category.querySelector('[value="__custom__"]'))}
- category.value=value||'Research Paper';customEditor.hidden=true;setLabel(value?'category':'none');
+ category.value=value;customEditor.hidden=true;renderMetadata();
 }
-function setPreparedFor(value){selectedPreparedFor=String(value||'').trim().slice(0,160);renderLabel()}
-function setDistribution(value){const allowed=['Public','Internal','Proprietary','Confidential'];distribution.value=allowed.includes(value)?value:'';const enabled=!!distribution.value;distributionField.hidden=!enabled;meta.classList.toggle('has-distribution',enabled);distributionField.querySelector('dd').textContent=distribution.value;
- updateFooter();updateReaderLink()}
+function setPreparedFor(value){selectedPreparedFor=String(value||'').trim().slice(0,160);renderMetadata()}
+function setDistribution(value){
+ if(!['Public','Internal','Restricted','Proprietary'].includes(value))throw Error('Choose Public, Internal, Restricted or Proprietary. Legacy distribution values require review; they are not automatically reclassified.');
+ distribution.value=value;
+ document.querySelectorAll('input[name="distribution-choice"]').forEach(input=>input.checked=input.value===value);
+ updateFooter();updateReaderLink();
+}
 function updateFooter(){
- const wording={Internal:'Internal use only',Proprietary:'Proprietary information',Confidential:'Confidential'};
- const categoryText=labelType.value==='category'?selectedCategory.replace(/[.\s]+$/,''):'';
- const footer=[config.organization||'WindBorne Systems',categoryText,wording[distribution.value]].filter(Boolean).join('. ')+'.';
- const confidential=distribution.value==='Confidential';
- const recommended=confidential?footer+' For authorized recipients only. Do not copy or distribute without '+(config.organization||'WindBorne Systems')+'’ permission.':footer;
- const custom=customFooterText(),firstFooter=custom||recommended;firstPageFooter.placeholder=recommended;
+ const wording={Internal:'Internal use only',Restricted:'RESTRICTED',Proprietary:'PROPRIETARY'};
+ const organization=(config.organization||'WindBorne Systems').replace(/[.\s]+$/,'');
+ const categoryText=selectedCategory.replace(/[.\s]+$/,'');
+ const months=['January','February','March','April','May','June','July','August','September','October','November','December'];
+ const dateText=document.querySelector('.metadata .date')?.textContent.trim()||'';
+ const dateMatch=dateText.match(/^([A-Za-z]+)\.?\s+(?:\d{1,2},?\s+)?(\d{4})$/);
+ const month=dateMatch&&months.find(name=>name.toLowerCase().startsWith(dateMatch[1].toLowerCase()));
+ const footerDate=month?month+' '+dateMatch[2]:'';
+ const footer=[organization,footerDate,distribution.value.toUpperCase()].filter(Boolean).join('. ')+'.';
+ const firstPrefix=[organization,wording[distribution.value],categoryText].filter(Boolean).join('. ')+'.';
+ const notices={
+  Public:'For public distribution.',
+  Internal:'Not approved for public release.',
+  Restricted:'External sharing requires Data Owner approval and a contract/NDA.',
+  Proprietary:'External release requires an NDA and written COO/delegate approval.'
+ };
+ // Accept legacy full footers, but compose the organization and classification only once.
+ let custom=customFooterText();
+ if(custom.toLowerCase().startsWith(organization.toLowerCase()+'.'))custom=custom.slice(organization.length+1).trim();
+ custom=custom.replace(/^(?:PUBLIC|INTERNAL(?: USE ONLY)?|RESTRICTED|PROPRIETARY)\.\s*/i,'');
+ const firstFooter=firstPrefix+' '+(custom||notices[distribution.value]);
  document.querySelector('.doc-end').textContent=firstFooter;
- footerStyle.textContent='@page{@bottom-left{content:'+JSON.stringify(footer)+'}}@page:first{@bottom-left{content:'+JSON.stringify(firstFooter)+';'+((confidential||custom)?'width:100%;white-space:normal;overflow-wrap:anywhere;line-height:1.35;text-align:left;':'')+'}}';
+ footerStyle.textContent='@page{@bottom-left{content:'+JSON.stringify(footer)+'}}@page:first{@bottom-left{content:'+JSON.stringify(firstFooter)+';'+'width:100%;white-space:normal;overflow-wrap:anywhere;line-height:1.35;text-align:left;'+'}}';
 }
 function renderAuthors(){const dd=document.querySelector('.author-value'),mode=authorDetails.value;dd.replaceChildren();document.querySelector('.author-label').textContent=currentAuthors.length===1?'Author':'Authors';
  if(mode==='none'){dd.textContent=currentAuthors.map(a=>a.name).join(', ')}else{currentAuthors.forEach(a=>{const row=document.createElement('span');row.className='author-row';row.textContent=[a.name,...(['full','title'].includes(mode)?[a.title]:[]),...(mode==='title'?[]:[a.organization])].filter(Boolean).join(', ');dd.append(row)})}
  meta.classList.toggle('authors-long',currentAuthors.length>1||currentAuthors.map(a=>a.name).join(', ').length>50);updateReaderLink()}
 abstract.onchange=()=>setAbstract(abstract.checked?'shaded':'plain');printContents.onchange=()=>setPrintContents(printContents.value);category.onchange=()=>{if(category.value==='__custom__'){customEditor.hidden=false;customInput.value='';customInput.focus()}else setCategory(category.value)};authorDetails.onchange=renderAuthors;
 document.querySelector('.add-label').onclick=()=>{if(customInput.value.trim())setCategory(customInput.value);else customInput.focus()};customInput.addEventListener('keydown',e=>{if(e.key==='Enter'){e.preventDefault();document.querySelector('.add-label').click()}});
-labelType.onchange=()=>setLabel(labelType.value);preparedFor.oninput=()=>setPreparedFor(preparedFor.value);
+preparedFor.oninput=()=>setPreparedFor(preparedFor.value);
 distribution.onchange=()=>setDistribution(distribution.value);
-firstPageFooter.oninput=()=>{updateFooter();updateReaderLink()};
 if(authors){authors.value=(params.get('authors')||config.defaults?.authors)==='many'?'many':'single';currentAuthors=authors.value==='many'?exampleAuthors:baseAuthors;authors.onchange=()=>{currentAuthors=authors.value==='many'?exampleAuthors:baseAuthors;renderAuthors()}}
 if(['none','title','organization','full'].includes(params.get('details')))authorDetails.value=params.get('details');
-const defaults={abstract:'plain',contents:'two',details:'title',category:'',preparedFor:'',distribution:'Confidential',firstPageFooter:'',...config.defaults};
-defaults.label=config.defaults?.label??(defaults.preparedFor?'prepared-for':defaults.category?'category':'none');
+const defaults={abstract:'plain',contents:'two',details:'title',category:'',preparedFor:'',distribution:'Internal',firstPageFooter:'',...config.defaults};
+delete defaults.label; // Legacy label mode no longer hides either independent field.
 if(!params.has('details'))authorDetails.value=defaults.details;
-setPrintContents(params.has('contents')?params.get('contents'):defaults.contents);setAbstract(params.get('abstract')||defaults.abstract);setCategory(params.has('category')?params.get('category'):defaults.category);preparedFor.value=params.has('preparedFor')?params.get('preparedFor'):defaults.preparedFor;setPreparedFor(preparedFor.value);setLabel(params.has('label')?params.get('label'):params.has('preparedFor')?'prepared-for':params.has('category')?(params.get('category')?'category':'none'):defaults.label);renderAuthors();setDistribution(params.has('distribution')?params.get('distribution'):defaults.distribution);
+setPrintContents(params.has('contents')?params.get('contents'):defaults.contents);setAbstract(params.get('abstract')||defaults.abstract);setCategory(params.has('category')?params.get('category'):defaults.category);preparedFor.value=params.has('preparedFor')?params.get('preparedFor'):defaults.preparedFor;setPreparedFor(preparedFor.value);renderAuthors();setDistribution(params.has('distribution')?params.get('distribution'):defaults.distribution);
 addEventListener('beforeprint',()=>{if(!document.body.dataset.pdfBuild)document.body.classList.add('native-print')});addEventListener('afterprint',()=>document.body.classList.remove('native-print'));
 async function printCurrent(){await document.fonts.ready;window.print()}
 document.querySelector('.print-trigger').onclick=printCurrent;
-function exportSettings(){return {abstract:abstract.checked?'shaded':'plain',contents:printContents.value,label:labelType.value,category:labelType.value==='category'?selectedCategory:'',preparedFor:labelType.value==='prepared-for'?selectedPreparedFor:'',distribution:distribution.value,details:authorDetails.value,authors:authors?.value||'single',firstPageFooter:customFooterText()}}
+function exportSettings(){return {abstract:abstract.checked?'shaded':'plain',contents:printContents.value,category:selectedCategory,preparedFor:selectedPreparedFor,distribution:distribution.value,details:authorDetails.value,authors:authors?.value||'single',firstPageFooter:customFooterText()}}
 // Save only document settings; the article's content stays in the HTML source.
 function refreshSaveState(clearFeedback=false){
  if(!saveButton)return;
@@ -209,6 +210,29 @@ document.querySelector('[data-pdf-link]').addEventListener('click',async e=>{
  }finally{exporting=false;link.removeAttribute('aria-busy');link.querySelector('span').textContent=original}
 });
 
+// Always-visible choice buttons use native radios for required, single-choice behavior.
+const distributionGuidance={
+ Public:'Use for information approved for public release by its Data Owner, or legitimately public-source material. Technical releases also need COO/delegate clearance; federal-contract disclosure rules still apply. Selecting Public is not approval.',
+ Internal:'Default for nonpublic company information that does not meet a higher level. Share with WB personnel and authorized providers under written agreements. Use approved systems; personal information remains need-to-know.',
+ Restricted:'Use for commercial observations, forecasts, customer information, pricing and other restricted business information. Access is need-to-know with Data Owner approval; external recipients require a contract or NDA. CUI and export-controlled data have additional rules.',
+ Proprietary:'Use for core technology: system designs, source code, models, algorithms, hardware designs and test data. Access is limited to named people with need-to-know. External release requires an NDA and written COO/delegate approval.'
+};
+const choices=document.createElement('div');choices.className='distribution-choices';choices.setAttribute('role','radiogroup');choices.setAttribute('aria-label','Distribution');choices.setAttribute('aria-required','true');
+const choiceHelp=document.querySelector('#distribution').closest('[data-help]').querySelector('.help-trigger');
+for(const [value,description] of Object.entries(distributionGuidance)){
+ const row=document.createElement('div');row.className='distribution-choice has-help';row.dataset.help='';
+ const label=document.createElement('label'),radio=document.createElement('input');radio.type='radio';radio.name='distribution-choice';radio.value=value;radio.required=true;
+ const id='help-distribution-'+value.toLowerCase();radio.setAttribute('aria-describedby',id);label.append(radio,document.createTextNode(value));
+ const help=choiceHelp.cloneNode(true);help.setAttribute('aria-label','About '+value);help.setAttribute('aria-describedby',id);help.setAttribute('aria-controls',id);help.setAttribute('aria-expanded','false');
+ const tooltip=document.createElement('span');tooltip.id=id;tooltip.className='help-tooltip';tooltip.setAttribute('role','tooltip');tooltip.hidden=true;tooltip.textContent=description;
+ row.append(label,help,tooltip);choices.append(row);
+ radio.onchange=()=>setDistribution(value);
+}
+distribution.after(choices);distribution.hidden=true;distribution.setAttribute('aria-hidden','true');distribution.tabIndex=-1;
+const distributionLabel=distribution.closest('.setting-field').querySelector('label');
+distributionLabel.removeAttribute('for');distributionLabel.textContent='Distribution';
+setDistribution(distribution.value);
+
 // Help works on hover, keyboard focus and tap; Escape dismisses help first.
 const helpControllers=[];
 function closeOpenHelp(){const open=helpControllers.filter(c=>c.isOpen());open.forEach(c=>c.close());return open.length>0}
@@ -216,8 +240,13 @@ document.querySelectorAll('[data-help]').forEach(group=>{
  const button=group.querySelector('.help-trigger'),tooltip=group.querySelector('.help-tooltip');let pinned=false,timer;
  const close=()=>{clearTimeout(timer);pinned=false;tooltip.hidden=true;button.setAttribute('aria-expanded','false')};
  const show=()=>{clearTimeout(timer);helpControllers.forEach(c=>{if(c.button!==button)c.close()});tooltip.hidden=false;button.setAttribute('aria-expanded','true')};
- const leave=()=>{clearTimeout(timer);timer=setTimeout(()=>{if(!pinned&&document.activeElement!==button)close()},120)};
+ const leave=()=>{clearTimeout(timer);timer=setTimeout(()=>{if(!pinned&&document.activeElement!==button&&!group.querySelector('input:focus'))close()},120)};
  helpControllers.push({button,close,isOpen:()=>!tooltip.hidden});
+ if(group.classList.contains('distribution-choice')){
+  group.addEventListener('pointerenter',e=>{if(e.pointerType==='mouse')show()});group.addEventListener('pointerleave',leave);
+  const radio=group.querySelector('input');radio.addEventListener('focus',show);radio.addEventListener('blur',leave);
+ }
+
  button.addEventListener('pointerenter',e=>{if(e.pointerType==='mouse')show()});button.addEventListener('pointerleave',leave);
  tooltip.addEventListener('pointerenter',()=>clearTimeout(timer));tooltip.addEventListener('pointerleave',leave);
  button.addEventListener('focus',show);button.addEventListener('blur',()=>{if(!pinned)close()});
