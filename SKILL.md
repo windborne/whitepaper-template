@@ -61,3 +61,11 @@ Use `defaults.firstPageFooter` for a supplied document-specific first-page notic
 ## Public repository boundary
 
 This repository is public on the internet. Keep examples synthetic or placeholder-based. Supplying a real document for local restyling does not authorize publishing it. Keep source documents, derived HTML/PDFs, screenshots and review bundles outside this checkout. Require explicit publication approval for the specific real content before adding it to a public repository, including historical examples.
+
+## Back matter order
+
+When these sections are present, use body → References → Appendices → Glossary. Put the glossary after all appendices; omit any sections the document does not need. If any appendix or glossary cites an external source, including an existing bibliography entry, move the single References section to the very end: body → Appendices → Glossary → References. Links to sections, figures or tables within the document do not trigger this change. Inspect both linked citations and plain-text source attributions; do not rely only on citation markup. Preserve reference IDs and backlinks when moving the section. Submission requirements or explicit user instructions take precedence.
+
+This is an authoring decision, not automatic browser reordering. Use `<section class="glossary"><h2 id="glossary">Glossary</h2><dl>…</dl></section>` with `dt` terms and `dd` definitions. Define unfamiliar terms at first use too; a glossary supplements the prose. Glossary gets an ordinary section heading and continuous navigation/contents number, like References and appendices. Do not invent definitions unsupported by the manuscript.
+
+When References is followed by another section, a subtle bottom rule separates the reference list from that section on web and in print. The rule uses the reference/body text width, adds no forced page break, and is absent when References is last.

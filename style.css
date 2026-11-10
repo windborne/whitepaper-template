@@ -211,3 +211,15 @@ figure{display:grid;grid-template-columns:minmax(0,1fr) var(--rail);gap:var(--ga
 
 .options-panel .footer-setting textarea{display:block;box-sizing:border-box;width:100%;min-height:78px;margin-top:7px;padding:8px;border:1px solid var(--line);border-radius:0;resize:vertical;font:13px/1.4 var(--sans);color:var(--ink);background:white}
 .options-panel .footer-setting textarea::placeholder{color:var(--muted);opacity:.8}
+
+/* Back matter: distinguish a reference list from sections that follow it. */
+.prose .notes:has(~ h2, ~ .appendix, ~ .glossary){border-bottom:1px solid var(--line);padding-bottom:24px}
+.glossary{margin-top:40px}
+.glossary dt{font-weight:600;margin-top:1em}
+.glossary dd{margin:0 0 .65em}
+@media print{
+ .prose .notes:has(~ h2, ~ .appendix, ~ .glossary){padding-bottom:14pt}
+ .prose .glossary>:is(h2,h3,p,dl){max-width:6.5in;margin-left:auto;margin-right:auto}
+ .glossary dt{break-after:avoid}
+ .glossary dd{orphans:3;widows:3}
+}

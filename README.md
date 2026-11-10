@@ -61,7 +61,9 @@ Generated PDF links are temporary: they expire after 30 minutes or a server rest
 
 Figures and tables have separate sequences: Figure 1… and Table 1… in the main text; Figure A-1… and Table A-1… in Appendix A, restarting for each appendix. See [numbering and appendix markup](DESIGN.md#figure-and-table-numbering). When restyling, update the caption and its in-text references together. Caption labels are bold; caption text is upright with selective italics. Missing labels are filled automatically, but the agent must reconcile existing labels and provide a meaningful caption.
 
-Contents numbering is separate: every top-level entry, including References and appendices, receives a continuous section number (for example, **11. References** and **12. Appendix A: Supporting detail**). Body headings stay unnumbered; the appendix heading retains its letter.
+Contents numbering is separate: every top-level entry, including References and appendices, receives a continuous section number (for example, **11. References** and **12. Appendix A: Supporting detail**). Body headings stay unnumbered; the appendix heading retains its letter. A glossary uses the same continuous contents numbering.
+
+Back matter normally follows References → Appendices → Glossary. If an appendix or glossary cites sources, put References last instead. A subtle divider follows References only when another section follows. See [back matter order](DESIGN.md#back-matter-order).
 
 Recommended defaults: plain abstract, two-column PDF contents (headers only), author name and title, no optional label, Confidential. One-column contents includes headers and subheaders. PDF contents never appears in the web body and does not affect the web nav sidebar. See [DESIGN.md](DESIGN.md) for typography, options, footer language and page-flow rules. Unless a custom first-page footer is supplied, Confidential documents show the recommended full notice at the bottom of the web article and on the first PDF page; later PDF pages use the short footer. Distribution markings do not provide access control.
 
