@@ -19,15 +19,16 @@ const {chromium}=require('playwright');const {execFileSync,spawn}=require('node:
    await page.evaluate(()=>{setAbstract('shaded');setPrintContents('two')});assert.equal(await page.locator('#abstract-style').isChecked(),true);
    if(await page.locator('.figure-art').count()){
     await page.locator('.figure-art').first().focus();await page.keyboard.press('Enter');assert.equal(await page.locator('dialog').isVisible(),true);await page.keyboard.press('Escape');assert.equal(await page.locator('dialog').isVisible(),false);assert.equal(await page.locator('.figure-art').first().evaluate(e=>e===document.activeElement),true);
+    await page.locator('.figure-art').first().click();await page.getByRole('button',{name:'Close',exact:true}).click();assert.equal(await page.locator('dialog').isVisible(),false);assert.equal(await page.locator('.figure-art').first().evaluate(e=>e===document.activeElement),true);
    }
    const broken=await page.evaluate(()=>[...document.querySelectorAll('a[href^="#"]')].filter(a=>!document.getElementById(a.hash.slice(1))).map(a=>a.hash));assert.deepEqual(broken,[]);
    await page.evaluate(()=>{setCategory('Field Brief');setDistribution('Internal')});assert.equal(await page.locator('.doc-end').textContent(),'WindBorne Systems. Field Brief. Internal use only.');
-   for(const [value,ending] of [['',''],['Public',''],['Proprietary',' Proprietary information.'],['Confidential',' Confidential.']]){await page.evaluate(v=>setDistribution(v),value);assert.equal(await page.locator('.doc-end').textContent(),'WindBorne Systems. Field Brief.'+ending)}
+   for(const [value,ending] of [['',''],['Public',''],['Proprietary',' Proprietary information.'],['Confidential',' Confidential. For authorized recipients only. Do not copy or distribute without WindBorne Systems’ permission.']]){await page.evaluate(v=>setDistribution(v),value);assert.equal(await page.locator('.doc-end').textContent(),'WindBorne Systems. Field Brief.'+ending)}
    if(name==='stress-report'){
     assert.equal(await page.locator('.author-label').textContent(),'Authors');assert.equal(await page.locator('.author-row').count(),6);
     await page.evaluate(()=>{document.getElementById('author-details').value='none';renderAuthors()});assert.equal(await page.locator('.author-row').count(),0);assert.equal((await page.locator('.author-value').textContent()).split(', ').length,6);
    }
-   await page.emulateMedia({media:'print'});assert.equal(await page.locator('.preview-bar').isVisible(),false);assert.equal(await page.locator('.print-contents').isVisible(),true);
+   await page.emulateMedia({media:'print'});assert.equal(await page.locator('.preview-bar').isVisible(),false);assert.equal(await page.locator('.doc-end').isVisible(),false);assert.equal(await page.locator('.print-contents').isVisible(),true);
    if(await page.locator('.notes h2').count())assert.deepEqual(await page.evaluate(()=>['fontFamily','fontSize','fontWeight','letterSpacing','color'].map(k=>getComputedStyle(document.querySelector('.notes h2'))[k])),await page.evaluate(()=>['fontFamily','fontSize','fontWeight','letterSpacing','color'].map(k=>getComputedStyle(document.querySelector('.print-contents h2'))[k])));
    assert.deepEqual(errors,[]);await page.close();console.log('Layout and behavior passed: '+name);
   }

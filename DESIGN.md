@@ -46,7 +46,7 @@ Settings are ordered alphabetically: Abstract background, Author details, Catego
 - Authors: singular label for one author; plural for several. Name-only uses comma-separated names. Any title/organization details put each author on a separate line. Without optional fields the metadata uses a 50/50 split, or about 70/30 for a long byline.
 - Category: None, Research Paper, Technical Report, Concept of Operations, Case Study, White Paper, Analysis, Proposal, or a custom label (80 characters maximum).
 - Distribution: None, Public, Internal, Proprietary, Confidential. Public appears in metadata but adds no footer wording. None hides the metadata field. Internal becomes “Internal use only.” in the footer; Proprietary becomes “Proprietary information.”; Confidential stays “Confidential.”
-- Footer: `WindBorne Systems. [Category.] [Distribution wording.]` The first page has no page number. A confidential first page adds “For authorized recipients only. Do not copy or distribute without WindBorne Systems’ permission.” Subsequent pages have the short footer and page number.
+- Footer: `WindBorne Systems. [Category.] [Distribution wording.]` The first page has no page number. A confidential first page adds “For authorized recipients only. Do not copy or distribute without WindBorne Systems’ permission.” Subsequent PDF pages have the short footer and page number. The continuous web article ends with the full confidentiality notice when Distribution is Confidential; other distribution choices retain their short footer.
 - Abstract background: off by default; on uses a pale tint without changing the text measure. No visible Summary or Abstract heading is added.
 - PDF contents: None; One column (headers and subheaders); Two columns (headers only). Enabling contents from None turns abstract shading off; a subsequent manual choice can restore it. Changing between enabled layouts preserves that manual choice.
 
@@ -68,7 +68,7 @@ The one-column contents puts CONTENTS to the left of the detailed list. The two-
 
 Copy actual components from `specimen.html`, replacing all illustrative content.
 
-- Figures: `figure` containing a `button.figure-art` with SVG or an image and a sibling `figcaption`. Give the button an accessible label and the graphic an accessible title/description or alt text. Captions use a bold figure label followed by a full sentence. Use unique SVG IDs per figure. The lightbox namespaces IDs in its copy.
+- Figures: `figure` containing a `button.figure-art` with SVG or an image and a sibling `figcaption`. Give the button an accessible label and the graphic an accessible title/description or alt text. Captions use a bold figure label followed by a full sentence. Use unique SVG IDs per figure. The lightbox caption uses 16px/1.5 IBM Plex Sans and spans its full inner width, aligned with the enlarged figure. The lightbox namespaces IDs in its copy. Its close control is a Lucide X with an accessible Close label; Escape also closes it and focus returns to the figure.
 - Tables: `.table-block > .table-wrap > table` with `thead`, `tbody`, scoped `th` cells, and a native `caption`. The web side caption is generated from the native caption. Use `.num` for numeric alignment. `.caption-below` keeps a desktop caption below when needed. Notes/legends remain beneath the table.
 - Equations: `.eq` with MathML and optional `.eqn`. Define variables and units nearby. Split long derivations into separate display equations rather than one oversized flex container.
 - References: `.notes` containing `h2#references` and an ordered list. Each reference has an ID; a `sup.fn` marker links to it. Give the marker an ID for the reference's `.ref-back` link. Keep links meaningful without relying on color.
@@ -85,6 +85,6 @@ An element taller than the available page cannot be kept intact; the renderer de
 
 ## First-run editor
 
-The local editor starts at `article.html?mode=edit`, with the starter copy preloaded in Article and the component specimen under Template. The CONOP remains a separate worked example. When editing a differently named draft, Template links back to that same Article. Settings save into the editable source, while PDF viewing always reflects the current controls. Static published readers hide editing controls and link their matching PDF.
+The local editor starts at `article.html?mode=edit`, with the starter copy preloaded in Article and the component specimen under Template. The CONOP remains a separate worked example. When editing a differently named draft, Template links back to that same Article. Settings save into the editable source, while PDF viewing always reflects the current controls. View reader layout opens a new tab with a snapshot of those choices, preserving the editing tab. Manuscript text and metadata are edited in HTML, not in the settings panel. Static published readers hide editing controls and link their matching PDF.
 
 Settings help is limited to PDF table of contents, Distribution and Save settings. Info buttons expose short explanations on hover, keyboard focus or tap; Escape dismisses help before closing the panel.

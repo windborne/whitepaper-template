@@ -63,9 +63,9 @@ function updateFooter(){
  const wording={Internal:'Internal use only',Proprietary:'Proprietary information',Confidential:'Confidential'};
  const categoryText=selectedCategory.replace(/[.\s]+$/,'');
  const footer=[config.organization||'WindBorne Systems',categoryText,wording[distribution.value]].filter(Boolean).join('. ')+'.';
- document.querySelector('.doc-end').textContent=footer;
  const confidential=distribution.value==='Confidential';
  const firstFooter=confidential?footer+' For authorized recipients only. Do not copy or distribute without '+(config.organization||'WindBorne Systems')+'’ permission.':footer;
+ document.querySelector('.doc-end').textContent=firstFooter;
  footerStyle.textContent='@page{@bottom-left{content:'+JSON.stringify(footer)+'}}@page:first{@bottom-left{content:'+JSON.stringify(firstFooter)+';'+(confidential?'width:100%;white-space:normal;line-height:1.35;text-align:left;':'')+'}}';
 }
 function renderAuthors(){const dd=document.querySelector('.author-value'),mode=authorDetails.value;dd.replaceChildren();document.querySelector('.author-label').textContent=currentAuthors.length===1?'Author':'Authors';

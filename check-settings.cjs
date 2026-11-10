@@ -17,6 +17,16 @@ module.exports=async function checkSettings(browser,origin){
   await page.locator('#category').selectOption('__custom__');await page.locator('#custom-category').fill('Field </script> report');await page.locator('.add-label').click();
   await page.locator('#author-details').selectOption('full');await page.locator('#print-contents-option').selectOption('one');await page.locator('#abstract-style').check();
   const selected=await page.evaluate(()=>exportSettings());
+  // Reader preview is a separate tab and preserves unsaved editor choices.
+  const editorUrl=page.url(),readerOpened=page.waitForEvent('popup');
+  await page.getByRole('link',{name:'View reader layout',exact:true}).click();
+  const reader=await readerOpened;await reader.waitForLoadState('load');
+  assert.equal(new URL(reader.url()).searchParams.get('mode'),'public');
+  assert.deepEqual(await reader.evaluate(()=>exportSettings()),selected);
+  assert.equal(await reader.locator('.options').isVisible(),false);
+  assert.equal(page.url(),editorUrl);assert.deepEqual(await page.evaluate(()=>exportSettings()),selected);
+  assert.equal(await page.locator('.save-settings').isEnabled(),true);
+  assert.equal(await reader.evaluate(()=>window.opener===null),true);await reader.close();
   const saved=page.waitForResponse(r=>r.url().endsWith('/api/settings')&&r.request().method()==='POST');await page.locator('.save-settings').click();assert.equal((await saved).status(),200);await page.waitForFunction(()=>document.querySelector('.save-status').textContent==='Saved');
   assert.equal(await page.locator('.save-settings').isEnabled(),false);assert.equal(new URL(page.url()).searchParams.has('distribution'),false);
   const after=await fs.readFile(file,'utf8');assert.deepEqual(config(after).defaults,selected);
