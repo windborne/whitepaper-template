@@ -57,7 +57,7 @@ Generated PDF links are temporary: they expire after 30 minutes or a server rest
    For square or portrait photos, use the recommended 3in maximum with a right-side print caption; see [Print photographs](DESIGN.md#print-photographs). Export logs flag untreated non-landscape images for review. Scientific charts, diagrams, maps and tables are exempt from photo limits.
 4. Open `http://127.0.0.1:8743/my-paper.html?mode=edit`, adjust and save settings, then review the web article and View PDF. Template/Article tabs return to the same named draft. The shared CSS, JavaScript, fonts and referenced assets must remain alongside the source.
 
-Recommended defaults: plain abstract, two-column PDF contents (headers only), author name and title, no category, Confidential. One-column contents includes headers and subheaders. PDF contents never appears in the web body and does not affect the web nav sidebar. See [DESIGN.md](DESIGN.md) for typography, options, footer language and page-flow rules. Confidential documents show the full notice at the bottom of the web article and on the first PDF page; later PDF pages use the short footer. Distribution markings do not provide access control.
+Recommended defaults: plain abstract, two-column PDF contents (headers only), author name and title, no optional label, Confidential. One-column contents includes headers and subheaders. PDF contents never appears in the web body and does not affect the web nav sidebar. See [DESIGN.md](DESIGN.md) for typography, options, footer language and page-flow rules. Confidential documents show the full notice at the bottom of the web article and on the first PDF page; later PDF pages use the short footer. Distribution markings do not provide access control.
 
 `conop.html` is a worked example using supplied source material; its technical claims are not independently verified here. `stress-report.html` is a synthetic layout fixture, not research evidence. Keep both separate from your draft.
 
@@ -68,6 +68,8 @@ PYTHON=.venv/bin/python node render.cjs my-paper.html my-paper.pdf
 PYTHON=.venv/bin/python node render.cjs my-paper.html my-paper.pdf \
   --settings '{"contents":"one","category":"Field Brief","distribution":"Internal","details":"full","abstract":"shaded"}'
 ```
+
+In Document settings, **Label (optional)** offers None, Category or Prepared for. Category reveals the existing category choices and Add new option; Prepared for reveals a free-text field with the placeholder “Conference/event name”. These share one header slot. Category appears in the footer; Prepared for does not. Both save and export with the document. For command-line export, use `--settings '{"label":"prepared-for","preparedFor":"AMS Annual Meeting 2027"}'`.
 
 Omitted settings inherit the document's saved defaults. `npm run build` renders the working article, clean starter, specimen, CONOP and synthetic report. `./build.sh my-paper.html` is a compatibility wrapper. `npm run check` tests layout and interaction behavior; [VALIDATION.md](VALIDATION.md) describes PDF review and stress coverage.
 

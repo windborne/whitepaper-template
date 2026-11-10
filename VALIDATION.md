@@ -43,3 +43,5 @@ Reader preview is checked as a separate tab: it carries unsaved choices, hides e
 Lightbox resizing checks cover raster and SVG artwork while an open dialog shrinks and expands from 320px to 1500px. They verify aspect ratios and that the image, caption and close control stay within the dialog without horizontal overflow.
 
 Print figure preflight is tested at the actual Letter content width. A synthetic portrait verifies the opt-in 3in square/portrait photo ceiling and side caption; an uncapped tall chart still renders, and a 70-row table spans pages with every row present once and repeated headers.
+
+Optional labels are tested for conditional controls, mutually exclusive metadata, safe free text, save/reload, reader preview and generated PDF output. Prepared for is omitted from footers. Legacy category links remain supported; long event names wrap on narrow screens.

@@ -31,21 +31,23 @@ Each HTML includes a `script` with `id="document-config"` and `type="application
 {
   "authors": [{"name": "Author Name", "title": "Research scientist", "organization": "WindBorne"}],
   "organization": "WindBorne Systems",
-  "defaults": {"abstract": "plain", "contents": "two", "details": "title", "category": "", "distribution": "Confidential"}
+  "defaults": {"abstract": "plain", "contents": "two", "details": "title", "label": "none", "category": "", "preparedFor": "", "distribution": "Confidential"}
 }
 ```
 
-Use `plain` or `shaded`; `none`, `one` or `two` for contents; `none` (name only), `title`, `organization` or `full` for author details. Blank category or distribution means None. Escape JSON correctly, including `<` as `\u003c` if it occurs in a value inside the script element. Organization is configurable; the WindBorne web logo remains a brand asset and is not a license to imply affiliation.
+Use `plain` or `shaded`; `none`, `one` or `two` for contents; `none` (name only), `title`, `organization` or `full` for author details. Use `none`, `category` or `prepared-for` for `label`. Store the category in `category`, or the free text in `preparedFor` (160 characters maximum); inactive values are saved as empty strings. Blank distribution means None. Existing documents with a category and no label mode are treated as Category for compatibility. Escape JSON correctly, including `<` as `\u003c` if it occurs in a value inside the script element. Organization is configurable; the WindBorne web logo remains a brand asset and is not a license to imply affiliation.
 
 The editable metadata date is abbreviated, e.g. `Sep. 23, 2026` or `Sep. 2026`. Do not reformat dates inside source quotations or reference titles.
 
 ## Optional treatments
 
-Settings are ordered alphabetically: Abstract background, Author details, Category (optional), Distribution (optional), PDF table of contents. The specimen also has Example authors for demonstration. Below the options, Save settings (Lucide save) persists changes in this document’s HTML. It is disabled until settings change, reports Saved on success and keeps unsaved choices visible on failure. The top bar uses View PDF (Lucide file-text) and Document settings (Lucide pencil-line).
+Settings are ordered alphabetically: Abstract background, Author details, Distribution (optional), Label (optional), PDF table of contents. Category or Prepared for appears immediately below Label when selected. The specimen also has Example authors for demonstration. Below the options, Save settings (Lucide save) persists changes in this document’s HTML. It is disabled until settings change, reports Saved on success and keeps unsaved choices visible on failure. The top bar uses View PDF (Lucide file-text) and Document settings (Lucide pencil-line).
 
 - Authors: singular label for one author; plural for several. Name-only uses comma-separated names. Any title/organization details put each author on a separate line. Without optional fields the metadata uses a 50/50 split, or about 70/30 for a long byline.
-- Category: None, Research Paper, Technical Report, Concept of Operations, Case Study, White Paper, Analysis, Proposal, or a custom label (80 characters maximum).
+- Label (optional): None, Category, Prepared for. None hides the metadata slot. Category and Prepared for are mutually exclusive.
+- Category: Research Paper, Technical Report, Concept of Operations, Case Study, White Paper, Analysis, Proposal, or a custom label (80 characters maximum).
 - Distribution: None, Public, Internal, Proprietary, Confidential. Public appears in metadata but adds no footer wording. None hides the metadata field. Internal becomes “Internal use only.” in the footer; Proprietary becomes “Proprietary information.”; Confidential stays “Confidential.”
+- Prepared for: free text with “Conference/event name” as a placeholder, never a prefilled value. Suitable for conferences, events, organizations or audiences; omit it from the footer.
 - Footer: `WindBorne Systems. [Category.] [Distribution wording.]` The first page has no page number. A confidential first page adds “For authorized recipients only. Do not copy or distribute without WindBorne Systems’ permission.” Subsequent PDF pages have the short footer and page number. The continuous web article ends with the full confidentiality notice when Distribution is Confidential; other distribution choices retain their short footer.
 - Abstract background: off by default; on uses a pale tint without changing the text measure. No visible Summary or Abstract heading is added.
 - PDF contents: None; One column (headers and subheaders); Two columns (headers only). Enabling contents from None turns abstract shading off; a subsequent manual choice can restore it. Changing between enabled layouts preserves that manual choice.
@@ -79,7 +81,7 @@ Use thin horizontal table rules, no vertical cell borders, aligned numbers with 
 
 ## Pagination contract
 
-Ordinary figure/caption units, table rows, equations and contents rows stay intact. Headings keep with the next content. Paragraphs and list items have three-line widow/orphan protection. Tables split between rows and repeat their headers. Whole sections, tables, abstracts, contents lists, examples and appendices are not forced onto one page. There are no automatic appendix page breaks or chained keeps around figures/equations.
+Ordinary figure/caption units, table rows, equations and contents rows stay intact. Headings keep with the next content. In print, main section headings use 24pt above and 8pt below; subsections use 16pt above and 6pt below. Use normal collapsing margins so spacing is discarded at automatic page breaks, rather than padding or forced breaks. Web heading spacing is independent. Paragraphs and list items have three-line widow/orphan protection. Tables split between rows and repeat their headers. Whole sections, tables, abstracts, contents lists, examples and appendices are not forced onto one page. There are no automatic appendix page breaks or chained keeps around figures/equations.
 
 An element taller than the available page cannot be kept intact; the renderer detects oversized figures, rows and equations and requests a structural fix. Reduce excess drawing canvas, simplify or divide the material. Never clip, hide, or shrink the entire report to fit. Inspect every final page because text length, figures and long references can still produce sparse endings.
 

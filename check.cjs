@@ -37,6 +37,7 @@ const {chromium}=require('playwright');const {execFileSync,spawn}=require('node:
   await require('./check-lightbox.cjs')(browser,origin);
   await require('./check-help.cjs')(browser,origin);
   await require('./check-settings.cjs')(browser,origin);
+  await require('./check-labels.cjs')(browser,origin);
   const entry=await browser.newPage();await entry.goto(origin+'/');assert.equal(await entry.locator('body').getAttribute('data-document'),'article');assert.match(await entry.locator('.document-tabs a').nth(1).getAttribute('href'),/^article.html/);assert.equal(await entry.getByRole('link',{name:'View PDF',exact:true}).count(),1);assert.equal(await entry.locator('[data-lucide="file-text"]').count(),1);assert.equal(await entry.locator('[data-lucide="pencil-line"]').count(),1);assert.equal(await entry.locator('[data-lucide="save"]').count(),1);await entry.close();
   const page=await browser.newPage();await page.goto(origin+'/conop.html?abstract=shaded&contents=one&category=Custom%20Field%20Brief&distribution=Internal&details=full');
   const popup=page.waitForEvent('popup');await page.locator('[data-pdf-link]').click();const viewer=await popup;await viewer.waitForURL('**/generated/**',{timeout:120000});

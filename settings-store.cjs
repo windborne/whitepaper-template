@@ -1,5 +1,5 @@
 const fs=require('node:fs/promises'),path=require('node:path'),crypto=require('node:crypto');
-const {defaults,validateSettings}=require('./renderer.cjs');
+const {defaults,validateSettings,resolveDefaults}=require('./renderer.cjs');
 const keys=Object.keys(defaults);
 function completeSettings(value){
  const result=validateSettings(value);
@@ -15,7 +15,7 @@ async function saveSettings(file,settings,expected){
  const matches=[...original.matchAll(pattern)];if(matches.length!==1)throw Object.assign(Error('The document needs one valid document-config block'),{status:400});
  let config;try{config=JSON.parse(matches[0][2]);if(!config||typeof config!=='object'||Array.isArray(config))throw Error()}catch{throw Object.assign(Error('Invalid document configuration'),{status:400})}
  if(config.published)throw Object.assign(Error('Published documents are read-only. Save settings in the editable source.'),{status:400});
- const current={...defaults,...config.defaults};
+ const current=resolveDefaults(config.defaults);
  if(!same(current,expected))throw Object.assign(Error('Settings changed in another editor. Reload the document before saving.'),{status:409});
  config.defaults={...config.defaults,...settings};
  const updated=original.replace(pattern,(_,open,body,close)=>open+JSON.stringify(config).replaceAll('<','\\u003c')+close);

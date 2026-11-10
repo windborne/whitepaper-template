@@ -1,12 +1,12 @@
 // A disposable root-level document tests durable saves without altering examples.
 const assert=require('node:assert/strict'),fs=require('node:fs/promises'),path=require('node:path'),crypto=require('node:crypto');
-const {defaults}=require('./renderer.cjs');
+const {resolveDefaults}=require('./renderer.cjs');
 module.exports=async function checkSettings(browser,origin){
  const name='save-test-'+crypto.randomUUID()+'.html',file=path.join(__dirname,name);
  const source=(await fs.readFile(path.join(__dirname,'starter.html'),'utf8')).replace('data-document="starter"','data-document="'+name.slice(0,-5)+'"');
  const configPattern=/(<script\b[^>]*\bid="document-config"[^>]*>)([\s\S]*?)(<\/script>)/;
  const config=text=>JSON.parse(text.match(configPattern)[2]);
- const baseline={...defaults,...config(source).defaults};
+ const baseline=resolveDefaults(config(source).defaults);
  await fs.writeFile(file,source,{flag:'wx'});const page=await browser.newPage(),stale=await browser.newPage();
  const post=data=>fetch(origin+'/api/settings',{method:'POST',headers:{Origin:origin,'Content-Type':'application/json'},body:JSON.stringify(data)});
  try{
@@ -14,6 +14,7 @@ module.exports=async function checkSettings(browser,origin){
   await page.goto(origin+'/'+name+'?mode=edit&distribution=Internal');await stale.goto(origin+'/'+name);
   await page.locator('.options > summary').click();
   assert.equal(await page.locator('.save-settings').isEnabled(),true);
+  await page.locator('#label-type').selectOption('category');
   await page.locator('#category').selectOption('__custom__');await page.locator('#custom-category').fill('Field </script> report');await page.locator('.add-label').click();
   await page.locator('#author-details').selectOption('full');await page.locator('#print-contents-option').selectOption('one');await page.locator('#abstract-style').check();
   const selected=await page.evaluate(()=>exportSettings());

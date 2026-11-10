@@ -13,12 +13,13 @@ document.querySelectorAll('.document-tabs a').forEach(a=>{if(new URL(a.href).pat
 const abstract=document.getElementById('abstract-style'),printContents=document.getElementById('print-contents-option'),category=document.getElementById('category'),authors=document.getElementById('authors-demo'),authorDetails=document.getElementById('author-details');
 const meta=document.querySelector('.metadata'),cat=document.querySelector('.category-field');
 const distribution=document.getElementById('distribution'),distributionField=document.querySelector('.distribution-field'),customEditor=document.querySelector('.custom-label-editor'),customInput=document.getElementById('custom-category');
-let selectedCategory=category.value;
+const labelType=document.getElementById('label-type'),preparedFor=document.getElementById('prepared-for');
+let selectedCategory='',selectedPreparedFor='';
 const footerStyle=document.createElement('style');document.head.append(footerStyle);
 const baseAuthors=config.authors;
 const exampleAuthors=[{name:'Author One',title:'Research scientist',organization:'WindBorne'},{name:'Author Two',title:'Machine learning engineer',organization:'WindBorne'},{name:'Author Three',title:'Research engineer',organization:'WindBorne'}];
 let currentAuthors=baseAuthors;
-function updateReaderLink(){const q=new URLSearchParams({mode:'public',abstract:abstract.checked?'shaded':'plain',contents:printContents.value,category:selectedCategory,details:authorDetails.value});if(authors)q.set('authors',authors.value);q.set('distribution',distribution.value);document.querySelector('.reader-link').href=location.pathname+'?'+q.toString();refreshSaveState(true)}
+function updateReaderLink(){const q=new URLSearchParams({mode:'public',...exportSettings()});document.querySelector('.reader-link').href=location.pathname+'?'+q.toString();refreshSaveState(true)}
 function updatePDFLink(){document.querySelector('[data-pdf-link]').href=config.pdf||kind+'.pdf';updateReaderLink()}
 function populateNavigation(){
  const source=[...document.querySelectorAll('.prose h2,.prose h3')];
@@ -54,14 +55,30 @@ function arrangeContents(mode){
 }
 function setPrintContents(value){const wasOn=document.body.classList.contains('with-print-contents');const mode=value==='on'?'one':['one','two'].includes(value)?value:'none';printContents.value=mode;document.body.dataset.contentsLayout=mode;document.body.classList.toggle('with-print-contents',mode!=='none');arrangeContents(mode);if(mode!=='none'&&!wasOn)setAbstract('plain');updatePDFLink()}
 function setAbstract(value){abstract.checked=value!=='plain';document.body.classList.toggle('abstract-plain',!abstract.checked);updatePDFLink()}
+function renderLabel(){
+ const mode=labelType.value,value=mode==='category'?selectedCategory:mode==='prepared-for'?selectedPreparedFor:'';
+ document.querySelector('.category-setting').hidden=mode!=='category';
+ document.querySelector('.prepared-for-setting').hidden=mode!=='prepared-for';
+ if(mode!=='category')customEditor.hidden=true;
+ cat.hidden=!value;meta.classList.toggle('has-category',!!value);
+ cat.querySelector('dt').textContent=mode==='prepared-for'?'Prepared for':'Category';cat.querySelector('dd').textContent=value;
+ updateFooter();updateReaderLink();
+}
+function setLabel(value){
+ labelType.value=['category','prepared-for'].includes(value)?value:'none';
+ if(labelType.value==='category'&&!selectedCategory){selectedCategory='Research Paper';category.value=selectedCategory}
+ renderLabel();
+}
 function setCategory(value){value=String(value||'').trim().slice(0,80);if(value==='__custom__')return;selectedCategory=value;
- if(![...category.options].some(o=>o.value===value)){const option=new Option(value,value);category.add(option,category.querySelector('[value="__custom__"]'))}
- cat.hidden=!value;meta.classList.toggle('has-category',!!value);cat.querySelector('dt').textContent='Category';cat.querySelector('dd').textContent=value;category.value=value;customEditor.hidden=true;updateFooter();updateReaderLink()}
+ if(value&&![...category.options].some(o=>o.value===value)){const option=new Option(value,value);category.add(option,category.querySelector('[value="__custom__"]'))}
+ category.value=value||'Research Paper';customEditor.hidden=true;setLabel(value?'category':'none');
+}
+function setPreparedFor(value){selectedPreparedFor=String(value||'').trim().slice(0,160);renderLabel()}
 function setDistribution(value){const allowed=['Public','Internal','Proprietary','Confidential'];distribution.value=allowed.includes(value)?value:'';const enabled=!!distribution.value;distributionField.hidden=!enabled;meta.classList.toggle('has-distribution',enabled);distributionField.querySelector('dd').textContent=distribution.value;
  updateFooter();updateReaderLink()}
 function updateFooter(){
  const wording={Internal:'Internal use only',Proprietary:'Proprietary information',Confidential:'Confidential'};
- const categoryText=selectedCategory.replace(/[.\s]+$/,'');
+ const categoryText=labelType.value==='category'?selectedCategory.replace(/[.\s]+$/,''):'';
  const footer=[config.organization||'WindBorne Systems',categoryText,wording[distribution.value]].filter(Boolean).join('. ')+'.';
  const confidential=distribution.value==='Confidential';
  const firstFooter=confidential?footer+' For authorized recipients only. Do not copy or distribute without '+(config.organization||'WindBorne Systems')+'’ permission.':footer;
@@ -73,16 +90,18 @@ function renderAuthors(){const dd=document.querySelector('.author-value'),mode=a
  meta.classList.toggle('authors-long',currentAuthors.length>1||currentAuthors.map(a=>a.name).join(', ').length>50);updateReaderLink()}
 abstract.onchange=()=>setAbstract(abstract.checked?'shaded':'plain');printContents.onchange=()=>setPrintContents(printContents.value);category.onchange=()=>{if(category.value==='__custom__'){customEditor.hidden=false;customInput.value='';customInput.focus()}else setCategory(category.value)};authorDetails.onchange=renderAuthors;
 document.querySelector('.add-label').onclick=()=>{if(customInput.value.trim())setCategory(customInput.value);else customInput.focus()};customInput.addEventListener('keydown',e=>{if(e.key==='Enter'){e.preventDefault();document.querySelector('.add-label').click()}});
+labelType.onchange=()=>setLabel(labelType.value);preparedFor.oninput=()=>setPreparedFor(preparedFor.value);
 distribution.onchange=()=>setDistribution(distribution.value);
 if(authors){authors.value=(params.get('authors')||config.defaults?.authors)==='many'?'many':'single';currentAuthors=authors.value==='many'?exampleAuthors:baseAuthors;authors.onchange=()=>{currentAuthors=authors.value==='many'?exampleAuthors:baseAuthors;renderAuthors()}}
 if(['none','title','organization','full'].includes(params.get('details')))authorDetails.value=params.get('details');
-const defaults={abstract:'plain',contents:'two',details:'title',category:'',distribution:'Confidential',...config.defaults};
+const defaults={abstract:'plain',contents:'two',details:'title',category:'',preparedFor:'',distribution:'Confidential',...config.defaults};
+defaults.label=config.defaults?.label??(defaults.preparedFor?'prepared-for':defaults.category?'category':'none');
 if(!params.has('details'))authorDetails.value=defaults.details;
-setPrintContents(params.has('contents')?params.get('contents'):defaults.contents);setAbstract(params.get('abstract')||defaults.abstract);setCategory(params.has('category')?params.get('category'):defaults.category);renderAuthors();setDistribution(params.has('distribution')?params.get('distribution'):defaults.distribution);
+setPrintContents(params.has('contents')?params.get('contents'):defaults.contents);setAbstract(params.get('abstract')||defaults.abstract);setCategory(params.has('category')?params.get('category'):defaults.category);preparedFor.value=params.has('preparedFor')?params.get('preparedFor'):defaults.preparedFor;setPreparedFor(preparedFor.value);setLabel(params.has('label')?params.get('label'):params.has('preparedFor')?'prepared-for':params.has('category')?(params.get('category')?'category':'none'):defaults.label);renderAuthors();setDistribution(params.has('distribution')?params.get('distribution'):defaults.distribution);
 addEventListener('beforeprint',()=>{if(!document.body.dataset.pdfBuild)document.body.classList.add('native-print')});addEventListener('afterprint',()=>document.body.classList.remove('native-print'));
 async function printCurrent(){await document.fonts.ready;window.print()}
 document.querySelector('.print-trigger').onclick=printCurrent;
-function exportSettings(){return {abstract:abstract.checked?'shaded':'plain',contents:printContents.value,category:selectedCategory,distribution:distribution.value,details:authorDetails.value,authors:authors?.value||'single'}}
+function exportSettings(){return {abstract:abstract.checked?'shaded':'plain',contents:printContents.value,label:labelType.value,category:labelType.value==='category'?selectedCategory:'',preparedFor:labelType.value==='prepared-for'?selectedPreparedFor:'',distribution:distribution.value,details:authorDetails.value,authors:authors?.value||'single'}}
 // Save only document settings; the article's content stays in the HTML source.
 function refreshSaveState(clearFeedback=false){
  if(!saveButton)return;

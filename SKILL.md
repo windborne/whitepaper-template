@@ -18,7 +18,7 @@ Use the approved template in this repository for an editorial, readable technica
 
 ## Recommended defaults
 
-Abstract background **off**; PDF table of contents **two columns (headers only)**; author details **name and title**; category **none**; distribution **Confidential**. These are stored in the document's JSON configuration. Do not infer classification from the subject matter. A distribution label is descriptive and does not implement access control.
+Abstract background **off**; PDF table of contents **two columns (headers only)**; author details **name and title**; label **None**; distribution **Confidential**. Use the optional Label slot for either Category or Prepared for, never both; only Category is included in the footer. Prepared for is user-supplied text, not the placeholder. These are stored in the document's JSON configuration. Do not infer classification from the subject matter. A distribution label is descriptive and does not implement access control.
 
 One-column contents includes sections and subsections. Two-column contents includes sections only. Contents appears before the abstract in print and never in the web body. The first body section flows after the abstract. In print, CONTENTS and REFERENCES share a small uppercase IBM Plex Mono label. There is no visible Summary label, print cover logo, automatic “Draft for discussion,” or mandatory cover page.
 
