@@ -32,9 +32,9 @@ The original and blog-like reference treatments are preserved. Their old typogra
 
 ## Verified checkpoint — November 9, 2026
 
-Default builds: starter 1 page, specimen 5 pages, supplied CONOP 5 pages and synthetic long report 7 pages. All 64 inventory records were verified in order with repeating headers; all four PDFs passed text-bound checks. The CONOP's normalized article and abstract text, including tables, captions and references, match the supplied design-checkpoint source. The small print REFERENCES label matches CONTENTS. The full interaction/export checks and skill validator passed. A static publication was tested with a custom category, Public distribution, three detailed authors, shaded abstract and one-column contents.
+Current default builds: starter and working article 1 page each, specimen 5 pages, supplied CONOP 6 pages and synthetic long report 7 pages. All 64 inventory records were verified in order with repeating headers; all four PDFs passed text-bound checks. The CONOP's normalized article and abstract text, including tables, captions and references, match the supplied design-checkpoint source. The small print REFERENCES label matches CONTENTS. The full interaction/export checks and skill validator passed. A static publication was tested with a custom category, Public distribution, three detailed authors, shaded abstract and one-column contents.
 
-Every page was rendered for visual review. The CONOP still has space before its large concept diagram because the figure and caption remain together; no whole-section keep is involved. The tighter table padding removes its former nearly empty sixth page without changing body type or source content. Each new manuscript still needs a page-by-page review.
+Every page was rendered for visual review. The CONOP still has space before its large concept diagram because the figure and caption remain together; no whole-section keep is involved. The CONOP currently ends with a short references-only sixth page after missing table labels were added. This is a remaining copy-fitting opportunity, not a forced section break; preserve the source content and body typography when refining it. Each new manuscript still needs a page-by-page review.
 
 Settings persistence is tested on a disposable draft: saving and reopening, preserving all article content and author records, discarding unsaved changes, escaping custom labels, detecting stale-tab conflicts, rejecting invalid or cross-origin writes, and refusing to save published reader files. The first-run route and the three Lucide icons are also checked.
 
@@ -46,6 +46,10 @@ Print figure preflight is tested at the actual Letter content width. A synthetic
 
 Optional labels are tested for conditional controls, mutually exclusive metadata, safe free text, save/reload, reader preview and generated PDF output. Prepared for is omitted from footers. Legacy category links remain supported; long event names wrap on narrow screens.
 
-The opt-in portrait photo is checked in equal print columns with a centered image and vertically centered caption. Web checks cover its compact centered layout and responsive side caption, plus whole-image lightbox fitting at desktop, mobile portrait and mobile landscape sizes. Scientific figures retain their separate sizing.
+The opt-in portrait photo is checked in equal print columns with a centered image and bottom-aligned caption. Web checks cover its compact centered layout and responsive side caption, plus whole-image lightbox fitting at desktop, mobile portrait and mobile landscape sizes. Scientific figures retain their separate sizing.
 
 For a source-document conversion, inventory every section, table, figure, caption, note and reference before formatting. Compare text and numeric table values independently against the source; check ligatures, subscripts and cross-page paragraph joins. Do not present selected-excerpt tests as complete documents. Update all internal references when renumbering.
+
+Caption checks cover separate figure/table sequences, explicit-label preservation, missing labels, Appendix A/B counters, repeated normalization, removal of blanket italics and preservation of selective emphasis. They also verify numbered References/appendix contents entries and private review tabs at mobile widths.
+
+Custom footer checks cover recommended wording, a complete first-page override, clearing back to the recommendation, independence from Distribution, save/reload, reader preview, input validation and mobile layout. Verify custom wording appears only on the first PDF page and at the web article end, with standard short footers on later PDF pages.

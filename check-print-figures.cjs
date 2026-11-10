@@ -8,8 +8,8 @@ module.exports=async function checkPrintFigures(browser){
  await fs.writeFile(file,source,{flag:'wx'});const page=await browser.newPage();
  try{
   await page.goto(pathToFileURL(file).href);await page.evaluate(()=>document.fonts.ready);await page.emulateMedia({media:'print'});await page.setViewportSize({width:662,height:924});
-  const sizes=await page.evaluate(()=>{const image=document.querySelector('.figure-photo img').getBoundingClientRect(),caption=document.querySelector('.figure-photo figcaption').getBoundingClientRect(),chart=document.querySelector('#chart img').getBoundingClientRect(),table=document.querySelector('table').getBoundingClientRect();return {photo:image.height,captionRight:caption.left>image.right,captionCenter:Math.abs((caption.top+caption.height/2)-(image.top+image.height/2)),imageCenter:Math.abs((image.left+image.width/2)-(document.querySelector('.figure-photo .figure-art').getBoundingClientRect().left+document.querySelector('.figure-photo .figure-art').getBoundingClientRect().width/2)),chart:chart.height,table:table.height}});
-  assert.ok(sizes.photo<=288&&sizes.photo>250);assert.ok(sizes.captionRight&&sizes.captionCenter<1&&sizes.imageCenter<1);assert.ok(sizes.chart>384,'Chart inherited the photo ceiling');assert.ok(sizes.table>924,'Fixture must span pages');
+  const sizes=await page.evaluate(()=>{const image=document.querySelector('.figure-photo img').getBoundingClientRect(),caption=document.querySelector('.figure-photo figcaption').getBoundingClientRect(),chart=document.querySelector('#chart img').getBoundingClientRect(),table=document.querySelector('table').getBoundingClientRect();return {photo:image.height,captionRight:caption.left>image.right,captionBottom:Math.abs(caption.bottom-image.bottom),imageCenter:Math.abs((image.left+image.width/2)-(document.querySelector('.figure-photo .figure-art').getBoundingClientRect().left+document.querySelector('.figure-photo .figure-art').getBoundingClientRect().width/2)),chart:chart.height,table:table.height}});
+  assert.ok(sizes.photo<=288&&sizes.photo>250);assert.ok(sizes.captionRight&&sizes.captionBottom<1&&sizes.imageCenter<1);assert.ok(sizes.chart>384,'Chart inherited the photo ceiling');assert.ok(sizes.table>924,'Fixture must span pages');
   assert.deepEqual(await imageRecommendations(page),[]);
   await page.locator('.figure-photo').evaluate(e=>e.classList.remove('figure-portrait'));
   assert.equal((await imageRecommendations(page)).length,1,'Untreated portrait should receive an advisory');
@@ -33,6 +33,6 @@ module.exports=async function checkPrintFigures(browser){
   }
   await render(file,pdf,{contents:'none'});
   execFileSync(process.env.PYTHON||'python3',['-c',`from pypdf import PdfReader\nr=PdfReader(${JSON.stringify(pdf)})\nt='\\n'.join(p.extract_text() for p in r.pages)\nassert len(r.pages)>2\nassert all(t.count('ROW-%03d'%n)==1 for n in range(1,71))\nassert t.count('Record')>=2`]);
-  console.log('Photo layout passed: centered print columns, compact web image, mobile lightbox; chart and 70-row table remain uncapped');
+  console.log('Photo layout passed: centered print photo and bottom-aligned caption, compact web image, mobile lightbox; chart and 70-row table remain uncapped');
  }finally{await page.close();await fs.rm(file,{force:true});await fs.rm(pdf,{force:true})}
 };

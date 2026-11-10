@@ -32,7 +32,7 @@ Open **[the draft editor](http://127.0.0.1:8743/article.html?mode=edit)**. Keep 
 
 - **Article** opens `article.html`, preloaded with starter copy on a fresh checkout. Your work stays in that file; reopening does not reset it.
 - **Template** opens the component specimen. It is a reference you can browse while your agent builds your Article. Its settings belong to the specimen, not your paper.
-- **Document settings** controls abstract shading, author details, category, distribution and PDF contents. Info icons explain the less obvious choices.
+- **Document settings** controls abstract shading, author details, distribution, an optional first-page footer, category/prepared-for label and PDF contents. Info icons explain the less obvious choices.
 
 `CHROME` optionally selects an installed Chrome/Chromium executable; `PORT` changes the local port. Use the URL printed in the terminal if the port changes. Fonts and document assets are bundled; PDF export does not fetch external resources.
 
@@ -45,6 +45,8 @@ Open **[the draft editor](http://127.0.0.1:8743/article.html?mode=edit)**. Keep 
 | **View reader layout** | Opens a new tab with editing controls hidden and your current choices applied. Your original editing tab stays open. This is a local preview, not a published website. |
 | **Print current version** | Opens browser print. Use View PDF for the finished export with resolved contents page numbers. |
 
+**First-page footer (optional)** accepts a complete custom footer (up to 400 characters), including the organization name. Blank uses the recommended distribution-based wording: Confidential includes the standard permission notice; other distributions use the short footer. Custom text replaces that recommendation on the first PDF page and at the end of the web article. Later PDF pages retain the standard organization/category/distribution footer. It is independent of Distribution: changing Distribution does not overwrite custom wording. Clear the field to return to the recommendation. Save settings persists it; View PDF and reader preview include unsaved changes. The configuration/CLI key is `firstPageFooter`.
+
 Settings are **not autosaved**. Save before reloading or switching between Template and Article if you want to keep your changes. A reader preview carries a snapshot of the choices when opened; reopen it to see later changes. If another editor saved the same document, reload before choosing and saving again.
 
 Generated PDF links are temporary: they expire after 30 minutes or a server restart. Download the PDF itself for sharing; a `127.0.0.1` link only works on your computer. Saving settings does not update existing PDFs. Generate a fresh PDF after changing content or settings.
@@ -54,10 +56,14 @@ Generated PDF links are temporary: they expire after 30 minutes or a server rest
 1. For the first draft, edit `article.html`. Check for existing work before replacing it. For another paper, copy `starter.html` to a new root-level file such as `my-paper.html` (letters, numbers, hyphens or underscores; no spaces).
 2. Replace the HTML `<title>`, visible title, subtitle, abbreviated date, abstract and article content. Update `document-config` authors and organization; its `defaults` hold saved presentation choices. Set `body data-document="my-paper"` to the filename without `.html`. The date is explicit source content, not automatically today's date.
 3. Use stable unique IDs on `h2` and `h3` headings. Web navigation and PDF contents are generated from them. Copy figures, tables, equations and reference markup from `specimen.html` as needed, replacing illustrative content.
-   For square or portrait photos, use the recommended 3in maximum with a right-side print caption; see [Photographs](DESIGN.md#photographs). Export logs flag untreated non-landscape images for review. Scientific charts, diagrams, maps and tables are exempt from photo limits.
+   For square or portrait photos, use the recommended 3in maximum with a right-side print caption aligned to the bottom of the photo; see [Photographs](DESIGN.md#photographs). Export logs flag untreated non-landscape images for review. Scientific charts, diagrams, maps and tables are exempt from photo limits.
 4. Open `http://127.0.0.1:8743/my-paper.html?mode=edit`, adjust and save settings, then review the web article and View PDF. Template/Article tabs return to the same named draft. The shared CSS, JavaScript, fonts and referenced assets must remain alongside the source.
 
-Recommended defaults: plain abstract, two-column PDF contents (headers only), author name and title, no optional label, Confidential. One-column contents includes headers and subheaders. PDF contents never appears in the web body and does not affect the web nav sidebar. See [DESIGN.md](DESIGN.md) for typography, options, footer language and page-flow rules. Confidential documents show the full notice at the bottom of the web article and on the first PDF page; later PDF pages use the short footer. Distribution markings do not provide access control.
+Figures and tables have separate sequences: Figure 1… and Table 1… in the main text; Figure A-1… and Table A-1… in Appendix A, restarting for each appendix. See [numbering and appendix markup](DESIGN.md#figure-and-table-numbering). When restyling, update the caption and its in-text references together. Caption labels are bold; caption text is upright with selective italics. Missing labels are filled automatically, but the agent must reconcile existing labels and provide a meaningful caption.
+
+Contents numbering is separate: every top-level entry, including References and appendices, receives a continuous section number (for example, **11. References** and **12. Appendix A: Supporting detail**). Body headings stay unnumbered; the appendix heading retains its letter.
+
+Recommended defaults: plain abstract, two-column PDF contents (headers only), author name and title, no optional label, Confidential. One-column contents includes headers and subheaders. PDF contents never appears in the web body and does not affect the web nav sidebar. See [DESIGN.md](DESIGN.md) for typography, options, footer language and page-flow rules. Unless a custom first-page footer is supplied, Confidential documents show the recommended full notice at the bottom of the web article and on the first PDF page; later PDF pages use the short footer. Distribution markings do not provide access control.
 
 `conop.html` is a worked example using supplied source material; its technical claims are not independently verified here. `stress-report.html` is a synthetic layout fixture, not research evidence. Keep both separate from your draft.
 
@@ -85,6 +91,10 @@ PYTHON=.venv/bin/python node publish.cjs my-paper.html dist/my-paper \
 This creates `dist/my-paper/my-paper.html`, `my-paper.pdf` and the shared assets. It does not upload anything. Open or host `my-paper.html` from that folder; the command does not create an `index.html`. Share the whole folder for a web reader, or just the PDF for a PDF handoff. The reader's View PDF opens that baked PDF; a static host cannot run Chromium to generate changed settings. Regenerate the package after content or settings change. The local editor provides live custom export; public static readers receive an exact fixed publication.
 
 Directly opening an editable HTML file still lets you read it and use browser print, but saving settings and generating custom PDFs require `npm start`. Saving settings does not rebuild existing PDF files; View PDF generates the current version, and publishing packages the matching PDF. Browser-native print omits unresolved contents page numbers; use the renderer for a finished PDF. Editing controls are presentation state, not authentication.
+
+## Review several documents together
+
+The standard editor has Template and Article tabs. For a private review bundle, configure `document-config.reviewTabs` to link additional documents, such as Template, Sample 1, Sample 2 and Sample 3; see [review bundle configuration](DESIGN.md#private-review-bundles). Each file keeps its own saved settings. Save before switching tabs. Keep customer/internal documents and their derived PDFs outside this public repository.
 
 ## Contents of the repository
 

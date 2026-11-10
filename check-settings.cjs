@@ -17,7 +17,9 @@ module.exports=async function checkSettings(browser,origin){
   await page.locator('#label-type').selectOption('category');
   await page.locator('#category').selectOption('__custom__');await page.locator('#custom-category').fill('Field </script> report');await page.locator('.add-label').click();
   await page.locator('#author-details').selectOption('full');await page.locator('#print-contents-option').selectOption('one');await page.locator('#abstract-style').check();
+  await page.locator('#first-page-footer').fill('WindBorne Systems. Custom first-page notice for reviewers.');
   const selected=await page.evaluate(()=>exportSettings());
+  assert.equal(await page.locator('.doc-end').textContent(),selected.firstPageFooter);
   // Reader preview is a separate tab and preserves unsaved editor choices.
   const editorUrl=page.url(),readerOpened=page.waitForEvent('popup');
   await page.getByRole('link',{name:'View reader layout',exact:true}).click();
