@@ -19,7 +19,7 @@ This is the approved default, evolved from the WindBorne research blog. Earlier 
 | Contents page numbers | IBM Plex Mono | Not in web body | 8.2pt |
 | Math | STIX Two Math | MathML | MathML |
 
-Use left-aligned text. The main web reading column is 660px, with generous gutters between the navigation and caption rails. Print uses US Letter with .68in top, .8in side and .70in bottom margins. Text remains slightly narrower than the figure/table area. Fonts are bundled in `fonts.css`; no network font request is needed.
+Use left-aligned text. The main web reading column is 660px, with generous gutters between the navigation and caption rails. Print uses US Letter with .68in top, .8in side and .70in bottom margins. Text remains slightly narrower than the figure/table area. Appendix headings and prose, and the references block, use the same centered 6.5in print measure as body text; figures and tables inside an appendix retain the wider measure. Fonts are bundled in `fonts.css`; no network font request is needed.
 
 Use restrained near-black ink, muted gray text, light rules and white space. A light abstract tint is optional. Avoid cards, pills, decorative shadows and arbitrary font sizes inside the article. Meaningful charts and photographs may preserve color; use pattern, line style and direct labels so meaning does not depend on color alone.
 

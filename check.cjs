@@ -29,6 +29,7 @@ const {chromium}=require('playwright');const {execFileSync,spawn}=require('node:
     await page.evaluate(()=>{document.getElementById('author-details').value='none';renderAuthors()});assert.equal(await page.locator('.author-row').count(),0);assert.equal((await page.locator('.author-value').textContent()).split(', ').length,6);
    }
    await page.emulateMedia({media:'print'});assert.equal(await page.locator('.preview-bar').isVisible(),false);assert.equal(await page.locator('.doc-end').isVisible(),false);assert.equal(await page.locator('.print-contents').isVisible(),true);
+   const textAlignment=await page.evaluate(()=>{const body=document.querySelector('.prose>p');if(!body)return [];const b=body.getBoundingClientRect();return [...document.querySelectorAll('.prose .appendix>h2,.prose .appendix>h3,.prose .appendix>p,.prose .notes')].map(el=>{const r=el.getBoundingClientRect();return {left:Math.abs(r.left-b.left),width:Math.abs(r.width-b.width)}})});assert.ok(textAlignment.every(r=>r.left<1&&r.width<1),`${name}: appendix/references do not align with body`);
    if(await page.locator('.notes h2').count())assert.deepEqual(await page.evaluate(()=>['fontFamily','fontSize','fontWeight','letterSpacing','color'].map(k=>getComputedStyle(document.querySelector('.notes h2'))[k])),await page.evaluate(()=>['fontFamily','fontSize','fontWeight','letterSpacing','color'].map(k=>getComputedStyle(document.querySelector('.print-contents h2'))[k])));
    assert.deepEqual(errors,[]);await page.close();console.log('Layout and behavior passed: '+name);
   }
