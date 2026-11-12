@@ -21,6 +21,8 @@ document.querySelectorAll('.document-tabs a').forEach(a=>{if(new URL(a.href).pat
 const abstract=document.getElementById('abstract-style'),printContents=document.getElementById('print-contents-option'),category=document.getElementById('category'),authors=document.getElementById('authors-demo'),authorDetails=document.getElementById('author-details');
 const meta=document.querySelector('.metadata'),cat=document.querySelector('.category-field');
 const distribution=document.getElementById('distribution'),customEditor=document.querySelector('.custom-label-editor'),customInput=document.getElementById('custom-category');
+// Refresh older document markup too: no custom distribution field or retired choices.
+distribution.replaceChildren(...['Public','Internal','Proprietary'].map(value=>new Option(value,value)));
 const preparedFor=document.getElementById('prepared-for'),preparedField=document.querySelector('.prepared-for-field');
 const metadataDate=meta.querySelector('.date'),dateLabel=metadataDate.previousElementSibling;
 const dateLabelDefault=dateLabel.textContent;
@@ -159,7 +161,9 @@ function setCategory(value,{autoCover=true}={}){const wasProposal=isProposal();v
 }
 function setPreparedFor(value){selectedPreparedFor=String(value||'').trim().slice(0,160);renderMetadata()}
 function setDistribution(value){
- if(!['Public','Internal','Restricted','Proprietary'].includes(value))throw Error('Choose Public, Internal, Restricted or Proprietary. Legacy distribution values require review; they are not automatically reclassified.');
+ // Explicit migration: both former labels now use Proprietary.
+ if(value==='Restricted'||value==='Confidential')value='Proprietary';
+ if(!['Public','Internal','Proprietary'].includes(value))throw Error('Choose Public, Internal or Proprietary.');
  distribution.value=value;
  document.querySelectorAll('input[name="distribution-choice"]').forEach(input=>input.checked=input.value===value);
  updateFooter();renderCover();updateReaderLink();
@@ -178,7 +182,6 @@ function updateFooter(){
  const notices={
   Public:'WindBorne Systems. For public distribution.',
   Internal:'Internal WindBorne Systems document. Not approved for public release.',
-  Restricted:'Restricted WindBorne Systems document. External sharing requires Data Owner approval and a contract/NDA.',
   Proprietary:'Proprietary WindBorne Systems document. External release requires an NDA and written approval from the COO or delegate.'
  };
  // Strip legacy prefixes: page one and the web end show only the tailored notice.
@@ -263,8 +266,7 @@ document.querySelector('[data-pdf-link]').addEventListener('click',async e=>{
 const distributionGuidance={
  Public:'Use for information approved for public release by its Data Owner, or legitimately public-source material. Technical releases also need COO/delegate clearance; federal-contract disclosure rules still apply. Selecting Public is not approval.',
  Internal:'Default for nonpublic company information that does not meet a higher level. Share with WB personnel and authorized providers under written agreements. Use approved systems; personal information remains need-to-know.',
- Restricted:'Use for commercial observations, forecasts, customer information, pricing and other restricted business information. Access is need-to-know with Data Owner approval; external recipients require a contract or NDA. CUI and export-controlled data have additional rules.',
- Proprietary:'Use for core technology: system designs, source code, models, algorithms, hardware designs and test data. Access is limited to named people with need-to-know. External release requires an NDA and written COO/delegate approval.'
+ Proprietary:'Use for sensitive company or customer information, including pricing, commercial observations and forecasts, core technology, system designs, source code, models, algorithms, hardware designs and test data. Former Restricted and Confidential labels map here. Access is need-to-know; external release requires an NDA and written COO/delegate approval. CUI and export-controlled data have additional rules.'
 };
 const choices=document.createElement('div');choices.className='distribution-choices';choices.setAttribute('role','radiogroup');choices.setAttribute('aria-label','Distribution');choices.setAttribute('aria-required','true');
 const choiceHelp=document.querySelector('#distribution').closest('[data-help]').querySelector('.help-trigger');
