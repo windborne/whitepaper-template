@@ -16,9 +16,9 @@ module.exports=async function checkSettings(browser,origin){
   await page.locator('.options > summary').click();
   assert.equal(await page.locator('.save-settings').isEnabled(),true);
   await page.locator('#category').selectOption('__custom__');await page.locator('#custom-category').fill('Field </script> report');await page.locator('.add-label').click();
-  await page.locator('#author-details').selectOption('full');await page.locator('#print-contents-option').selectOption('one');await page.locator('#abstract-style').check();await page.getByRole('switch',{name:'PDF cover page',exact:true}).check();
+  await page.locator('#author-details').selectOption('full');await page.locator('#print-contents-option').selectOption('one');await page.locator('#abstract-style').check();await page.getByRole('switch',{name:'PDF cover page',exact:true}).check();await page.getByRole('switch',{name:'Figure borders',exact:true}).check();
   assert.equal(await page.locator('#first-page-footer').count(),0);
-  const selected=await page.evaluate(()=>exportSettings());
+  const selected=await page.evaluate(()=>exportSettings());assert.equal(selected.figureBorders,'on');
   assert.equal(await page.locator('.doc-end').textContent(),'Custom first-page notice for reviewers.');
   // Reader preview is a separate tab and preserves unsaved editor choices.
   const editorUrl=page.url(),readerOpened=page.waitForEvent('popup');

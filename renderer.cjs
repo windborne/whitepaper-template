@@ -1,12 +1,12 @@
 const {chromium}=require('playwright');
 const {execFileSync}=require('node:child_process');
 const fs=require('node:fs/promises'),path=require('node:path'),{pathToFileURL}=require('node:url');
-const defaults={cover:'off',abstract:'plain',contents:'two',details:'title',category:'',preparedFor:'',distribution:'Internal',authors:'single',firstPageFooter:''};
+const defaults={figureBorders:'off',cover:'off',abstract:'plain',contents:'two',details:'title',category:'',preparedFor:'',distribution:'Internal',authors:'single',firstPageFooter:''};
 function validateSettings(input={}){
  if(!input||typeof input!=='object'||Array.isArray(input))throw Error('Settings must be an object');
  input={...input};
  if(input.distribution==='Restricted'||input.distribution==='Confidential')input.distribution='Proprietary';
- const enums={cover:['off','on'],label:['none','category','prepared-for'],abstract:['plain','shaded'],contents:['none','one','two'],details:['none','title','organization','full'],distribution:['Public','Internal','Proprietary'],authors:['single','many']};
+ const enums={figureBorders:['off','on'],cover:['off','on'],label:['none','category','prepared-for'],abstract:['plain','shaded'],contents:['none','one','two'],details:['none','title','organization','full'],distribution:['Public','Internal','Proprietary'],authors:['single','many']};
  for(const key of Object.keys(input))if(key!=='label'&&!Object.hasOwn(defaults,key))throw Error('Unknown setting: '+key);
  for(const [key,values] of Object.entries(enums))if(input[key]!==undefined&&!values.includes(input[key]))throw Error('Invalid '+key);
  if(input.category!==undefined&&(typeof input.category!=='string'||input.category.length>80||/[\x00-\x1f\x7f]/.test(input.category)||input.category==='__custom__'))throw Error('Invalid category');

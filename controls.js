@@ -32,6 +32,14 @@ const coverField=document.createElement('label');coverField.className='toggle-se
 coverField.innerHTML='<span>PDF cover page</span><input type="checkbox" role="switch" id="pdf-cover-option" aria-label="PDF cover page">';
 printContents.closest('.setting-field').before(coverField);
 const coverOption=coverField.querySelector('input');
+// A fixed hairline frame, shared by web, lightbox and PDF output.
+const bordersField=document.createElement('label');bordersField.className='toggle-setting figure-borders-setting';
+bordersField.innerHTML='<span>Figure borders</span><input type="checkbox" role="switch" id="figure-borders-option" aria-label="Figure borders">';
+coverField.before(bordersField);
+const figureBorders=bordersField.querySelector('input');
+function setFigureBorders(value){figureBorders.checked=value==='on';document.body.classList.toggle('with-figure-borders',figureBorders.checked);updatePDFLink()}
+figureBorders.onchange=()=>setFigureBorders(figureBorders.checked?'on':'off');
+
 const coverPage=document.createElement('section');coverPage.className='pdf-cover';coverPage.setAttribute('aria-label','Cover page');
 document.querySelector('.paper-header').before(coverPage);
 function renderCover(){
@@ -206,14 +214,14 @@ preparedFor.oninput=()=>setPreparedFor(preparedFor.value);
 distribution.onchange=()=>setDistribution(distribution.value);
 if(authors){authors.value=(params.get('authors')||config.defaults?.authors)==='many'?'many':'single';currentAuthors=authors.value==='many'?exampleAuthors:baseAuthors;authors.onchange=()=>{currentAuthors=authors.value==='many'?exampleAuthors:baseAuthors;renderAuthors()}}
 if(['none','title','organization','full'].includes(params.get('details')))authorDetails.value=params.get('details');
-const defaults={cover:'off',abstract:'plain',contents:'two',details:'title',category:'',preparedFor:'',distribution:'Internal',firstPageFooter:'',...config.defaults};
+const defaults={figureBorders:'off',cover:'off',abstract:'plain',contents:'two',details:'title',category:'',preparedFor:'',distribution:'Internal',firstPageFooter:'',...config.defaults};
 delete defaults.label; // Legacy label mode no longer hides either independent field.
 if(!params.has('details'))authorDetails.value=defaults.details;
-setCover(params.has('cover')?params.get('cover'):defaults.cover);setPrintContents(params.has('contents')?params.get('contents'):defaults.contents);setAbstract(params.get('abstract')||defaults.abstract);setCategory(params.has('category')?params.get('category'):defaults.category,{autoCover:!params.has('cover')&&(params.has('category')||!Object.hasOwn(config.defaults||{},'cover'))});preparedFor.value=params.has('preparedFor')?params.get('preparedFor'):defaults.preparedFor;setPreparedFor(preparedFor.value);renderAuthors();setDistribution(params.has('distribution')?params.get('distribution'):defaults.distribution);
+setFigureBorders(params.has('figureBorders')?params.get('figureBorders'):defaults.figureBorders);setCover(params.has('cover')?params.get('cover'):defaults.cover);setPrintContents(params.has('contents')?params.get('contents'):defaults.contents);setAbstract(params.get('abstract')||defaults.abstract);setCategory(params.has('category')?params.get('category'):defaults.category,{autoCover:!params.has('cover')&&(params.has('category')||!Object.hasOwn(config.defaults||{},'cover'))});preparedFor.value=params.has('preparedFor')?params.get('preparedFor'):defaults.preparedFor;setPreparedFor(preparedFor.value);renderAuthors();setDistribution(params.has('distribution')?params.get('distribution'):defaults.distribution);
 addEventListener('beforeprint',()=>{if(!document.body.dataset.pdfBuild)document.body.classList.add('native-print')});addEventListener('afterprint',()=>document.body.classList.remove('native-print'));
 async function printCurrent(){await document.fonts.ready;window.print()}
 document.querySelector('.print-trigger').onclick=printCurrent;
-function exportSettings(){return {cover:coverOption.checked?'on':'off',abstract:abstract.checked?'shaded':'plain',contents:printContents.value,category:selectedCategory,preparedFor:selectedPreparedFor,distribution:distribution.value,details:authorDetails.value,authors:authors?.value||'single',firstPageFooter:customFooterText()}}
+function exportSettings(){return {figureBorders:figureBorders.checked?'on':'off',cover:coverOption.checked?'on':'off',abstract:abstract.checked?'shaded':'plain',contents:printContents.value,category:selectedCategory,preparedFor:selectedPreparedFor,distribution:distribution.value,details:authorDetails.value,authors:authors?.value||'single',firstPageFooter:customFooterText()}}
 // Save only document settings; the article's content stays in the HTML source.
 function refreshSaveState(clearFeedback=false){
  if(!saveButton)return;
@@ -309,4 +317,4 @@ settings.addEventListener('toggle',()=>{if(!settings.open)closeOpenHelp()});
 const toc=[...document.querySelectorAll('.toc a')];const headings=toc.map(a=>document.getElementById(a.hash.slice(1))).filter(Boolean);let scheduled=false;
 function update(){const threshold=parseFloat(getComputedStyle(document.documentElement).scrollPaddingTop)+4;let current=headings[0];for(const h of headings){if(h.getBoundingClientRect().top<=threshold)current=h}if(innerHeight+scrollY>=document.documentElement.scrollHeight-3)current=headings.at(-1);toc.forEach(a=>{if(a.hash==='#'+current?.id)a.setAttribute('aria-current','location');else a.removeAttribute('aria-current')});scheduled=false}
 function scheduleUpdate(){if(!scheduled){scheduled=true;requestAnimationFrame(update)}}addEventListener('scroll',scheduleUpdate,{passive:true});addEventListener('resize',scheduleUpdate);addEventListener('hashchange',scheduleUpdate);document.fonts.ready.then(scheduleUpdate);if(headings.length)update();
-const dialog=document.querySelector('dialog');document.querySelectorAll('.figure-art').forEach(b=>b.onclick=()=>{const f=b.closest('figure');dialog.classList.toggle('photo-lightbox',f.classList.contains('figure-photo')&&f.classList.contains('figure-portrait'));const art=dialog.querySelector('.enlarged-art');art.innerHTML=b.innerHTML;art.querySelectorAll('[id]').forEach(el=>{const old=el.id;const next='lightbox-'+old;el.id=next;art.querySelectorAll('*').forEach(node=>{for(const attr of [...node.attributes]){if(attr.value.includes('url(#'+old+')'))node.setAttribute(attr.name,attr.value.replaceAll('url(#'+old+')','url(#'+next+')'))}})});dialog.querySelector('.enlarged-caption').innerHTML=f.querySelector('figcaption').innerHTML;dialog.showModal()});dialog.querySelector('button').onclick=()=>dialog.close();dialog.onclick=e=>{if(e.target===dialog)dialog.close()};
+const dialog=document.querySelector('dialog');document.querySelectorAll('.figure-art').forEach(b=>b.onclick=()=>{const f=b.closest('figure');dialog.classList.toggle('unframed-lightbox',f.dataset.figureBorder==='off');dialog.classList.toggle('photo-lightbox',f.classList.contains('figure-photo')&&f.classList.contains('figure-portrait'));const art=dialog.querySelector('.enlarged-art');art.innerHTML=b.innerHTML;art.querySelectorAll('[id]').forEach(el=>{const old=el.id;const next='lightbox-'+old;el.id=next;art.querySelectorAll('*').forEach(node=>{for(const attr of [...node.attributes]){if(attr.value.includes('url(#'+old+')'))node.setAttribute(attr.name,attr.value.replaceAll('url(#'+old+')','url(#'+next+')'))}})});dialog.querySelector('.enlarged-caption').innerHTML=f.querySelector('figcaption').innerHTML;dialog.showModal()});dialog.querySelector('button').onclick=()=>dialog.close();dialog.onclick=e=>{if(e.target===dialog)dialog.close()};

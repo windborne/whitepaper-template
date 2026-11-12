@@ -22,3 +22,5 @@ Optional overrides (Category and Prepared for, custom first-page footer, abstrac
 Content and sources:
 
 Distribution is a fixed three-choice control: **Public, Internal (default), Proprietary**. There is no custom-distribution input in the editor; use the source-only custom first-page footer for document-specific wording. Only change the classification scheme in code when explicitly requested and authorized; that requires updating validation, notices, help and tests together. Do not invent a new level for an individual document. This differs from Category, which still supports custom labels. Preserve supplied notice text even when its wording includes “confidential”; migrate the distribution field, not the manuscript or legal notice.
+
+Use optional Figure borders only when requested or helpful for separating artwork from the page: `defaults.figureBorders` is `"off"` by default, or `"on"` for a fixed 0.5pt WB Gray 900 frame. No adjustable thickness. Exclude already-framed figures with `data-figure-border="off"`. Keep all PDF paper pure white; use the verified brand colors in DESIGN.md for document styling and preserve scientific artwork colors.

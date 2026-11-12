@@ -21,7 +21,7 @@ This is the approved default, evolved from the WindBorne research blog. Earlier 
 
 Use left-aligned text. The main web reading column is 660px, with generous gutters between the navigation and caption rails. Print uses US Letter with .68in top, .8in side and .70in bottom margins. Text remains slightly narrower than the figure/table area. Appendix headings and prose, and the references block, use the same centered 6.5in print measure as body text; figures and tables inside an appendix retain the wider measure. Fonts are bundled in `fonts.css`; no network font request is needed.
 
-Use restrained near-black ink, muted gray text, light rules and white space. A light abstract tint is optional. Avoid cards, pills, decorative shadows and arbitrary font sizes inside the article. Meaningful charts and photographs may preserve color; use pattern, line style and direct labels so meaning does not depend on color alone.
+Use Engine Storybook’s verified brand palette: Gray 900 `#1E1C1C` for ink and figure frames; Gray 700 `#4F4D4B` for supporting text; Gray 200 `#DADBD7` for light rules; Gray 75 `#F2F1F0` for optional abstract shading; muted Sky 700 `#17667D` for links. PDF pages, including covers and margins, use pure white `#FFFFFF`, not Engine’s tinted application canvas. Palette source: https://app.windbornesystems.com/storybook/index.html?path=/docs/design-system-color--docs (verified November 12, 2026). Preserve original scientific image/chart colors. A light abstract tint is optional. Avoid cards, pills, decorative shadows and arbitrary font sizes inside the article. Meaningful charts and photographs may preserve color; use pattern, line style and direct labels so meaning does not depend on color alone.
 
 ## Document configuration
 
@@ -32,7 +32,7 @@ Each HTML includes a `script` with `id="document-config"` and `type="application
   "authors": [{"name": "Author Name", "title": "Research scientist", "organization": "WindBorne"}],
   "organization": "WindBorne Systems",
   "footer": {"title": ""},
-  "defaults": {"cover": "off", "abstract": "plain", "contents": "two", "details": "title", "category": "", "preparedFor": "", "distribution": "Internal", "firstPageFooter": ""}
+  "defaults": {"figureBorders": "off", "cover": "off", "abstract": "plain", "contents": "two", "details": "title", "category": "", "preparedFor": "", "distribution": "Internal", "firstPageFooter": ""}
 }
 ```
 
@@ -42,7 +42,7 @@ In header metadata, abbreviate the month with a period when a day is included, e
 
 ## Optional treatments
 
-Settings are ordered alphabetically: Abstract background, Author details, Category (optional), Distribution, PDF table of contents, Prepared for (optional). Category is always visible and includes None (the default); Prepared for is an always-visible text field, blank by default, with “Conference/event name” as placeholder. The specimen also has Example authors for demonstration. Below the options, Save settings (Lucide save) persists changes in this document’s HTML. It is disabled until settings change, reports Saved on success and keeps unsaved choices visible on failure. The top bar uses View PDF (Lucide file-text) and Document settings (Lucide pencil-line).
+Settings are ordered alphabetically: Abstract background, Author details, Category (optional), Distribution, Figure borders, PDF cover page, PDF table of contents, Prepared for (optional). Category is always visible and includes None (the default); Prepared for is an always-visible text field, blank by default, with “Conference/event name” as placeholder. The specimen also has Example authors for demonstration. Below the options, Save settings (Lucide save) persists changes in this document’s HTML. It is disabled until settings change, reports Saved on success and keeps unsaved choices visible on failure. The top bar uses View PDF (Lucide file-text) and Document settings (Lucide pencil-line).
 
 With four metadata fields, use two columns: Author / Date, then Prepared for / Category. With only one optional field, use three columns where space permits. Omit empty fields; never display the placeholder as content. This applies to web and PDF; long values wrap. Distribution is footer-only.
 
@@ -184,3 +184,7 @@ The optional source-only `document-config.footer.title` supplies a short running
 When authoring a short footer title, omit repeated “WindBorne” or “WindBorne Systems”: the company prefix already identifies the organization. If the main title includes the brand, set `footer.title` explicitly to avoid repeating it; for example, “WindBorne White Paper Template” uses “White Paper Template”. Keep the main/web/cover title unchanged. Preserve the remaining title wording unless the user provides or approves a shorter version. This is an authoring rule; the runtime full-title fallback remains available when no footer title is supplied.
 
 Distribution is a fixed three-choice control: **Public, Internal (default), Proprietary**. There is no custom-distribution input in the editor; use the source-only custom first-page footer for document-specific wording. Only change the classification scheme in code when explicitly requested and authorized; that requires updating validation, notices, help and tests together. Do not invent a new level for an individual document. This differs from Category, which still supports custom labels. Preserve supplied notice text even when its wording includes “confidential”; migrate the distribution field, not the manuscript or legal notice.
+
+## Optional figure borders
+
+Figure borders is a single on/off switch, off by default (`defaults.figureBorders: "off"`; use `"on"` to enable). The fixed 0.5pt Gray 900 frame follows each image or SVG artwork edge in web, lightbox and print; captions and decorative cover art remain outside it. No thickness control. Multi-image figures frame each panel separately. The border stays inside the artwork box; verify pagination at export. Use `data-figure-border="off"` on a figure that already has a frame or should remain unframed. Native HTML tables keep their own table rules. The setting is saved, carried to the web reader and honored by PDF export.

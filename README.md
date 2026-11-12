@@ -35,7 +35,7 @@ Open **[the draft editor](http://127.0.0.1:8743/article.html?mode=edit)**, or th
 
 - **Article** opens `article.html`, preloaded with starter copy. Your work stays in that file; reopening does not reset it.
 - **Template** opens the synthetic component specimen for reference. Its settings belong to the specimen, not your paper.
-- **Document settings** controls abstract shading, author details, distribution, independent Category and Prepared for fields, PDF cover page and PDF contents. Info icons explain the less obvious choices.
+- **Document settings** controls abstract shading, optional fixed-weight figure borders, author details, distribution, independent Category and Prepared for fields, PDF cover page and PDF contents. Info icons explain the less obvious choices.
 
 The new folder has no Git repository or publishing remote. This prevents an ordinary push from that folder; it does not set access permissions, disable cloud sync or authorize sharing. Keep it in approved storage and never add the public template remote. Ask your agent to work in this folder, not in the toolkit checkout. A separate approved private repository is an option for collaboration, but is not created automatically.
 
