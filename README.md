@@ -32,7 +32,7 @@ Open **[the draft editor](http://127.0.0.1:8743/article.html?mode=edit)**. Keep 
 
 - **Article** opens `article.html`, preloaded with starter copy on a fresh checkout. Your work stays in that file; reopening does not reset it.
 - **Template** opens the component specimen. It is a reference you can browse while your agent builds your Article. Its settings belong to the specimen, not your paper.
-- **Document settings** controls abstract shading, author details, distribution and independent Category and Prepared for fields and PDF contents. Info icons explain the less obvious choices.
+- **Document settings** controls abstract shading, author details, distribution and independent Category and Prepared for fields, PDF cover page and PDF contents. Info icons explain the less obvious choices.
 
 `CHROME` optionally selects an installed Chrome/Chromium executable; `PORT` changes the local port. Use the URL printed in the terminal if the port changes. Fonts and document assets are bundled; PDF export does not fetch external resources.
 
@@ -45,11 +45,29 @@ Open **[the draft editor](http://127.0.0.1:8743/article.html?mode=edit)**. Keep 
 | **View web reader layout** | Opens a new tab with editing controls hidden and your current choices applied. Your original editing tab stays open. This is a local preview, not a published website. |
 | **Print current PDF version** | Opens browser print. Use View PDF for the finished export with resolved contents page numbers. |
 
-**Custom first-page footer (source only):** set `defaults.firstPageFooter` in the HTML document-config (or the `firstPageFooter` CLI setting) to a short notice, up to 400 characters. There is no footer text field in Document settings. The renderer prefixes the organization, distribution wording and optional category, then the notice: `WindBorne Systems. PROPRIETARY. <notice>`. Legacy values beginning with the organization and classification are accepted without duplicating that prefix. Blank uses the automatic notice. The web article ends with the same treatment. Later PDF pages keep the standard organization/month-year/distribution footer. Changing Distribution updates the prefix without rewriting saved custom wording. Save settings preserves the override. Aim for one line at the existing footer type size; long custom notices wrap rather than shrink or clip.
+**Custom first-page footer (source only):** set `defaults.firstPageFooter` in the HTML document-config (or the `firstPageFooter` CLI setting) to a short notice, up to 1,000 characters. There is no footer text field in Document settings. The first page and web end display only the tailored notice, without an additional organization, category or distribution prefix. Company/classification wording within the approved notice itself is intentional. Legacy organization/classification prefixes are stripped from custom notices. Blank uses the automatic notice. The web article ends with the same treatment. Later PDF pages keep the standard organization/title/month-year footer on the left, with uppercase classification and page number on the right. Changing Distribution changes the default notice and later-page label, but preserves supplied custom notice wording. Save settings preserves the override. Aim for one line at the existing footer type size; long custom notices wrap rather than shrink or clip.
 
 Settings are **not autosaved**. Save before reloading or switching between Template and Article if you want to keep your changes. A reader preview carries a snapshot of the choices when opened; reopen it to see later changes. If another editor saved the same document, reload before choosing and saving again.
 
 Generated PDF links are temporary: they expire after 30 minutes or a server restart. Download the PDF itself for sharing; a `127.0.0.1` link only works on your computer. Saving settings does not update existing PDFs. Generate a fresh PDF after changing content or settings.
+
+## Running PDF footer
+
+Pages 2 onward show **WindBorne Systems. Title. Month Year.** on the left, and **CLASSIFICATION** plus the page number on the right. Keep company/title/date in their supplied mixed case; the classification stays uppercase. Page one and the web end retain their tailored notice.
+
+For an optional short footer title, add `"footer": {"title": "Short document title"}` at the top level of the HTML's `document-config`, beside `defaults`. Omitted, empty or whitespace-only titles use the complete visible article title (`.paper-header h1`), not the browser title or cover override. Save settings preserves this source-only field; there is no additional editor control. Long titles wrap at the existing font size, without ellipsis or automatic shortening. Inspect the exported footer; ask for an explicit short title if the full title cannot fit the footer area.
+
+When authoring a short footer title, omit repeated “WindBorne” or “WindBorne Systems”: the company prefix already identifies the organization. If the main title includes the brand, set `footer.title` explicitly to avoid repeating it; for example, “WindBorne White Paper Template” uses “White Paper Template”. Keep the main/web/cover title unchanged. Preserve the remaining title wording unless the user provides or approves a shorter version. This is an authoring rule; the runtime full-title fallback remains available when no footer title is supplied.
+
+## Optional PDF cover
+
+Enable **PDF cover page** in Document settings for a proposal or report that needs a separate opening page. It is **off by default**. Save settings retains the choice; View PDF exports it. The web article stays unchanged. In the PDF, the cover replaces the usual opening header and the contents/abstract/body begin on the next page. The cover counts as page one without a printed page number; subsequent pages and contents destinations include it.
+
+Selecting Category **Proposal** turns the cover on, uses Point of Contact and Delivery Date, and suppresses the visible Proposal category. You can still turn the cover off manually. Put contact name/email and optional validity in the source configuration; see [proposal treatment](DESIGN.md#proposal-treatment). The original confidentiality notice belongs in the custom first-page footer and at the web end.
+
+The cover uses the document title, subtitle and metadata. An agent can add an optional narrow photograph, contact details and the original submission notice in the HTML; see [cover markup](DESIGN.md#pdf-cover-page). Without a photograph it uses a text-only layout. Preserve supplied notices in full; do not replace them with the short classification footer.
+
+Cover typography is fixed: **Newsreader Bold (700)** for the title and **Newsreader Regular (400)** for the optional subtitle; **IBM Plex Sans Medium (500)** for dates, contact names and Prepared for recipients. Small uppercase field labels, emails and validity remain IBM Plex Sans Regular (400). The real Medium font is bundled for offline rendering. Preserve source notice capitalization, including **CONFIDENTIALITY NOTICE:**.
 
 ## Author a document
 
@@ -65,7 +83,7 @@ Contents numbering is separate: every top-level entry, including References and 
 
 Back matter normally follows References → Appendices → Glossary. If an appendix or glossary cites sources, put References last instead. A subtle divider follows References only when another section follows. See [back matter order](DESIGN.md#back-matter-order).
 
-Recommended defaults: plain abstract, two-column PDF contents (headers only), author name and title, Category None and Prepared for blank, Internal distribution. One-column contents includes headers and subheaders. PDF contents never appears in the web body and does not affect the web nav sidebar. See [DESIGN.md](DESIGN.md) for typography, options, footer language and page-flow rules. Distribution is required and footer-only. The first page uses a distribution-specific notice; subsequent pages use a short footer; the classification precedes both automatic and custom first-page notices. Distribution markings do not provide access control.
+Recommended defaults: PDF cover page off, plain abstract, two-column PDF contents (headers only), author name and title, Category None and Prepared for blank, Internal distribution. One-column contents includes headers and subheaders. PDF contents never appears in the web body and does not affect the web nav sidebar. See [DESIGN.md](DESIGN.md) for typography, options, footer language and page-flow rules. Distribution is required and footer-only. The first page uses a distribution-specific notice; subsequent pages use a short footer; the first-page and web-end notices include company wording as part of the notice itself, without an additional classification, organization or category prefix. Distribution markings do not provide access control.
 
 `stress-report.html` is a synthetic layout fixture, not research evidence. Keep it separate from your draft. Public examples contain placeholder or synthetic material; use real reports only in a separate private workspace.
 
@@ -76,18 +94,18 @@ Choose the highest applicable classification. The required Distribution setting 
 
 | Distribution | Use for | Short footer (PDF pages after page one) |
 |---|---|---|
-| Public | Data Owner-approved public releases or legitimately public-source material; technical releases also need COO/delegate clearance | WindBorne Systems. November 2026. PUBLIC. |
-| Internal | Nonpublic company information that does not meet a higher level; WB personnel and authorized providers under written agreements | WindBorne Systems. November 2026. INTERNAL. |
-| Restricted | Commercial observations, forecasts, customer information, pricing and related restricted business information; need-to-know access approved by the Data Owner; external recipients under contract/NDA | WindBorne Systems. November 2026. RESTRICTED. |
-| Proprietary | Core technology, source code, models, system/hardware designs and test data; named need-to-know access; external release requires an NDA and written COO/delegate approval | WindBorne Systems. November 2026. PROPRIETARY. |
+| Public | Data Owner-approved public releases or legitimately public-source material; technical releases also need COO/delegate clearance | Left: WindBorne Systems. Document title. November 2026. / Right: PUBLIC + page number |
+| Internal | Nonpublic company information that does not meet a higher level; WB personnel and authorized providers under written agreements | Left: WindBorne Systems. Document title. November 2026. / Right: INTERNAL + page number |
+| Restricted | Commercial observations, forecasts, customer information, pricing and related restricted business information; need-to-know access approved by the Data Owner; external recipients under contract/NDA | Left: WindBorne Systems. Document title. November 2026. / Right: RESTRICTED + page number |
+| Proprietary | Core technology, source code, models, system/hardware designs and test data; named need-to-know access; external release requires an NDA and written COO/delegate approval | Left: WindBorne Systems. Document title. November 2026. / Right: PROPRIETARY + page number |
 
-On later PDF pages, the full month and year from the document date appear between the organization and distribution wording; Category is omitted. On page one and at the web end, classification comes immediately after the organization, followed by Category if selected and the notice. A custom first-page footer affects the first PDF page and web end only; the organization and classification precede the custom notice, while pages 2 onward retain their standard classification footer. The later-page label is always uppercase: PUBLIC, INTERNAL, RESTRICTED or PROPRIETARY. The dates in this table are examples; use the document month/year. First-page notice wording is listed below; custom notices remain source-only.
+On later PDF pages, the left footer reads `WindBorne Systems. Document title. November 2026.` in mixed case; uppercase classification and the page number sit on the right with a generous gap. Category and Prepared for are omitted. On page one and at the web end, show only the tailored notice. A custom first-page footer affects those locations only; pages 2 onward retain their standard organization/title/date footer on the left and classification/page number on the right. The later-page label is always uppercase: PUBLIC, INTERNAL, RESTRICTED or PROPRIETARY. The dates in this table are examples; use the document month/year. First-page notice wording is listed below; custom notices remain source-only.
 
 The setting records classification; it does not authorize release or enforce access. Preserve supplied classifications, apply the highest level present, and ask the Data Owner when uncertain. Do not assume older “Confidential” documents map to any one new level. Blank/Confidential settings must be reviewed and replaced before saving/exporting. Missing settings default to Internal.
 
 Use approved systems and required access controls for nonpublic content, including approved U.S. storage/processing unless an authorized exception applies. CUI, export-controlled data and federal-contract information require additional approved environments, permissions and markings; this template is not a compliance validator and does not replace those markings. Apply matching Google Drive labels where available. Public publishing requires the relevant Data Owner approval and technical/contract clearances; neither a classification selection nor a random URL grants approval. Keep nonpublic source documents and derived outputs out of this public repository.
 
-See [automatic first-page notices](DESIGN.md#automatic-first-page-notices) for the exact default wording. The first-page notice also appears at the end of the web article. Preserve an existing source-authored custom notice instead of replacing it with these defaults.
+See [automatic first-page notices](DESIGN.md#automatic-first-page-notices) for the exact default wording. All four defaults name WindBorne Systems within the notice; no separate company/classification prefix is added. The first-page notice also appears at the end of the web article. Preserve an existing source-authored custom notice instead of replacing it with these defaults.
 
 ## Command-line export
 
@@ -97,7 +115,7 @@ PYTHON=.venv/bin/python node render.cjs my-paper.html my-paper.pdf \
   --settings '{"contents":"one","category":"Field Brief","distribution":"Internal","details":"full","abstract":"shaded"}'
 ```
 
-In Document settings, **Category (optional)** includes None (default), the category choices and Add new option. **Prepared for (optional)** is a separate text field, blank by default, with “Conference/event name” as a placeholder. Both can be filled, saved and exported together. With four metadata fields, Author and Date form the first row; Prepared for sits beneath Author and Category beneath Date. Only Category appears in the footer. For command-line export, use `--settings '{"category":"Technical Report","preparedFor":"AMS Annual Meeting 2027"}'`.
+In Document settings, **Category (optional)** includes None (default), the category choices and Add new option. **Prepared for (optional)** is a separate text field, blank by default, with “Conference/event name” as a placeholder. Both can be filled, saved and exported together. With four metadata fields, Author and Date form the first row; Prepared for sits beneath Author and Category beneath Date. Neither appears in the footer. For command-line export, use `--settings '{"category":"Technical Report","preparedFor":"AMS Annual Meeting 2027"}'`.
 
 Omitted settings inherit the document's saved defaults. `npm run build` renders the working article, clean starter, specimen and synthetic report. `./build.sh my-paper.html` is a compatibility wrapper. `npm run check` tests layout and interaction behavior; [VALIDATION.md](VALIDATION.md) describes PDF review and stress coverage.
 

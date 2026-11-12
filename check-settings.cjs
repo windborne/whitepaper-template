@@ -3,9 +3,10 @@ const assert=require('node:assert/strict'),fs=require('node:fs/promises'),path=r
 const {resolveDefaults}=require('./renderer.cjs');
 module.exports=async function checkSettings(browser,origin){
  const name='save-test-'+crypto.randomUUID()+'.html',file=path.join(__dirname,name);
- const source=(await fs.readFile(path.join(__dirname,'starter.html'),'utf8')).replace('data-document="starter"','data-document="'+name.slice(0,-5)+'"').replace('"distribution": "Internal"','"distribution": "Internal", "firstPageFooter": "WindBorne Systems. Custom first-page notice for reviewers."');
+ let source=(await fs.readFile(path.join(__dirname,'starter.html'),'utf8')).replace('data-document="starter"','data-document="'+name.slice(0,-5)+'"').replace('"distribution": "Internal"','"distribution": "Internal", "firstPageFooter": "WindBorne Systems. Custom first-page notice for reviewers."');
  const configPattern=/(<script\b[^>]*\bid="document-config"[^>]*>)([\s\S]*?)(<\/script>)/;
  const config=text=>JSON.parse(text.match(configPattern)[2]);
+ source=source.replace(configPattern,(_,open,body,close)=>{const c=JSON.parse(body);c.footer={title:'Saved running title'};c.defaults.firstPageFooter='WindBorne Systems. Custom first-page notice for reviewers.';return open+JSON.stringify(c)+close});
  const baseline=resolveDefaults(config(source).defaults);
  await fs.writeFile(file,source,{flag:'wx'});const page=await browser.newPage(),stale=await browser.newPage();
  const post=data=>fetch(origin+'/api/settings',{method:'POST',headers:{Origin:origin,'Content-Type':'application/json'},body:JSON.stringify(data)});
@@ -15,10 +16,10 @@ module.exports=async function checkSettings(browser,origin){
   await page.locator('.options > summary').click();
   assert.equal(await page.locator('.save-settings').isEnabled(),true);
   await page.locator('#category').selectOption('__custom__');await page.locator('#custom-category').fill('Field </script> report');await page.locator('.add-label').click();
-  await page.locator('#author-details').selectOption('full');await page.locator('#print-contents-option').selectOption('one');await page.locator('#abstract-style').check();
+  await page.locator('#author-details').selectOption('full');await page.locator('#print-contents-option').selectOption('one');await page.locator('#abstract-style').check();await page.getByRole('switch',{name:'PDF cover page',exact:true}).check();
   assert.equal(await page.locator('#first-page-footer').count(),0);
   const selected=await page.evaluate(()=>exportSettings());
-  assert.equal(await page.locator('.doc-end').textContent(),'WindBorne Systems. Field </script> report. Custom first-page notice for reviewers.');
+  assert.equal(await page.locator('.doc-end').textContent(),'Custom first-page notice for reviewers.');
   // Reader preview is a separate tab and preserves unsaved editor choices.
   const editorUrl=page.url(),readerOpened=page.waitForEvent('popup');
   await page.getByRole('link',{name:'View web reader layout',exact:true}).click();
@@ -33,7 +34,7 @@ module.exports=async function checkSettings(browser,origin){
   assert.equal(await page.locator('.save-settings').isEnabled(),false);assert.equal(new URL(page.url()).searchParams.has('distribution'),false);
   const after=await fs.readFile(file,'utf8');assert.deepEqual(config(after).defaults,selected);
   assert.equal(after.replace(configPattern,'CONFIG'),source.replace(configPattern,'CONFIG'),'Save changed article content');
-  assert.deepEqual(config(after).authors,config(source).authors);assert.equal(after.includes('Field </script> report'),false,'Configuration was not safely escaped');
+  assert.deepEqual(config(after).authors,config(source).authors);assert.deepEqual(config(after).footer,{title:'Saved running title'});assert.equal(after.includes('Field </script> report'),false,'Configuration was not safely escaped');
   await page.reload();assert.deepEqual(await page.evaluate(()=>exportSettings()),selected);
   await page.locator('.options > summary').click();assert.equal(await page.locator('.save-settings').isEnabled(),false);
   await page.getByRole('link',{name:'Template',exact:true}).click();await page.waitForURL('**/specimen.html?**');

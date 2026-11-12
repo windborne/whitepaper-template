@@ -1,15 +1,15 @@
 const {chromium}=require('playwright');
 const {execFileSync}=require('node:child_process');
 const fs=require('node:fs/promises'),path=require('node:path'),{pathToFileURL}=require('node:url');
-const defaults={abstract:'plain',contents:'two',details:'title',category:'',preparedFor:'',distribution:'Internal',authors:'single',firstPageFooter:''};
+const defaults={cover:'off',abstract:'plain',contents:'two',details:'title',category:'',preparedFor:'',distribution:'Internal',authors:'single',firstPageFooter:''};
 function validateSettings(input={}){
  if(!input||typeof input!=='object'||Array.isArray(input))throw Error('Settings must be an object');
- const enums={label:['none','category','prepared-for'],abstract:['plain','shaded'],contents:['none','one','two'],details:['none','title','organization','full'],distribution:['Public','Internal','Restricted','Proprietary'],authors:['single','many']};
+ const enums={cover:['off','on'],label:['none','category','prepared-for'],abstract:['plain','shaded'],contents:['none','one','two'],details:['none','title','organization','full'],distribution:['Public','Internal','Restricted','Proprietary'],authors:['single','many']};
  for(const key of Object.keys(input))if(key!=='label'&&!Object.hasOwn(defaults,key))throw Error('Unknown setting: '+key);
  for(const [key,values] of Object.entries(enums))if(input[key]!==undefined&&!values.includes(input[key]))throw Error('Invalid '+key);
  if(input.category!==undefined&&(typeof input.category!=='string'||input.category.length>80||/[\x00-\x1f\x7f]/.test(input.category)||input.category==='__custom__'))throw Error('Invalid category');
  if(input.preparedFor!==undefined&&(typeof input.preparedFor!=='string'||input.preparedFor.length>160||/[\x00-\x1f\x7f]/.test(input.preparedFor)))throw Error('Invalid preparedFor');
- if(input.firstPageFooter!==undefined&&(typeof input.firstPageFooter!=='string'||input.firstPageFooter.length>400||/[\x00-\x1f\x7f]/.test(input.firstPageFooter)))throw Error('Invalid firstPageFooter');
+ if(input.firstPageFooter!==undefined&&(typeof input.firstPageFooter!=='string'||input.firstPageFooter.length>1000||/[\x00-\x1f\x7f]/.test(input.firstPageFooter)))throw Error('Invalid firstPageFooter');
  const result={...input};delete result.label;return result;
 }
 function resolveDefaults(input={}){return {...defaults,...validateSettings(input)}}
@@ -40,6 +40,8 @@ async function render(input,output,settings={}){
   if(errors.length)throw Error(errors.join('\n'));
   for(const note of await imageRecommendations(page))console.warn('Layout recommendation: '+note);
   const effective=await page.evaluate(()=>exportSettings());
+  const coverOverflow=await page.evaluate(()=>{if(!document.body.classList.contains('with-pdf-cover'))return false;const main=document.querySelector('.cover-main');return main.scrollHeight>main.clientHeight+1||document.querySelector('.pdf-cover').getBoundingClientRect().height>11*96+1});
+  if(coverOverflow)throw Error('Cover exceeds one page; shorten cover metadata or use a shorter cover title.');
   const oversized=await page.evaluate(()=>{const max=9.62*96;return [...document.querySelectorAll('figure,tr,.eq')].filter(e=>e.getBoundingClientRect().height>max).map(e=>e.id||e.tagName)});
   if(oversized.length)throw Error('Oversized print unit; split or redesign it before exporting: '+oversized.join(', '));
   await fs.mkdir(path.dirname(path.resolve(output)),{recursive:true});

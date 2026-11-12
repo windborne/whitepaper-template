@@ -1,4 +1,5 @@
 const config=JSON.parse(document.getElementById('document-config').textContent);
+if(/^WindBorne Systems(?:[., ]+Inc\.?)?$/i.test(config.organization||''))config.organization='WindBorne Systems';
 let saveButton,saveStatus,savedDefaults,saving=false,saveFeedback='';
 const params=new URLSearchParams(config.published?'':location.search);const kind=document.body.dataset.document;
 const localDocument=location.protocol==='file:'||['127.0.0.1','localhost','::1'].includes(location.hostname);
@@ -10,7 +11,7 @@ const articleName=documentName==='specimen.html'?(requestedArticle&&/^[a-zA-Z0-9
 const tabBar=document.querySelector('.document-tabs');
 const reviewTabs=Array.isArray(config.reviewTabs)?config.reviewTabs.filter(t=>t&&typeof t.label==='string'&&/^[a-zA-Z0-9][a-zA-Z0-9_-]*\.html$/.test(t.document)):[];
 if(editing&&reviewTabs.length){
- tabBar.replaceChildren(...reviewTabs.map(t=>{const a=document.createElement('a');a.href=t.document+'?mode=edit';a.textContent=t.label;if(t.title)a.title=t.title;return a}));
+ tabBar.replaceChildren(...reviewTabs.map(t=>{const a=document.createElement('a');a.href=t.document+'?mode=edit';a.textContent=t.document===documentName?t.label:(t.shortLabel||t.label);a.setAttribute('aria-label',t.label);a.title=t.title||t.label;return a}));
  document.body.classList.add('review-mode');
 }else{
  const tabs=[...tabBar.querySelectorAll('a')];
@@ -21,10 +22,45 @@ const abstract=document.getElementById('abstract-style'),printContents=document.
 const meta=document.querySelector('.metadata'),cat=document.querySelector('.category-field');
 const distribution=document.getElementById('distribution'),customEditor=document.querySelector('.custom-label-editor'),customInput=document.getElementById('custom-category');
 const preparedFor=document.getElementById('prepared-for'),preparedField=document.querySelector('.prepared-for-field');
+const metadataDate=meta.querySelector('.date'),dateLabel=metadataDate.previousElementSibling;
+const dateLabelDefault=dateLabel.textContent;
+const validity=document.createElement('span');validity.className='proposal-validity';metadataDate.append(validity);
+// PDF-only cover. The control is shared by older documents without new markup.
+const coverField=document.createElement('label');coverField.className='toggle-setting cover-setting';
+coverField.innerHTML='<span>PDF cover page</span><input type="checkbox" role="switch" id="pdf-cover-option" aria-label="PDF cover page">';
+printContents.closest('.setting-field').before(coverField);
+const coverOption=coverField.querySelector('input');
+const coverPage=document.createElement('section');coverPage.className='pdf-cover';coverPage.setAttribute('aria-label','Cover page');
+document.querySelector('.paper-header').before(coverPage);
+function renderCover(){
+ const main=document.createElement('div');main.className='cover-main';
+ const brand=document.createElement('div');brand.className='cover-organization';
+ const logo=document.querySelector('.brand-link img');
+ if(logo){const image=logo.cloneNode(true);image.className='cover-logo';brand.append(image)}else brand.textContent=config.organization||'WindBorne Systems';main.append(brand);
+ const heading=document.createElement('div');heading.className='cover-heading';
+ const title=document.createElement('h1');title.textContent=config.cover?.title||document.querySelector('.paper-header h1').textContent;heading.append(title);
+ const subtitle=document.querySelector('.paper-header .subtitle');if(subtitle){const sub=document.createElement('p');sub.className='cover-subtitle';sub.textContent=subtitle.textContent;heading.append(sub)}
+ main.append(heading);
+ const details=document.createElement('div');details.className='cover-details';
+ const metadata=meta.cloneNode(true);metadata.className='cover-metadata';
+ const recipient=metadata.querySelector('.prepared-for-field');if(recipient)recipient.dataset.coverField='prepared-for';metadata.querySelectorAll('[class]').forEach(el=>{if(!el.classList.contains('proposal-validity'))el.removeAttribute('class')});
+ if(isProposal()&&metadata.children.length>1)metadata.prepend(metadata.children[1]);metadata.querySelectorAll('[hidden]').forEach(el=>el.remove());metadata.querySelectorAll('[id]').forEach(el=>el.removeAttribute('id'));details.append(metadata);
+ const extra=document.querySelector('.document-contact');if(extra&&!isProposal())details.append(extra.cloneNode(true));main.append(details);
+ const content=document.createElement('div');content.className='cover-content';
+ const block=document.createElement('div');block.className='cover-block';block.append(...main.childNodes);content.append(block);main.append(content);
+ const note=document.createElement('p');note.className='cover-notice';note.textContent=currentFirstNotice;main.append(note);
+ coverPage.replaceChildren(main);
+ const art=document.querySelector('template#cover-art');
+ if(art){const photo=document.createElement('div');photo.className='cover-photo';photo.append(art.content.cloneNode(true));coverPage.append(photo)}
+ coverPage.classList.toggle('has-art',!!art);
+}
+function setCover(value){coverOption.checked=value==='on';document.body.classList.toggle('with-pdf-cover',coverOption.checked);renderCover();updatePDFLink()}
+coverOption.onchange=()=>setCover(coverOption.checked?'on':'off');
 // Agent-authored source override; intentionally absent from document settings.
 const firstPageFooter=params.has('firstPageFooter')?params.get('firstPageFooter'):(config.defaults?.firstPageFooter||'');
 function customFooterText(){return firstPageFooter.replace(/\s+/g,' ').trim()}
 let selectedCategory='',selectedPreparedFor='';
+let currentFirstNotice='';
 const footerStyle=document.createElement('style');document.head.append(footerStyle);
 const baseAuthors=config.authors;
 const exampleAuthors=[{name:'Author One',title:'Research scientist',organization:'WindBorne'},{name:'Author Two',title:'Machine learning engineer',organization:'WindBorne'},{name:'Author Three',title:'Research engineer',organization:'WindBorne'}];
@@ -103,65 +139,78 @@ function arrangeContents(mode){
 }
 function setPrintContents(value){const wasOn=document.body.classList.contains('with-print-contents');const mode=value==='on'?'one':['one','two'].includes(value)?value:'none';printContents.value=mode;document.body.dataset.contentsLayout=mode;document.body.classList.toggle('with-print-contents',mode!=='none');arrangeContents(mode);if(mode!=='none'&&!wasOn)setAbstract('plain');updatePDFLink()}
 function setAbstract(value){abstract.checked=value!=='plain';document.body.classList.toggle('abstract-plain',!abstract.checked);updatePDFLink()}
+function isProposal(){return selectedCategory==='Proposal'}
 function renderMetadata(){
- cat.hidden=!selectedCategory;cat.querySelector('dd').textContent=selectedCategory;
+ document.body.classList.toggle('proposal-mode',isProposal());
+ cat.hidden=!selectedCategory||isProposal();cat.querySelector('dd').textContent=selectedCategory;
  preparedField.hidden=!selectedPreparedFor;preparedField.querySelector('dd').textContent=selectedPreparedFor;
- meta.classList.toggle('has-category',!!selectedCategory);meta.classList.toggle('has-prepared-for',!!selectedPreparedFor);
- updateFooter();updateReaderLink();
+ meta.classList.toggle('has-category',!!selectedCategory&&!isProposal());meta.classList.toggle('has-prepared-for',!!selectedPreparedFor);
+ dateLabel.textContent=isProposal()?'Delivery Date':dateLabelDefault;
+ validity.textContent=isProposal()&&config.proposal?.validity?config.proposal.validity:'';
+ validity.hidden=!isProposal()||!config.proposal?.validity;
+ authorDetails.closest('.setting-field').hidden=isProposal();
+ renderAuthors();updateFooter();renderCover();updateReaderLink();
 }
-function setCategory(value){value=String(value||'').trim().slice(0,80);if(value==='__custom__')return;selectedCategory=value;
+function setCategory(value,{autoCover=true}={}){const wasProposal=isProposal();value=String(value||'').trim().slice(0,80);if(value==='__custom__')return;selectedCategory=value;
  if(value&&![...category.options].some(o=>o.value===value)){const option=new Option(value,value);category.add(option,category.querySelector('[value="__custom__"]'))}
- category.value=value;customEditor.hidden=true;renderMetadata();
+ category.value=value;customEditor.hidden=true;
+ if(autoCover&&!wasProposal&&isProposal())setCover('on');
+ renderMetadata();
 }
 function setPreparedFor(value){selectedPreparedFor=String(value||'').trim().slice(0,160);renderMetadata()}
 function setDistribution(value){
  if(!['Public','Internal','Restricted','Proprietary'].includes(value))throw Error('Choose Public, Internal, Restricted or Proprietary. Legacy distribution values require review; they are not automatically reclassified.');
  distribution.value=value;
  document.querySelectorAll('input[name="distribution-choice"]').forEach(input=>input.checked=input.value===value);
- updateFooter();updateReaderLink();
+ updateFooter();renderCover();updateReaderLink();
 }
 function updateFooter(){
- const wording={Internal:'Internal use only',Restricted:'RESTRICTED',Proprietary:'PROPRIETARY'};
  const organization=(config.organization||'WindBorne Systems').replace(/[.\s]+$/,'');
- const categoryText=selectedCategory.replace(/[.\s]+$/,'');
  const months=['January','February','March','April','May','June','July','August','September','October','November','December'];
- const dateText=document.querySelector('.metadata .date')?.textContent.trim()||'';
+ const dateText=[...metadataDate.childNodes].filter(node=>node!==validity).map(node=>node.textContent).join('').trim();
  const dateMatch=dateText.match(/^([A-Za-z]+)\.?\s+(?:\d{1,2},?\s+)?(\d{4})$/);
  const month=dateMatch&&months.find(name=>name.toLowerCase().startsWith(dateMatch[1].toLowerCase()));
- const footerDate=month?month+' '+dateMatch[2]:'';
- const footer=[organization,footerDate,distribution.value.toUpperCase()].filter(Boolean).join('. ')+'.';
- const firstPrefix=[organization,wording[distribution.value],categoryText].filter(Boolean).join('. ')+'.';
+ const footerDate=month?month+'\u00a0'+dateMatch[2]:'';
+ const suppliedTitle=typeof config.footer?.title==='string'?config.footer.title.trim():'';
+ const footerTitle=(suppliedTitle||document.querySelector('.paper-header h1').textContent).replace(/\s+/g,' ').trim().replace(/\.+$/,'');
+ const footer=[organization,footerTitle,footerDate].filter(Boolean).join('. ')+'.';
+ const footerMark=distribution.value.toUpperCase()+'\u2003\u2003';
  const notices={
-  Public:'For public distribution.',
-  Internal:'Not approved for public release.',
-  Restricted:'External sharing requires Data Owner approval and a contract/NDA.',
-  Proprietary:'External release requires an NDA and written COO/delegate approval.'
+  Public:'WindBorne Systems. For public distribution.',
+  Internal:'Internal WindBorne Systems document. Not approved for public release.',
+  Restricted:'Restricted WindBorne Systems document. External sharing requires Data Owner approval and a contract/NDA.',
+  Proprietary:'Proprietary WindBorne Systems document. External release requires an NDA and written approval from the COO or delegate.'
  };
- // Accept legacy full footers, but compose the organization and classification only once.
+ // Strip legacy prefixes: page one and the web end show only the tailored notice.
  let custom=customFooterText();
  if(custom.toLowerCase().startsWith(organization.toLowerCase()+'.'))custom=custom.slice(organization.length+1).trim();
  custom=custom.replace(/^(?:PUBLIC|INTERNAL(?: USE ONLY)?|RESTRICTED|PROPRIETARY)\.\s*/i,'');
- const firstFooter=firstPrefix+' '+(custom||notices[distribution.value]);
+ const firstFooter=custom||notices[distribution.value];
+ currentFirstNotice=firstFooter;
  document.querySelector('.doc-end').textContent=firstFooter;
- footerStyle.textContent='@page{@bottom-left{content:'+JSON.stringify(footer)+'}}@page:first{@bottom-left{content:'+JSON.stringify(firstFooter)+';'+'width:100%;white-space:normal;overflow-wrap:anywhere;line-height:1.35;text-align:left;'+'}}';
+ footerStyle.textContent='@page{@bottom-left{content:'+JSON.stringify(footer)+';width:5.15in;vertical-align:bottom;padding-bottom:.25in;white-space:normal;overflow-wrap:anywhere;line-height:1.35;text-align:left;}@bottom-right{content:'+JSON.stringify(footerMark)+' counter(page);width:1.5in;vertical-align:bottom;padding-bottom:.25in;white-space:nowrap;text-align:right;}}@page:first{@bottom-left{content:'+JSON.stringify(firstFooter)+';'+'width:100%;vertical-align:middle;padding-bottom:0;white-space:normal;overflow-wrap:anywhere;line-height:1.35;text-align:left;'+'}@bottom-right{content:none;}}';
 }
 function renderAuthors(){const dd=document.querySelector('.author-value'),mode=authorDetails.value;dd.replaceChildren();document.querySelector('.author-label').textContent=currentAuthors.length===1?'Author':'Authors';
- if(mode==='none'){dd.textContent=currentAuthors.map(a=>a.name).join(', ')}else{currentAuthors.forEach(a=>{const row=document.createElement('span');row.className='author-row';row.textContent=[a.name,...(['full','title'].includes(mode)?[a.title]:[]),...(mode==='title'?[]:[a.organization])].filter(Boolean).join(', ');dd.append(row)})}
- meta.classList.toggle('authors-long',currentAuthors.length>1||currentAuthors.map(a=>a.name).join(', ').length>50);updateReaderLink()}
+ if(isProposal()){
+  document.querySelector('.author-label').textContent='Point of Contact';
+  const contact=config.proposal?.contact||{};dd.append(document.createTextNode(contact.name||currentAuthors.map(a=>a.name).join(', ')));
+  if(contact.email){const a=document.createElement('a');a.textContent=contact.email;a.href='mailto:'+contact.email;dd.append(document.createElement('br'),a)}
+ }else if(mode==='none'){dd.textContent=currentAuthors.map(a=>a.name).join(', ')}else{currentAuthors.forEach(a=>{const row=document.createElement('span');row.className='author-row';row.textContent=[a.name,...(['full','title'].includes(mode)?[a.title]:[]),...(mode==='title'?[]:[a.organization])].filter(Boolean).join(', ');dd.append(row)})}
+ meta.classList.toggle('authors-long',currentAuthors.length>1||currentAuthors.map(a=>a.name).join(', ').length>50);renderCover();updateReaderLink()}
 abstract.onchange=()=>setAbstract(abstract.checked?'shaded':'plain');printContents.onchange=()=>setPrintContents(printContents.value);category.onchange=()=>{if(category.value==='__custom__'){customEditor.hidden=false;customInput.value='';customInput.focus()}else setCategory(category.value)};authorDetails.onchange=renderAuthors;
 document.querySelector('.add-label').onclick=()=>{if(customInput.value.trim())setCategory(customInput.value);else customInput.focus()};customInput.addEventListener('keydown',e=>{if(e.key==='Enter'){e.preventDefault();document.querySelector('.add-label').click()}});
 preparedFor.oninput=()=>setPreparedFor(preparedFor.value);
 distribution.onchange=()=>setDistribution(distribution.value);
 if(authors){authors.value=(params.get('authors')||config.defaults?.authors)==='many'?'many':'single';currentAuthors=authors.value==='many'?exampleAuthors:baseAuthors;authors.onchange=()=>{currentAuthors=authors.value==='many'?exampleAuthors:baseAuthors;renderAuthors()}}
 if(['none','title','organization','full'].includes(params.get('details')))authorDetails.value=params.get('details');
-const defaults={abstract:'plain',contents:'two',details:'title',category:'',preparedFor:'',distribution:'Internal',firstPageFooter:'',...config.defaults};
+const defaults={cover:'off',abstract:'plain',contents:'two',details:'title',category:'',preparedFor:'',distribution:'Internal',firstPageFooter:'',...config.defaults};
 delete defaults.label; // Legacy label mode no longer hides either independent field.
 if(!params.has('details'))authorDetails.value=defaults.details;
-setPrintContents(params.has('contents')?params.get('contents'):defaults.contents);setAbstract(params.get('abstract')||defaults.abstract);setCategory(params.has('category')?params.get('category'):defaults.category);preparedFor.value=params.has('preparedFor')?params.get('preparedFor'):defaults.preparedFor;setPreparedFor(preparedFor.value);renderAuthors();setDistribution(params.has('distribution')?params.get('distribution'):defaults.distribution);
+setCover(params.has('cover')?params.get('cover'):defaults.cover);setPrintContents(params.has('contents')?params.get('contents'):defaults.contents);setAbstract(params.get('abstract')||defaults.abstract);setCategory(params.has('category')?params.get('category'):defaults.category,{autoCover:!params.has('cover')&&(params.has('category')||!Object.hasOwn(config.defaults||{},'cover'))});preparedFor.value=params.has('preparedFor')?params.get('preparedFor'):defaults.preparedFor;setPreparedFor(preparedFor.value);renderAuthors();setDistribution(params.has('distribution')?params.get('distribution'):defaults.distribution);
 addEventListener('beforeprint',()=>{if(!document.body.dataset.pdfBuild)document.body.classList.add('native-print')});addEventListener('afterprint',()=>document.body.classList.remove('native-print'));
 async function printCurrent(){await document.fonts.ready;window.print()}
 document.querySelector('.print-trigger').onclick=printCurrent;
-function exportSettings(){return {abstract:abstract.checked?'shaded':'plain',contents:printContents.value,category:selectedCategory,preparedFor:selectedPreparedFor,distribution:distribution.value,details:authorDetails.value,authors:authors?.value||'single',firstPageFooter:customFooterText()}}
+function exportSettings(){return {cover:coverOption.checked?'on':'off',abstract:abstract.checked?'shaded':'plain',contents:printContents.value,category:selectedCategory,preparedFor:selectedPreparedFor,distribution:distribution.value,details:authorDetails.value,authors:authors?.value||'single',firstPageFooter:customFooterText()}}
 // Save only document settings; the article's content stays in the HTML source.
 function refreshSaveState(clearFeedback=false){
  if(!saveButton)return;

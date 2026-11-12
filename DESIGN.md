@@ -31,7 +31,8 @@ Each HTML includes a `script` with `id="document-config"` and `type="application
 {
   "authors": [{"name": "Author Name", "title": "Research scientist", "organization": "WindBorne"}],
   "organization": "WindBorne Systems",
-  "defaults": {"abstract": "plain", "contents": "two", "details": "title", "category": "", "preparedFor": "", "distribution": "Internal", "firstPageFooter": ""}
+  "footer": {"title": ""},
+  "defaults": {"cover": "off", "abstract": "plain", "contents": "two", "details": "title", "category": "", "preparedFor": "", "distribution": "Internal", "firstPageFooter": ""}
 }
 ```
 
@@ -49,25 +50,25 @@ With four metadata fields, use two columns: Author / Date, then Prepared for / C
 - Category (optional): None (default), Research Paper, Technical Report, Concept of Operations, Case Study, White Paper, Analysis, Proposal, or a custom label (80 characters maximum).
 - Distribution: required; Public, Internal (default), Restricted, Proprietary. Footer-only: never put it in the header metadata. Later PDF pages use uppercase PUBLIC, INTERNAL, RESTRICTED or PROPRIETARY; first-page wording is listed below. Every choice button has an info tooltip explaining when to use it.
 - Prepared for (optional): independent free text with “Conference/event name” as a placeholder, never a prefilled value. Suitable for conferences, events, organizations or audiences; omit it from the footer.
-- Footer: `WindBorne Systems. [Full month YYYY.] [UPPERCASE DISTRIBUTION.]` PDF pages after page one use this short text, deriving month/year from the document date and omitting Category. Page one uses the separate notice treatment below. The first page has no page number; subsequent pages do. Custom notices use the same organization/classification prefix, as described below. The web article ends with the first-page footer treatment. Prepared for is never included in the footer. The first-page notices are proposed template wording derived from the handling rules, not quotations or approved legal language.
+- Footer: pages after page one use `WindBorne Systems. [Footer title.] [Full month YYYY.]` on the left, in mixed case. The uppercase classification and page number sit on the right, separated by two em spaces. Use 7.5pt IBM Plex Sans Regular. The left box is 5.15in and the right box is 1.5in within the 6.9in content width, leaving a clear gutter. Keep month and year together. Align the left text and right group at their bottom baseline. Long left text wraps at the same font size; never truncate or silently abbreviate. Derive month/year from the document date and omit Category. Page one uses the separate notice treatment below. The first page has no page number; subsequent pages do. Custom notices appear without an organization/classification prefix. The web article ends with the first-page footer treatment. Prepared for is never included in the footer. The first-page notices are proposed template wording derived from the handling rules, not quotations or approved legal language.
 - Abstract background: off by default; on uses a pale tint without changing the text measure. No visible Summary or Abstract heading is added.
 - PDF contents: None; One column (headers and subheaders); Two columns (headers only). Enabling contents from None turns abstract shading off; a subsequent manual choice can restore it. Changing between enabled layouts preserves that manual choice.
 
-**Custom first-page footer (source only):** set `defaults.firstPageFooter` in the HTML document-config (or the `firstPageFooter` CLI setting) to a short notice, up to 400 characters. There is no footer text field in Document settings. The renderer prefixes the organization, distribution wording and optional category, then the notice: `WindBorne Systems. PROPRIETARY. <notice>`. Legacy values beginning with the organization and classification are accepted without duplicating that prefix. Blank uses the automatic notice. The web article ends with the same treatment. Later PDF pages keep the standard organization/month-year/distribution footer. Changing Distribution updates the prefix without rewriting saved custom wording. Save settings preserves the override. Aim for one line at the existing footer type size; long custom notices wrap rather than shrink or clip.
+**Custom first-page footer (source only):** set `defaults.firstPageFooter` in the HTML document-config (or the `firstPageFooter` CLI setting) to a short notice, up to 1,000 characters. There is no footer text field in Document settings. The first page and web end display only the tailored notice, without an additional organization, category or distribution prefix. Company/classification wording within the approved notice itself is intentional. Legacy organization/classification prefixes are stripped from custom notices. Blank uses the automatic notice. The web article ends with the same treatment. Later PDF pages keep the standard organization/title/month-year footer on the left, with uppercase classification and page number on the right. Changing Distribution changes the default notice and later-page label, but preserves supplied custom notice wording. Save settings preserves the override. Aim for one line at the existing footer type size; long custom notices wrap rather than shrink or clip.
 
 
 ## Automatic first-page notices
 
-These are proposed template wording derived from the classification handling rules, not quotations from the policy or approved legal language. They appear on the first PDF page and at the end of the web article. The organization comes first, then the classification, optional Category and notice; later PDF pages retain the short footer.
+These are proposed template wording derived from the classification handling rules, not quotations from the policy or approved legal language. They appear on the first PDF page and at the end of the web article. Show the notice alone; later PDF pages retain the organization/title/date footer on the left and classification/page number on the right.
 
-| Distribution | First-page wording after the organization (without Category) |
+| Distribution | Complete first-page notice |
 |---|---|
-| Public | For public distribution. |
-| Internal | Internal use only. Not approved for public release. |
-| Restricted | RESTRICTED. External sharing requires Data Owner approval and a contract/NDA. |
-| Proprietary | PROPRIETARY. External release requires an NDA and written COO/delegate approval. |
+| Public | WindBorne Systems. For public distribution. |
+| Internal | Internal WindBorne Systems document. Not approved for public release. |
+| Restricted | Restricted WindBorne Systems document. External sharing requires Data Owner approval and a contract/NDA. |
+| Proprietary | Proprietary WindBorne Systems document. External release requires an NDA and written approval from the COO or delegate. |
 
-A source-authored `defaults.firstPageFooter` takes precedence over these notices. Preserve existing document-specific wording, including regulatory disclaimers; do not replace it during migration. Place the classification after the organization and before the notice, never after the blurb. These notices do not replace additional CUI, export-control or contractual markings and permissions.
+A source-authored `defaults.firstPageFooter` takes precedence over these notices. Preserve existing document-specific wording, including regulatory disclaimers; do not replace it during migration. Do not prepend an additional organization, category or classification prefix on page one or at the web end. Preserve company wording already present in the default or supplied notice. These notices do not replace additional CUI, export-control or contractual markings and permissions.
 
 ## Web and print
 
@@ -139,3 +140,46 @@ This is an authoring decision, not automatic browser reordering. Use `<section c
 When References is followed by another section, a subtle bottom rule separates the reference list from that section on web and in print. The rule uses the reference/body text width, adds no forced page break, and is absent when References is last.
 
 The optional abstract background uses WindBorne brand Gray 75 (`#F2F1F0`), a quiet warm-neutral reading surface from the Storybook color ramp. The same shade token is used for subtle reference highlights.
+
+
+## PDF cover page
+
+The **PDF cover page** switch uses `defaults.cover: "off"` (recommended) or `"on"`, also supported by URL/CLI settings and Save settings. It affects print only. The cover replaces `.paper-header` in print; on the web the ordinary header remains visible. PDF contents, abstract and body follow the cover. It counts as physical page one, carries the first-page tailored notice in its left text column and has no printed page number. Subsequent page numbers and contents destinations include the cover.
+
+The cover takes the visible title, subtitle and metadata from the header. Set `document-config.cover.title` for deliberate cover line breaks (`\n`) or a shorter presentation title while retaining the complete title elsewhere. The bundled WindBorne logo sits above the title. Set the full tailored notice in `defaults.firstPageFooter`; it is placed inside the cover's left column, not in a page-wide bottom margin box. No organization or distribution prefix is added.
+
+Optional decorative image markup:
+
+```html
+<template id="cover-art"><img src="assets/cover-photo.jpg" alt="Balloon in flight"></template>
+```
+
+The cover uses a named US Letter page with zero margins. The image occupies a 2.1in strip flush with the right, top and bottom edges. Only decorative photographs may be cropped with `object-fit: cover`; never crop scientific figures. The left column begins 1in from the left edge; the logo, title, subtitle and metadata form one block centered vertically between the 1in top margin and the top of the confidentiality notice. The block shifts automatically as its content grows. The cover has only a title and an optional subtitle: 36pt bold Newsreader for the title and 18pt regular Newsreader for the subtitle. The subtitle comes from the normal article header. Metadata uses 8.5pt uppercase sans-serif labels, 14pt medium values, 13pt Medium (500) recipient names and 12pt email/validity. Do not split a title into separate volume labels or contract-number fields. Keep that information within the title and optional subtitle, preserving all source wording. Proposals put Delivery Date before Point of Contact, then Prepared for. Validity appears below the date without a comma. The 8.5pt notice is anchored near the bottom of the left column, aligned with the other text. Without art, the same cover uses the full text area.
+
+The body pages retain their usual margins, type sizes and short footers. Web typography is unchanged except for the separate validity line and notice-only end footer. Inspect every cover for title wrapping, photo crop and long notices. The renderer rejects overflow within the fixed cover instead of clipping; revise presentation spacing or metadata while preserving required information. Edge-to-edge refers to the PDF; a physical printer's printable area may differ.
+
+
+## Proposal treatment
+
+Choosing Category **Proposal** enables the PDF cover and switches metadata to **Point of Contact** and **Delivery Date**. Proposal remains a saved category for behavior, but its label is omitted from web metadata, print metadata and footers. The user may switch the cover off afterward; unrelated setting changes and reload preserve that explicit choice. Switching to another category restores ordinary author/date labels and leaves the cover choice alone.
+
+Supply proposal contact and validity in `document-config`, rather than duplicating them as extra header blocks:
+
+```json
+"proposal": {
+  "contact": {"name": "Contact name", "email": "contact@example.com"},
+  "validity": "Valid for 180 days"
+}
+```
+
+The contact replaces authors and includes a mailto link. The Author details control is hidden while Proposal is selected. If no separate contact was supplied, existing names are retained as a fallback; agents should confirm the actual contact instead of inventing one. Validity is optional, appears on a separate line beneath the delivery date (for example, `Jul. 4, 2026` followed by `Valid for 180 days`, without a comma) and does not alter the month/year used in later PDF footers. Prepared for remains independent.
+
+Move the full original confidentiality notice into `defaults.firstPageFooter`. It appears once at the web end and in the first PDF page footer, without an organization/classification prefix. Remove the duplicate `.document-notice` and `.document-contact` blocks from a proposal's header. Preserve original notice wording; longer notices wrap and need visual inspection. Use **WindBorne Systems** for the displayed organization (without Inc.). The PDF cover uses the bundled WindBorne logo from the web header.
+
+Private review tabs support an optional `shortLabel`, for example `{"label":"Proposal 2","shortLabel":"P2","document":"proposal-2.html"}`. Inactive tabs show the short label; the current document shows the full label. Accessible names and hover titles retain the full label. Template remains Template. This changes local navigation, not sharing permissions.
+
+The bundled IBM Plex Sans weights are Regular (400), Medium (500), Semibold (600) and Bold (700). Cover dates and contact names use the actual Medium (500) face at 14pt, and Prepared for recipients use it at 13pt; this is the approved cover standard, not a preview option. Field labels, email addresses and validity remain Regular (400). Do not substitute a heavier weight or rely on browser synthesis when packaging fonts. Preserve source notice capitalization, including CONFIDENTIALITY NOTICE: when supplied; do not normalize it to sentence case.
+
+The optional source-only `document-config.footer.title` supplies a short running title for every PDF page after page one. Omitted, empty or whitespace-only values fall back to the complete visible `.paper-header h1` text; do not use `cover.title` or the browser `<title>`. Normalize whitespace and avoid doubled terminal periods, preserving case, identifiers and wording. Save settings preserves the field. It does not change the visible title, web header, cover title or first-page notice. Review long full-title footers for wrapping and separation from the right-hand classification/page number.
+
+When authoring a short footer title, omit repeated “WindBorne” or “WindBorne Systems”: the company prefix already identifies the organization. If the main title includes the brand, set `footer.title` explicitly to avoid repeating it; for example, “WindBorne White Paper Template” uses “White Paper Template”. Keep the main/web/cover title unchanged. Preserve the remaining title wording unless the user provides or approves a shorter version. This is an authoring rule; the runtime full-title fallback remains available when no footer title is supplied.

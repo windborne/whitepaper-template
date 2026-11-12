@@ -252,3 +252,46 @@ figure{display:grid;grid-template-columns:minmax(0,1fr) var(--rail);gap:var(--ga
  .metadata.has-category.has-prepared-for{grid-template-columns:minmax(0,1fr) minmax(0,1fr)}
  .metadata.has-category.has-prepared-for.authors-long{grid-template-columns:minmax(0,7fr) minmax(0,3fr)}
 }
+
+/* Optional print-only cover: full-height photograph and a stacked editorial opening. */
+.pdf-cover{display:none}
+.document-contact{display:flex;flex-wrap:wrap;gap:10px 30px;margin-top:18px;font:12px/1.5 var(--sans);color:var(--muted)}
+.document-contact p{margin:0}.document-contact .contact-label{display:block;font:10px/1.5 var(--mono);letter-spacing:.06em;text-transform:uppercase;margin-bottom:5px}
+.document-notice{font:11px/1.5 var(--sans);color:var(--muted);margin-top:24px}
+.options-panel .cover-setting{margin-top:18px}
+.proposal-validity{display:block;font-weight:400}
+.proposal-mode .metadata .date{white-space:normal}
+.proposal-mode .paper-header :is(.document-contact,.document-notice){display:none}
+.proposal-mode .metadata:has(.prepared-for-field:not([hidden])){grid-template-columns:minmax(0,1fr) minmax(0,1fr)}
+.proposal-mode .metadata .prepared-for-field{grid-column:1/-1}
+.options-panel [hidden]{display:none!important}
+@page cover{size:letter;margin:0;@bottom-left{content:none}@bottom-right{content:none}}
+@media print{
+ .with-pdf-cover .pdf-cover{page:cover;display:grid;grid-template-columns:1fr;width:8.5in;height:11in;break-after:page;break-inside:avoid;margin:0;padding:0}
+ .with-pdf-cover .pdf-cover.has-art{grid-template-columns:minmax(0,1fr) 2.1in}
+ .with-pdf-cover .paper-header{display:none}
+ .cover-main{display:flex;flex-direction:column;min-width:0;min-height:0;padding:1in .65in .85in 1in}
+ .cover-content{flex:1;display:flex;align-items:center;min-height:min-content}
+ .cover-block{width:100%;min-width:0}
+ .cover-logo{display:block;width:1.9in;height:auto}
+ .cover-organization{margin:0;font:500 12pt/1.4 var(--sans)}
+ .cover-heading{margin-top:.42in}
+ .cover-heading h1{font:700 36pt/1.08 var(--serif);letter-spacing:-.025em;white-space:pre-line;text-wrap:balance;margin:0;color:var(--ink)}
+ .cover-subtitle{font:400 18pt/1.3 var(--serif);color:var(--ink);white-space:pre-line;margin:13pt 0 0}
+ .cover-details{margin-top:.65in}
+ .cover-details .cover-metadata{display:flex;flex-direction:column;gap:24pt;margin:0;padding:0;border:0}
+ .cover-details .cover-metadata>div{min-width:0}
+ .cover-details .cover-metadata dd{margin:0;font:500 14pt/1.35 var(--sans);overflow-wrap:anywhere;white-space:normal}
+ .cover-details .cover-metadata dd a{font-size:12pt;font-weight:400;text-decoration-thickness:.5pt;text-underline-offset:2pt}
+ .cover-metadata [data-cover-field="prepared-for"] dd{font-size:13pt;font-weight:500}
+ .cover-details .cover-metadata dt{text-transform:uppercase;letter-spacing:.06em;font:400 8.5pt/1.4 var(--sans);color:var(--muted);margin-bottom:6pt}
+ .cover-metadata .proposal-validity{font-size:12pt;margin-top:4pt;color:var(--muted)}
+ .cover-details .document-contact{display:block;font:15pt/1.45 var(--sans);margin-top:22pt}
+ .cover-details .document-contact p+p{margin-top:16pt}
+ .cover-details .contact-label{font:9.5pt/1.4 var(--sans)}
+ .cover-notice{font:400 8.5pt/1.35 var(--sans);color:var(--muted);margin:0;padding-top:0}
+ .cover-photo{height:11in;overflow:hidden;background:var(--shade)}
+ .cover-photo img{display:block;width:100%;height:100%;object-fit:cover;object-position:50% 50%}
+ .document-contact{font-size:8pt}.document-contact .contact-label{font-size:7pt}
+ .document-notice{font-size:7.5pt}
+}

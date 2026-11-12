@@ -8,7 +8,7 @@ module.exports=async function checkHelp(browser,origin){
   const help=page.locator('#help-contents');
   await button.hover();assert.equal(await help.isVisible(),true);
   await help.hover();assert.equal(await help.isVisible(),true);
-  await page.locator('h1').hover();await help.waitFor({state:'hidden'});
+  await page.locator('.paper-header h1').hover();await help.waitFor({state:'hidden'});
   await button.focus();assert.equal(await help.isVisible(),true);
   await page.keyboard.press('Escape');assert.equal(await help.isVisible(),false);assert.equal(await page.locator('.options').getAttribute('open'),'');
   await page.keyboard.press('Escape');assert.equal(await page.locator('.options').getAttribute('open'),null);
