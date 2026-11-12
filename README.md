@@ -8,33 +8,38 @@ A reusable editorial document system for technical papers, whitepapers and repor
 
 Give your agent this repository and [AI-PROMPT.md](AI-PROMPT.md), plus your source text/files, title, authors and date. No prior knowledge of this project is needed. For example:
 
-> Use https://github.com/windborne/whitepaper-template. Read README.md, SKILL.md and DESIGN.md, set up the local editor, and open the starter Article in draft mode. Use the attached content to create my paper. Keep the template defaults unless I specify otherwise. Save my chosen settings, generate a PDF, and give me the editable source and PDF after reviewing both.
+> Use https://github.com/windborne/whitepaper-template. Read README.md, SKILL.md and DESIGN.md, create a separate document workspace outside every Git checkout, set up its local editor, and open the starter Article in draft mode. Use the attached content to create my paper. Keep the template defaults unless I specify otherwise. Save my chosen settings, generate a PDF, and give me the editable source and PDF after reviewing both.
 
 The agent needs local file access and a terminal to install dependencies, edit HTML and run the server. **The browser is a layout/settings editor and preview, not a word processor.** Ask your agent to change the text, figures, author names or date in the HTML source; use Document settings to change their presentation.
 
-## Install and open
+## Create a private document workspace
 
-Requires Git, Node.js 20+ and Python 3.10+. Run these commands in a terminal (macOS/Linux):
+**This GitHub repository is public. Keep the checkout for template code and synthetic examples only.** Before adding real content, create a separate document folder outside every Git checkout. The command below copies an explicit list of starter/editor files, creates a fresh `article.html` from `starter.html`, and leaves Git history, remotes, existing drafts and generated PDFs behind. It refuses nonempty destinations and destinations inside a Git checkout, including symlinked paths.
+
+Requires Node.js 20+ and Python 3.10+. Git is needed only to clone the toolkit. Choose an approved storage location for your document's classification; the location below is an example (macOS/Linux):
 
 ```sh
 git clone https://github.com/windborne/whitepaper-template.git
 cd whitepaper-template
-npm ci
-npx playwright install chromium
-python3 -m venv .venv
-.venv/bin/pip install -r requirements.txt
-PYTHON=.venv/bin/python npm start
+node create-document.cjs "$HOME/Documents/WindBorne Documents/my-paper"
+cd "$HOME/Documents/WindBorne Documents/my-paper"
+node setup.cjs
+npm start
 ```
 
-If you already cloned or downloaded the repository, start inside its folder and skip the first two commands. On Windows, use `.venv\Scripts\python.exe` for the virtual environment; in PowerShell set `$env:PYTHON=".venv\Scripts\python.exe"` before `npm start`. Install requirements with `.venv\Scripts\python.exe -m pip install -r requirements.txt`.
+Already have the toolkit? Start with `node create-document.cjs` in its folder. Already have a document workspace? Read its `START-HERE.md` and resume there; do not recreate or overwrite it. For another document, create another workspace from the toolkit. On Windows, pass a quoted absolute destination such as `"C:\Users\you\Documents\WindBorne Documents\my-paper"`, then run the same Node commands inside that folder.
 
-Open **[the draft editor](http://127.0.0.1:8743/article.html?mode=edit)**. Keep the terminal running while using Save settings or View PDF. To return another day, run `PYTHON=.venv/bin/python npm start` from the same folder; you do not need to reinstall.
+`node setup.cjs` installs locked Node packages, creates a local Python environment, installs the pinned PDF dependency and Playwright Chromium, then verifies a real PDF export. On Linux it also installs Chromium's system libraries, which may require administrator access. Use `node setup.cjs --skip-system-deps` only if those libraries are already present. Install Node/Python first if setup reports they are missing. Setup can be rerun without resetting your document.
 
-- **Article** opens `article.html`, preloaded with starter copy on a fresh checkout. Your work stays in that file; reopening does not reset it.
-- **Template** opens the component specimen. It is a reference you can browse while your agent builds your Article. Its settings belong to the specimen, not your paper.
-- **Document settings** controls abstract shading, author details, distribution and independent Category and Prepared for fields, PDF cover page and PDF contents. Info icons explain the less obvious choices.
+Open **[the draft editor](http://127.0.0.1:8743/article.html?mode=edit)**, or the URL printed by the server if the port differs. Keep the terminal running for Save settings and View PDF. To return another day, run **`npm start` from your document folder**; there is no need to reinstall or set a Python environment variable. `npm run doctor` checks the browser, Python and PDF export if something stops working.
 
-`CHROME` optionally selects an installed Chrome/Chromium executable; `PORT` changes the local port. Use the URL printed in the terminal if the port changes. Fonts and document assets are bundled; PDF export does not fetch external resources.
+- **Article** opens `article.html`, preloaded with starter copy. Your work stays in that file; reopening does not reset it.
+- **Template** opens the synthetic component specimen for reference. Its settings belong to the specimen, not your paper.
+- **Document settings** controls abstract shading, author details, distribution, independent Category and Prepared for fields, PDF cover page and PDF contents. Info icons explain the less obvious choices.
+
+The new folder has no Git repository or publishing remote. This prevents an ordinary push from that folder; it does not set access permissions, disable cloud sync or authorize sharing. Keep it in approved storage and never add the public template remote. Ask your agent to work in this folder, not in the toolkit checkout. A separate approved private repository is an option for collaboration, but is not created automatically.
+
+`CHROME` optionally selects an installed Chrome/Chromium executable; `PYTHON` can explicitly override the auto-selected local `.venv`; `PORT` changes the local port. Fonts and document assets are bundled; PDF export does not fetch external resources. Keep `template-origin.json` (source revision and file hashes) and `toolchain.json` (versions from the latest successful setup check) with the source for later troubleshooting and rebuilds. These records do not upload anything or guarantee identical output across operating systems.
 
 ## Save, preview and export
 
@@ -71,7 +76,7 @@ Cover typography is fixed: **Newsreader Bold (700)** for the title and **Newsrea
 
 ## Author a document
 
-1. For the first draft, edit `article.html`. Check for existing work before replacing it. For another paper, copy `starter.html` to a new root-level file such as `my-paper.html` (letters, numbers, hyphens or underscores; no spaces).
+1. Work inside the separate document workspace created above. Edit its `article.html`; inspect existing work before changing it. For another paper, create another workspace. A multi-document private review workspace may instead have additional root-level HTML files copied from its starter (letters, numbers, hyphens or underscores; no spaces). Never write a real manuscript into the public toolkit checkout.
 2. Replace the HTML `<title>`, visible title, subtitle, date (abbreviated month with a day; full month without a day), abstract and article content. Update `document-config` authors and organization; its `defaults` hold saved presentation choices. Set `body data-document="my-paper"` to the filename without `.html`. The date is explicit source content, not automatically today's date.
 3. Use stable unique IDs on `h2` and `h3` headings. Web navigation and PDF contents are generated from them. Copy figures, tables, equations and reference markup from `specimen.html` as needed, replacing illustrative content.
    For square or portrait photos, use the recommended 3in maximum with a right-side print caption aligned to the bottom of the photo; see [Photographs](DESIGN.md#photographs). Export logs flag untreated non-landscape images for review. Scientific charts, diagrams, maps and tables are exempt from photo limits.
@@ -110,21 +115,21 @@ See [automatic first-page notices](DESIGN.md#automatic-first-page-notices) for t
 ## Command-line export
 
 ```sh
-PYTHON=.venv/bin/python node render.cjs my-paper.html my-paper.pdf
-PYTHON=.venv/bin/python node render.cjs my-paper.html my-paper.pdf \
+node render.cjs my-paper.html my-paper.pdf
+node render.cjs my-paper.html my-paper.pdf \
   --settings '{"contents":"one","category":"Field Brief","distribution":"Internal","details":"full","abstract":"shaded"}'
 ```
 
 In Document settings, **Category (optional)** includes None (default) first, Case Study / Proposal / Technical Report / White Paper alphabetically, and Add new option last. Existing or newly added custom labels appear alphabetically too; Research Paper, Concept of Operations and Analysis are custom labels rather than presets. **Prepared for (optional)** is a separate text field, blank by default, with “Conference/event name” as a placeholder. Both can be filled, saved and exported together. With four metadata fields, Author and Date form the first row; Prepared for sits beneath Author and Category beneath Date. Neither appears in the footer. For command-line export, use `--settings '{"category":"Technical Report","preparedFor":"AMS Annual Meeting 2027"}'`.
 
-Omitted settings inherit the document's saved defaults. `npm run build` renders the working article, clean starter, specimen and synthetic report. `./build.sh my-paper.html` is a compatibility wrapper. `npm run check` tests layout and interaction behavior; [VALIDATION.md](VALIDATION.md) describes PDF review and stress coverage.
+Omitted settings inherit the document's saved defaults. In a generated document workspace, `npm run build` renders your article and `npm run check` runs the setup/export smoke check. In the public toolkit checkout, `npm run build` renders the synthetic examples and `npm run check` runs the full implementation suite. [VALIDATION.md](VALIDATION.md) describes visual review and test coverage.
 
 The local server accepts only local, same-origin JSON export and settings-save requests for root-level HTML documents. Saving updates only the document configuration, preserves article content, and detects conflicting settings from another tab. Published reader files are read-only. It serves no arbitrary filesystem paths or repository secrets. It is an authoring utility, not a production hosting service.
 
 ## Publish a static reader
 
 ```sh
-PYTHON=.venv/bin/python node publish.cjs my-paper.html dist/my-paper \
+node publish.cjs my-paper.html dist/my-paper \
   --settings '{"distribution":"Public","category":"Research Paper"}'
 ```
 
@@ -138,11 +143,20 @@ The standard editor has Template and Article tabs. For a private review bundle, 
 
 ## Contents of the repository
 
+- `create-document.cjs`, `setup.cjs`, `doctor.cjs`: isolated document creation, dependency setup and export diagnostics.
 - `SKILL.md`, `AI-PROMPT.md`, `DESIGN.md`: reusable AI instructions and visual rules.
 - `article.html`, `starter.html`, `specimen.html`, `stress-report.html`: editable sources and companion PDFs.
 - `style.css`, `fonts.css`, `controls.js`: shared design, offline fonts and interactions.
 - `renderer.cjs`, `render.cjs`, `server.cjs`, `settings-store.cjs`, `publish.cjs`: deterministic PDF export, local editor and static packaging.
 - `check.cjs`, `check-settings.cjs`, `check-help.cjs`, `check.py`, `VALIDATION.md`: behavioral checks, content checks and review guidance.
-- `experiments/comparison`: preserved earlier design comparisons; `experiments/original`: original print-only template. Start new work at the repository root.
+- `experiments/comparison`: preserved earlier design comparisons; `experiments/original`: original print-only template. These are historical references, not places to write real documents.
 
 Fonts carry their licenses in `licenses/`; Lucide's license is in `LICENSE-LUCIDE`. WindBorne's name and logo are brand assets, not a grant of trademark rights. Keep font and icon licenses with redistributed assets.
+
+## Maintaining the toolkit
+
+Change shared code in the public checkout using synthetic fixtures only. Setup also installs `requirements-dev.txt` here for the PDF-layout checks; document workspaces receive only the export dependency. Run `node setup.cjs`, `npm run check:workspace` and `npm run check` before handing off a change. GitHub Actions runs the same checks on Linux and macOS for pull requests and pushes to main; it uses no customer documents or publishing credentials and uploads no document artifacts. Automated checks catch known failures but do not replace visual PDF review or automatically enforce branch protection.
+
+Use pull requests for shared template changes. Do not copy a working manuscript back into `article.html`, a fixture, a screenshot or a test log. Existing Word templates remain alternatives when Word or a customer-specific format is required. This is the AI-assisted HTML/PDF workflow.
+
+The design has been reviewed; default notice wording remains proposed and awaits organizational approval. Keep that distinction when sharing the template. Tag a release after the wording is approved and checks pass; the existing package version is not a release approval. Record the template revision used for each document rather than silently updating its shared assets mid-draft.

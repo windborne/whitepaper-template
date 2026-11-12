@@ -11,3 +11,6 @@ experiments/hybrid-v2/
 private/
 document-review/
 document-audit/
+
+# Local setup diagnostics, not document content.
+toolchain.json

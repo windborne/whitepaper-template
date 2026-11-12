@@ -32,7 +32,7 @@ module.exports=async function checkPrintFigures(browser){
    await page.getByRole('button',{name:'Close',exact:true}).click();
   }
   await render(file,pdf,{contents:'none'});
-  execFileSync(process.env.PYTHON||'python3',['-c',`from pypdf import PdfReader\nr=PdfReader(${JSON.stringify(pdf)})\nt='\\n'.join(p.extract_text() for p in r.pages)\nassert len(r.pages)>2\nassert all(t.count('ROW-%03d'%n)==1 for n in range(1,71))\nassert t.count('Record')>=2`]);
+  execFileSync(require('./runtime.cjs').python(),['-c',`from pypdf import PdfReader\nr=PdfReader(${JSON.stringify(pdf)})\nt='\\n'.join(p.extract_text() for p in r.pages)\nassert len(r.pages)>2\nassert all(t.count('ROW-%03d'%n)==1 for n in range(1,71))\nassert t.count('Record')>=2`]);
   console.log('Photo layout passed: centered print photo and bottom-aligned caption, compact web image, mobile lightbox; chart and 70-row table remain uncapped');
  }finally{await page.close();await fs.rm(file,{force:true});await fs.rm(pdf,{force:true})}
 };

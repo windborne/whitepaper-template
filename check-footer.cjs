@@ -58,14 +58,14 @@ module.exports=async function checkFooter(browser,origin){
   for(const distribution of ['Restricted','Proprietary']){
    const pdf=path.join(__dirname,'.cache','footer-'+distribution.toLowerCase()+'.pdf');
    await render(path.join(__dirname,'stress-report.html'),pdf,{distribution,firstPageFooter:custom});
-   execFileSync(process.env.PYTHON||'python3',['-c',`from pypdf import PdfReader\nimport unicodedata\nr=PdfReader(${JSON.stringify(pdf)})\nassert len(r.pages)>1\nfor i,p in enumerate(r.pages):\n t=' '.join(unicodedata.normalize('NFKC',p.extract_text()).split())\n if i>0: assert ${JSON.stringify(distribution.toUpperCase())} in t\n assert ('Keep this supplied notice.' in t)==(i==0)\n if i>0: assert ${JSON.stringify('WindBorne Systems. Instrument network verification. November 2026.')} in t\n else: assert ${JSON.stringify('WindBorne Systems. '+distribution.toUpperCase())} not in t`]);
+   execFileSync(require('./runtime.cjs').python(),['-c',`from pypdf import PdfReader\nimport unicodedata\nr=PdfReader(${JSON.stringify(pdf)})\nassert len(r.pages)>1\nfor i,p in enumerate(r.pages):\n t=' '.join(unicodedata.normalize('NFKC',p.extract_text()).split())\n if i>0: assert ${JSON.stringify(distribution.toUpperCase())} in t\n assert ('Keep this supplied notice.' in t)==(i==0)\n if i>0: assert ${JSON.stringify('WindBorne Systems. Instrument network verification. November 2026.')} in t\n else: assert ${JSON.stringify('WindBorne Systems. '+distribution.toUpperCase())} not in t`]);
   }
   for(const [distribution,notice] of Object.entries(notices)){
    const pdf=path.join(__dirname,'.cache','notice-'+distribution.toLowerCase()+'.pdf');
    await render(path.join(__dirname,'stress-report.html'),pdf,{distribution});
-   execFileSync(process.env.PYTHON||'python3',['-c',`from pypdf import PdfReader\nimport unicodedata\nr=PdfReader(${JSON.stringify(pdf)})\nfor i,p in enumerate(r.pages):\n t=' '.join(p.extract_text().split())\n assert (${JSON.stringify(notice)} in t)==(i==0)`]);
+   execFileSync(require('./runtime.cjs').python(),['-c',`from pypdf import PdfReader\nimport unicodedata\nr=PdfReader(${JSON.stringify(pdf)})\nfor i,p in enumerate(r.pages):\n t=' '.join(p.extract_text().split())\n assert (${JSON.stringify(notice)} in t)==(i==0)`]);
   }
-  execFileSync(process.env.PYTHON||'python3',['-c',`import pdfplumber\nfrom pathlib import Path\nfor f in Path(${JSON.stringify(path.join(__dirname,'.cache'))}).glob('notice-*.pdf'):\n with pdfplumber.open(f) as pdf:\n  words=[w for w in pdf.pages[0].extract_words() if w['top']>740]\n  assert len({round(w['top'],1) for w in words})==1, str(f)\n  assert max(w['x1'] for w in words)<555, str(f)`]);
+  execFileSync(require('./runtime.cjs').python(),['-c',`import pdfplumber\nfrom pathlib import Path\nfor f in Path(${JSON.stringify(path.join(__dirname,'.cache'))}).glob('notice-*.pdf'):\n with pdfplumber.open(f) as pdf:\n  words=[w for w in pdf.pages[0].extract_words() if w['top']>740]\n  assert len({round(w['top'],1) for w in words})==1, str(f)\n  assert max(w['x1'] for w in words)<555, str(f)`]);
   console.log('Distribution passed: required default, footer-only, per-choice help/keyboard, notice-only first pages and later-page markings, reader, validation and multipage PDFs');
  }finally{await page.close()}
 };

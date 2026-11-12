@@ -49,7 +49,7 @@ async function render(input,output,settings={}){
   for(let pass=0;pass<(effective.contents==='none'?1:6);pass++){
    await page.pdf({path:output,preferCSSPageSize:true,printBackground:true,tagged:true});
    if(effective.contents==='none')break;
-   const map=JSON.parse(execFileSync(process.env.PYTHON||'python3',[path.join(__dirname,'pdf_destination_pages.py'),output],{encoding:'utf8'}));
+   const map=JSON.parse(execFileSync(require('./runtime.cjs').python(),[path.join(__dirname,'pdf_destination_pages.py'),output],{encoding:'utf8'}));
    const rows=await page.evaluate(map=>[...document.querySelectorAll('[data-page-for]')].map(e=>{const key=e.dataset.pageFor;if(!map[key])throw Error('Missing PDF destination: '+key);e.textContent=map[key];return [key,map[key]]}),map);
    const signature=JSON.stringify(rows);if(signature===previous){stable=true;break}previous=signature;
   }

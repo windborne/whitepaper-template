@@ -5,7 +5,11 @@
   "scripts": {
     "start": "node server.cjs",
     "build": "node render.cjs",
-    "check": "node check.cjs"
+    "check": "node check.cjs",
+    "new": "node create-document.cjs",
+    "setup": "node setup.cjs",
+    "doctor": "node doctor.cjs",
+    "check:workspace": "node --test check-workspace.cjs"
   },
   "dependencies": {
     "playwright": "1.62.1"

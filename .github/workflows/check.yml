@@ -1,0 +1,40 @@
+name: Template checks
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  check:
+    name: Checks (${{ matrix.os }})
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 25
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, macos-latest]
+    steps:
+      - uses: actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09 # v5
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7
+        with:
+          node-version: '24'
+          cache: npm
+      - uses: actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0 # v7
+        with:
+          python-version: '3.12'
+      - name: Install dependencies and verify PDF export
+        run: node setup.cjs
+      - name: Verify private workspace boundaries
+        run: npm run check:workspace
+      - name: Check synthetic layouts, settings and export
+        run: npm run check
+      - name: Verify a fresh standalone document
+        run: |
+          node create-document.cjs "$RUNNER_TEMP/document-workspace"
+          cd "$RUNNER_TEMP/document-workspace"
+          node setup.cjs
+          npm run build

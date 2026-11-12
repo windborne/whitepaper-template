@@ -1,12 +1,14 @@
 # Validation and review
 
+Run the full suite below in the public toolkit checkout with synthetic fixtures only, after `node setup.cjs`. Also run `npm run check:workspace` to verify that new documents stay outside Git and existing work is preserved. In a generated document workspace, `npm run check` runs only the setup/export smoke check; use the visual/content checklist below for your actual manuscript. Never copy real documents into public tests or CI artifacts.
+
 The renderer waits for bundled fonts, applies the chosen settings, and resolves contents page numbers against PDF destinations until the numbers stabilize. It fails for missing destinations, nonconverging pagination or an oversized figure, table row or equation. It does not claim to judge every editorial page break.
 
 ## Repeatable checks
 
 ```sh
-PYTHON=.venv/bin/python npm run check
-PYTHON=.venv/bin/python npm run build
+npm run check
+npm run build
 pdftoppm -r 120 -png specimen.pdf preview/specimen
 ```
 

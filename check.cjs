@@ -1,7 +1,7 @@
 const assert=require('node:assert/strict'),path=require('node:path'),fs=require('node:fs/promises');
 const {chromium}=require('playwright');const {execFileSync,spawn}=require('node:child_process');const {once}=require('node:events');
 (async()=>{
- execFileSync(process.env.PYTHON||'python3',['check.py'],{cwd:__dirname,stdio:'inherit'});
+ execFileSync(require('./runtime.cjs').python(),['check.py'],{cwd:__dirname,stdio:'inherit'});
  const port=18743,origin='http://127.0.0.1:'+port,server=spawn(process.execPath,['server.cjs'],{cwd:__dirname,env:{...process.env,PORT:String(port)},stdio:['ignore','pipe','inherit']});
  await Promise.race([once(server.stdout,'data'),once(server,'exit').then(()=>{throw Error('Test server failed to start')})]);
  const browser=await chromium.launch({headless:true,...(process.env.CHROME?{executablePath:process.env.CHROME}:{})});
@@ -44,11 +44,15 @@ const {chromium}=require('playwright');const {execFileSync,spawn}=require('node:
   await require('./check-proposal.cjs')(browser,origin);
   const entry=await browser.newPage();await entry.goto(origin+'/');assert.equal(await entry.locator('body').getAttribute('data-document'),'article');assert.match(await entry.locator('.document-tabs a').nth(1).getAttribute('href'),/^article.html/);assert.equal(await entry.getByRole('link',{name:'View PDF',exact:true}).count(),1);assert.equal(await entry.locator('[data-lucide="file-text"]').count(),1);assert.equal(await entry.locator('[data-lucide="pencil-line"]').count(),1);assert.equal(await entry.locator('[data-lucide="save"]').count(),1);await entry.close();
   const page=await browser.newPage();await page.goto(origin+'/stress-report.html?abstract=shaded&contents=one&category=Custom%20Field%20Brief&distribution=Internal&details=full');
-  const popup=page.waitForEvent('popup');await page.locator('[data-pdf-link]').click();const viewer=await popup;await viewer.waitForURL('**/generated/**',{timeout:120000});
-  const pdf=await page.request.get(viewer.url());assert.equal(pdf.headers()['content-type'],'application/pdf');const bytes=await pdf.body();assert.equal(bytes.subarray(0,5).toString(),'%PDF-');
+  // Headless Chromium may download PDFs instead of committing a viewer navigation.
+  // Verify the real new-tab navigation request, then inspect the returned PDF itself.
+  const popup=page.waitForEvent('popup');
+  const navigation=page.context().waitForEvent('request',{predicate:r=>r.isNavigationRequest()&&r.url().startsWith(origin+'/generated/'),timeout:120000});
+  await page.locator('[data-pdf-link]').click();const viewer=await popup,request=await navigation;assert.equal(request.frame().page(),viewer);
+  const pdf=await page.request.get(request.url());assert.equal(pdf.status(),200);assert.equal(pdf.headers()['content-type'],'application/pdf');const bytes=await pdf.body();assert.equal(bytes.subarray(0,5).toString(),'%PDF-');
   await fs.mkdir(path.join(__dirname,'.cache'),{recursive:true});await fs.writeFile(path.join(__dirname,'.cache/custom-export.pdf'),bytes);
-  execFileSync(process.env.PYTHON||'python3',['-c',`from pypdf import PdfReader; r=PdfReader('.cache/custom-export.pdf'); t='\\n'.join(p.extract_text() for p in r.pages); assert 'Custom Field Brief' in t and 'Not approved for public release.' in t and 'Morgan Example' in t; assert 'For authorized recipients only' not in t; assert len(r.named_destinations)>0`],{cwd:__dirname});
-  console.log('Custom settings open a generated PDF in the viewer');
+  execFileSync(require('./runtime.cjs').python(),['-c',`from pypdf import PdfReader; r=PdfReader('.cache/custom-export.pdf'); t='\\n'.join(p.extract_text() for p in r.pages); assert 'Custom Field Brief' in t and 'Not approved for public release.' in t and 'Morgan Example' in t; assert 'For authorized recipients only' not in t; assert len(r.named_destinations)>0`],{cwd:__dirname});
+  console.log('View PDF opens a new tab and requests a valid generated PDF with the selected settings');
   for(const [request,status]of [[{document:'../stress-report.html',settings:{}},400],[{document:'stress-report.html',settings:{contents:'bad'}},400]]){const r=await fetch(origin+'/api/export',{method:'POST',headers:{Origin:origin,'Content-Type':'application/json'},body:JSON.stringify(request)});assert.equal(r.status,status)}
   assert.equal((await fetch(origin+'/api/export',{method:'POST',headers:{Origin:'https://example.com','Content-Type':'application/json'},body:'{}'})).status,403);
   assert.equal((await fetch(origin+'/.git/config')).status,404);
