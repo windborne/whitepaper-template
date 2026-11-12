@@ -152,7 +152,7 @@ function renderMetadata(){
  renderAuthors();updateFooter();renderCover();updateReaderLink();
 }
 function setCategory(value,{autoCover=true}={}){const wasProposal=isProposal();value=String(value||'').trim().slice(0,80);if(value==='__custom__')return;selectedCategory=value;
- if(value&&![...category.options].some(o=>o.value===value)){const option=new Option(value,value);category.add(option,category.querySelector('[value="__custom__"]'))}
+ if(value&&![...category.options].some(o=>o.value===value)){const option=new Option(value,value);category.add(option,[...category.options].find(o=>o.value&&o.value!=='__custom__'&&o.text.localeCompare(value,'en',{sensitivity:'base'})>0)||category.querySelector('[value="__custom__"]'))}
  category.value=value;customEditor.hidden=true;
  if(autoCover&&!wasProposal&&isProposal())setCover('on');
  renderMetadata();
