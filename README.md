@@ -8,7 +8,7 @@ A reusable editorial document system for technical papers, whitepapers, reports 
 
 Give your agent this repository and [AI-PROMPT.md](AI-PROMPT.md), plus your source text/files, title, authors and date. No prior knowledge of this project is needed. For example:
 
-> Use https://github.com/windborne/whitepaper-template at v1.0. Read README.md, SKILL.md and DESIGN.md, create a separate document workspace outside every Git checkout, set up its local editor, and open the starter Article in draft mode. Use the attached content to create my paper. Keep the template defaults unless I specify otherwise. Save my chosen settings, generate a PDF, and give me the editable source and PDF after reviewing both.
+> Use https://github.com/windborne/whitepaper-template at v1.0.1. Read README.md, SKILL.md and DESIGN.md, create a separate document workspace outside every Git checkout, set up its local editor, and open the starter Article in draft mode. Use the attached content to create my paper. Keep the template defaults unless I specify otherwise. Save my chosen settings, generate a PDF, and give me the editable source and PDF after reviewing both.
 
 The agent needs local file access and a terminal to install dependencies, edit HTML and run the server. **The browser is a layout/settings editor and preview, not a word processor.** Ask your agent to change the text, figures, author names or date in the HTML source; use Document settings to change their presentation.
 
@@ -21,7 +21,7 @@ Requires Node.js 20+ and Python 3.10+. Git is needed only to clone the toolkit. 
 ```sh
 git clone https://github.com/windborne/whitepaper-template.git
 cd whitepaper-template
-git checkout v1.0
+git checkout v1.0.1
 node create-document.cjs "$HOME/Documents/WindBorne Documents/my-paper"
 cd "$HOME/Documents/WindBorne Documents/my-paper"
 node setup.cjs
@@ -147,7 +147,7 @@ The standard editor has Template and Article tabs. For a private review bundle, 
 
 - `create-document.cjs`, `setup.cjs`, `doctor.cjs`: isolated document creation, dependency setup and export diagnostics.
 - `SKILL.md`, `AI-PROMPT.md`, `DESIGN.md`: reusable AI instructions and visual rules.
-- `RELEASE.md`: approved v1.0 scope, release procedure and rollout responsibilities.
+- `RELEASE.md`: approved v1.0.1 scope, release procedure and rollout responsibilities.
 - `article.html`, `starter.html`, `specimen.html`, `stress-report.html`: editable sources and companion PDFs.
 - `style.css`, `fonts.css`, `controls.js`: shared design, offline fonts and interactions.
 - `renderer.cjs`, `render.cjs`, `server.cjs`, `settings-store.cjs`, `publish.cjs`: PDF export, local editor and static packaging.
@@ -158,7 +158,9 @@ Fonts carry their licenses in `licenses/`; Lucide's license is in `LICENSE-LUCID
 
 ## Versioned template baseline
 
-Use the annotated `v1.0` tag for the reviewed baseline: after cloning, run `git checkout v1.0` before creating a document workspace. The resulting detached checkout is suitable for copying a template; maintainers should work on a branch for template changes. The tag fixes the source revision, not every machine’s browser/OS behavior. Keep `template-origin.json`, `toolchain.json`, the source/assets and the final PDF with each document. Use `main` deliberately when you want subsequent template changes; do not move the existing release tag.
+`v1.0.1` is the recommended maintenance release: it updates pypdf to 6.21.4 and adjusts a PDF text-extraction test. The document design and authoring workflow are unchanged. The original `v1.0` tag remains fixed; use the newer tag for new work. Existing document workspaces keep their copied dependencies until explicitly updated and checked.
+
+Use the annotated `v1.0.1` tag for the reviewed baseline: after cloning, run `git checkout v1.0.1` before creating a document workspace. The resulting detached checkout is suitable for copying a template; maintainers should work on a branch for template changes. The tag fixes the source revision, not every machine’s browser/OS behavior. Keep `template-origin.json`, `toolchain.json`, the source/assets and the final PDF with each document. Use `main` deliberately when you want subsequent template changes; do not move the existing release tag.
 
 ## Maintaining the toolkit
 
@@ -166,6 +168,6 @@ Change shared code in the public checkout using synthetic fixtures only. Setup a
 
 Use pull requests for shared template changes. Do not copy a working manuscript back into `article.html`, a fixture, a screenshot or a test log. Dana’s Word template remains supported when Word is needed; it is not superseded by this workflow. Customer-mandated formats take precedence. This is the AI-assisted HTML/PDF workflow.
 
-John approved the design; Chris confirmed the exact three default notices and classification mapping on November 12, 2026, following Mei-lan’s policy approval. These approvals do not authorize a particular document’s release or approve a storage/AI environment. See [release status and rollout](RELEASE.md) for the v1.0 baseline and remaining owner decisions. Record the template revision used for each document rather than silently updating its shared assets mid-draft.
+John approved the design; Chris confirmed the exact three default notices and classification mapping on November 12, 2026, following Mei-lan’s policy approval. These approvals do not authorize a particular document’s release or approve a storage/AI environment. See [release status and rollout](RELEASE.md) for the v1.0.1 baseline and remaining owner decisions. Record the template revision used for each document rather than silently updating its shared assets mid-draft.
 
 Distribution is a fixed three-choice control: **Public, Internal (default), Proprietary**. There is no custom-distribution input in the editor; use the source-only custom first-page footer for document-specific wording. Only change the classification scheme in code when explicitly requested and authorized; that requires updating validation, notices, help and tests together. Do not invent a new level for an individual document. This differs from Category, which still supports custom labels. Preserve supplied notice text even when its wording includes “confidential”; migrate the distribution field, not the manuscript or legal notice.

@@ -69,4 +69,4 @@ Before a release, compare README.md, SKILL.md, AI-PROMPT.md, DESIGN.md, the gene
 
 Inspect grouped figures with one caption: one frame surrounds all panels, captions remain outside it, borders default off, and explicit per-figure exceptions work. Verify compact artwork at 70% on desktop/print, at full available width on screens up to 700px, normal caption alignment, and an enlarged lightbox. Compact sizing remains an explicit authoring decision.
 
-Run the workspace and implementation checks and require successful GitHub Actions on the exact release commit before creating the annotated v1.0 tag. Approval scope and remaining rollout work are recorded in RELEASE.md. A version tag identifies the source; it does not establish identical rendering on every platform or complete security/handling approvals.
+Run the workspace and implementation checks and require successful GitHub Actions on the exact release commit before creating the annotated v1.0.1 tag. Approval scope and remaining rollout work are recorded in RELEASE.md. A version tag identifies the source; it does not establish identical rendering on every platform or complete security/handling approvals.

@@ -1,6 +1,10 @@
-# v1.0 release scope and rollout
+# v1.0.1 release scope and rollout
 
-The `v1.0` annotated tag identifies the reviewed HTML/web/PDF template baseline. It is applied after the exact source commit passes the workspace checks and GitHub Actions on Ubuntu and macOS. The tag fixes the source revision, not every OS/browser outcome; preserve each document’s `template-origin.json`, `toolchain.json`, editable source, assets and final PDF. Do not move a published tag; use a new version for later changes.
+The `v1.0.1` annotated tag identifies the reviewed HTML/web/PDF template baseline. It is applied after the exact source commit passes the workspace checks and GitHub Actions on Ubuntu and macOS. The tag fixes the source revision, not every OS/browser outcome; preserve each document’s `template-origin.json`, `toolchain.json`, editable source, assets and final PDF. Do not move a published tag; use a new version for later changes.
+
+## Changes from v1.0
+
+[PR #1](https://github.com/windborne/whitepaper-template/pull/1) updates pypdf from 6.10.0 to 6.21.4 and makes the cover test tolerate spaces inserted into letter-spaced text during extraction. This maintenance release also updates the recommended version in the onboarding and agent guides. It does not change document styling or the authoring workflow. The original `v1.0` tag remains unchanged. Existing workspaces retain their copied requirements; update them explicitly and rerun setup/export checks before relying on the new dependency.
 
 ## Confirmed decisions
 
@@ -10,11 +14,11 @@ The `v1.0` annotated tag identifies the reviewed HTML/web/PDF template baseline.
 - Real manuscripts and derived files belong in a separate document workspace outside Git, in approved storage. The public repository contains the toolkit and synthetic examples. The setup utility does not configure access permissions, cloud sync or AI authorization.
 - Dana’s Word template is not superseded. Use this workflow for AI-assisted HTML/PDF; retain Word when required and follow customer-mandated formats.
 
-## Rollout responsibilities still requiring follow-through
+## Rollout status and follow-through
 
 | Item | Owner / next step |
 |---|---|
-| Agent discovery | SHODAN can prepare an Index PR; Darius/the Index owner reviews it. A proposed entry is below. No Index change is implied by this release. |
+| Agent discovery | Darius confirmed the Index entry is live via the_index#77. Ask SHODAN to update its recommended version from v1.0 to v1.0.1; that follow-up is not performed by this repository release. |
 | CUI and other controlled material | Darius/the responsible IT or security owner identifies the approved storage, AI environments, permissions and markings before such content is processed. This repo does not designate a platform as approved. |
 | Branch protection | A repository administrator configures the agreed rules for main. As checked November 13, 2026, main is unprotected and the publishing account has push access, not admin access. |
 | Dependency alerts | `requirements.txt` pins pypdf 6.21.4, which fixes every pypdf advisory open on November 13, 2026. Those were hang and memory bugs on crafted PDFs, and the toolkit parses only PDFs it renders. Keep reviewing new alerts; passing layout CI is not a security review. |
@@ -24,16 +28,16 @@ The `v1.0` annotated tag identifies the reviewed HTML/web/PDF template baseline.
 
 These follow-ups are not a request to silently change repository access, retire another template, publish a manuscript or contact anyone.
 
-## Proposed Index entry
+## Suggested Index version update
 
 | Task | Resource and use |
 |---|---|
-| Write a whitepaper, technical report, case study or proposal (web + PDF) | [windborne/whitepaper-template](https://github.com/windborne/whitepaper-template), reviewed baseline `v1.0`. Give the repo and source content to an agent in an approved environment. Follow README.md to create a separate document workspace outside Git, then edit and export. Never commit real content to the public toolkit. Internal is the default classification. Use Dana’s Word template when Word is needed and the customer’s template for mandated formats. Contact: Julea Chin. |
+| Write a whitepaper, technical report, case study or proposal (web + PDF) | [windborne/whitepaper-template](https://github.com/windborne/whitepaper-template), reviewed baseline `v1.0.1`. Give the repo and source content to an agent in an approved environment. Follow README.md to create a separate document workspace outside Git, then edit and export. Never commit real content to the public toolkit. Internal is the default classification. Use Dana’s Word template when Word is needed and the customer’s template for mandated formats. Contact: Julea Chin. |
 
 ## Release procedure
 
 1. Review the diff: shared code, documentation and synthetic fixtures only; no customer/internal examples or derived assets.
 2. Run `npm run check:workspace` and `npm run check` after setup. Regenerate and visually inspect changed synthetic PDF content.
 3. Push the reviewed source commit and require successful GitHub Actions on that exact commit.
-4. Create an annotated `v1.0` tag pointing to that commit, push the tag without force, and verify its remote target. If it already exists, inspect it rather than replacing it.
+4. Create an annotated `v1.0.1` tag pointing to that commit, push the tag without force, and verify its remote target. If it already exists, inspect it rather than replacing it.
 5. Preserve the release identifier with each new document. Keep remaining rollout responsibilities explicit.
