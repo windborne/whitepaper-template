@@ -19,7 +19,7 @@ module.exports=async function checkCover(browser,origin){
   assert.throws(()=>validateSettings({cover:'yes'}));
   const dir=path.join(__dirname,'.cache');await fs.mkdir(dir,{recursive:true});
   for(const cover of ['off','on'])await render(path.join(__dirname,'starter.html'),path.join(dir,'cover-'+cover+'.pdf'),{cover});
-  execFileSync(require('./runtime.cjs').python(),['-c',`from pypdf import PdfReader\na=PdfReader(${JSON.stringify(path.join(dir,'cover-off.pdf'))})\nb=PdfReader(${JSON.stringify(path.join(dir,'cover-on.pdf'))})\nassert len(b.pages)==len(a.pages)+1\nassert 'Document title' in b.pages[0].extract_text()\nassert 'CONTENTS' not in b.pages[0].extract_text()\nassert 'CONTENTS' in b.pages[1].extract_text()\nassert 'Describe the method or proposal.' in b.pages[1].extract_text()\nfor d in b.named_destinations.values(): assert b.get_destination_page_number(d)>=1`]);
+  execFileSync(require('./runtime.cjs').python(),['-c',`from pypdf import PdfReader\na=PdfReader(${JSON.stringify(path.join(dir,'cover-off.pdf'))})\nb=PdfReader(${JSON.stringify(path.join(dir,'cover-on.pdf'))})\nassert len(b.pages)==len(a.pages)+1\nassert 'Document title' in b.pages[0].extract_text()\nassert 'CONTENTS' not in b.pages[0].extract_text().replace(' ','')\nassert 'CONTENTS' in b.pages[1].extract_text().replace(' ','')\nassert 'Describe the method or proposal.' in b.pages[1].extract_text()\nfor d in b.named_destinations.values(): assert b.get_destination_page_number(d)>=1`]);
   console.log('Cover passed: off by default, web unchanged, print-only page, body/contents retained, accurate destinations');
  }finally{await page.close()}
 };
