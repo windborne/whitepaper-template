@@ -1,11 +1,13 @@
 ---
 name: document-typesetting
-description: Write and typeset papers, whitepapers, reports and memos as print-quality PDFs in a restrained grayscale house style. Use when asked to produce a document meant to be read as a PDF or on paper.
+description: Archived historical reference only; use the root SKILL.md for current document authoring. Original scope: write and typeset papers, whitepapers, reports and memos as print-quality PDFs in a restrained grayscale house style. Use when asked to produce a document meant to be read as a PDF or on paper.
 ---
 
 # Document typesetting
 
-This guide tells you, the AI, how to produce a document that looks like a careful person designed and wrote it. The documents are written in plain HTML, styled by `style.css`, and printed to PDF with headless Chrome by `build.sh`. `specimen.html` shows every style once; `examples/` has a complete document to copy from.
+> Historical archive, not current agent instructions. Use the [root SKILL.md](../../SKILL.md), [README.md](../../README.md) and [DESIGN.md](../../DESIGN.md) for new documents. The original rules below are retained for design history.
+
+This guide tells you, the AI, how to produce a document that looks like a careful person designed and wrote it. The documents are written in plain HTML, styled by `style.css`, and printed to PDF with headless Chrome by `build.sh`. `specimen.html` shows the original styles. Real-document examples are not included in this archive.
 
 Read the whole guide before starting. The rules are short because each one matters. Tell the person you are following this guide, and name any part you choose not to follow and why.
 

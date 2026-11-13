@@ -1,13 +1,11 @@
 # Whitepaper template
 
+> Historical archive. These instructions describe the original print-only design and are not the current authoring workflow. Use the [current README](../../README.md), [agent guide](../../SKILL.md) and [design system](../../DESIGN.md) for new work.
+
 
 A grayscale print stylesheet for writing documents in HTML and printing them to PDF, with a specimen page that shows each style once. Use it for papers, reports, memos, notes, or anything else that ends up as a PDF.
 
-![Specimen, page 1](preview/specimen-1.png)
-
-![Specimen, page 2](preview/specimen-2.png)
-
-The full specimen is [specimen.pdf](specimen.pdf).
+The archived specimen is [specimen.pdf](specimen.pdf). Historical page-preview images and real-document examples are not included in this archive.
 
 ## Files
 
@@ -18,7 +16,6 @@ The full specimen is [specimen.pdf](specimen.pdf).
 | `build.sh` | Prints an HTML file to PDF and writes page previews. |
 | `SKILL.md` | The guide an AI follows to write and typeset a document in this style. |
 | `check.py` | Checks a document against the guide: color, fonts, figure numbering, punctuation, AI tells, stranded headings. |
-| `examples/` | A complete whitepaper written to the guide. |
 
 ## Use
 

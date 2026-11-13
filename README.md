@@ -1,6 +1,6 @@
 # WindBorne whitepaper template
 
-A reusable editorial document system for technical papers, whitepapers and reports. Write once in HTML; read as a web article or export a paginated PDF with the same content. The approved design uses Newsreader prose/headings, IBM Plex Sans technical matter, IBM Plex Mono navigation/page numbers, and STIX Two Math.
+A reusable editorial document system for technical papers, whitepapers, reports and proposals. Write once in HTML; read as a web article or export a paginated PDF with the same content. John approved the design. It uses Newsreader prose/headings, IBM Plex Sans technical matter, IBM Plex Mono navigation/page numbers, and STIX Two Math.
 
 ![Draft editor with Template and Article tabs, View PDF and Save settings](assets/editor-preview.png)
 
@@ -8,19 +8,20 @@ A reusable editorial document system for technical papers, whitepapers and repor
 
 Give your agent this repository and [AI-PROMPT.md](AI-PROMPT.md), plus your source text/files, title, authors and date. No prior knowledge of this project is needed. For example:
 
-> Use https://github.com/windborne/whitepaper-template. Read README.md, SKILL.md and DESIGN.md, create a separate document workspace outside every Git checkout, set up its local editor, and open the starter Article in draft mode. Use the attached content to create my paper. Keep the template defaults unless I specify otherwise. Save my chosen settings, generate a PDF, and give me the editable source and PDF after reviewing both.
+> Use https://github.com/windborne/whitepaper-template at v1.0. Read README.md, SKILL.md and DESIGN.md, create a separate document workspace outside every Git checkout, set up its local editor, and open the starter Article in draft mode. Use the attached content to create my paper. Keep the template defaults unless I specify otherwise. Save my chosen settings, generate a PDF, and give me the editable source and PDF after reviewing both.
 
 The agent needs local file access and a terminal to install dependencies, edit HTML and run the server. **The browser is a layout/settings editor and preview, not a word processor.** Ask your agent to change the text, figures, author names or date in the HTML source; use Document settings to change their presentation.
 
-## Create a private document workspace
+## Create a separate document workspace
 
 **This GitHub repository is public. Keep the checkout for template code and synthetic examples only.** Before adding real content, create a separate document folder outside every Git checkout. The command below copies an explicit list of starter/editor files, creates a fresh `article.html` from `starter.html`, and leaves Git history, remotes, existing drafts and generated PDFs behind. It refuses nonempty destinations and destinations inside a Git checkout, including symlinked paths.
 
-Requires Node.js 20+ and Python 3.10+. Git is needed only to clone the toolkit. Choose an approved storage location for your document's classification; the location below is an example (macOS/Linux):
+Requires Node.js 20+ and Python 3.10+. Git is needed only to clone the toolkit. Choose a storage location and AI tool already approved for your document’s classification; the location below is only a path example, not an approved-storage designation (macOS/Linux). Darius/the responsible IT or security owner must identify approved storage and AI environments for CUI, export-controlled or otherwise contract-restricted material before that content is provided to an agent. This repository does not name or approve those environments:
 
 ```sh
 git clone https://github.com/windborne/whitepaper-template.git
 cd whitepaper-template
+git checkout v1.0
 node create-document.cjs "$HOME/Documents/WindBorne Documents/my-paper"
 cd "$HOME/Documents/WindBorne Documents/my-paper"
 node setup.cjs
@@ -90,7 +91,7 @@ Contents numbering is separate: every top-level entry, including References and 
 
 Back matter normally follows References → Appendices → Glossary. If an appendix or glossary cites sources, put References last instead. A subtle divider follows References only when another section follows. See [back matter order](DESIGN.md#back-matter-order).
 
-Recommended defaults: PDF cover page off, plain abstract, two-column PDF contents (headers only), author name and title, Category None and Prepared for blank, Internal distribution. One-column contents includes headers and subheaders. PDF contents never appears in the web body and does not affect the web nav sidebar. See [DESIGN.md](DESIGN.md) for typography, options, footer language and page-flow rules. Distribution is required and footer-only. The first page uses a distribution-specific notice; subsequent pages use a short footer; the first-page and web-end notices include company wording as part of the notice itself, without an additional classification, organization or category prefix. Distribution markings do not provide access control.
+Recommended defaults: figure borders off, PDF cover page off, plain abstract, two-column PDF contents (headers only), author name and title, Category None and Prepared for blank, Internal distribution. One-column contents includes headers and subheaders. PDF contents never appears in the web body and does not affect the web nav sidebar. See [DESIGN.md](DESIGN.md) for typography, options, footer language and page-flow rules. Distribution is required and footer-only. The first page uses a distribution-specific notice; subsequent pages use a short footer; the first-page and web-end notices include company wording as part of the notice itself, without an additional classification, organization or category prefix. Distribution markings do not provide access control.
 
 `stress-report.html` is a synthetic layout fixture, not research evidence. Keep it separate from your draft. Public examples contain placeholder or synthetic material; use real reports only in a separate private workspace.
 
@@ -131,7 +132,7 @@ The local server accepts only local, same-origin JSON export and settings-save r
 
 ```sh
 node publish.cjs my-paper.html dist/my-paper \
-  --settings '{"distribution":"Public","category":"Research Paper"}'
+  --settings '{"distribution":"Public","category":"Technical Report"}'
 ```
 
 This creates `dist/my-paper/my-paper.html`, `my-paper.pdf` and the shared assets. It does not upload anything. Open or host `my-paper.html` from that folder; the command does not create an `index.html`. Share the whole folder for a web reader, or just the PDF for a PDF handoff. The reader's View PDF opens that baked PDF; a static host cannot run Chromium to generate changed settings. Regenerate the package after content or settings change. The local editor provides live custom export; public static readers receive an exact fixed publication.
@@ -146,20 +147,25 @@ The standard editor has Template and Article tabs. For a private review bundle, 
 
 - `create-document.cjs`, `setup.cjs`, `doctor.cjs`: isolated document creation, dependency setup and export diagnostics.
 - `SKILL.md`, `AI-PROMPT.md`, `DESIGN.md`: reusable AI instructions and visual rules.
+- `RELEASE.md`: approved v1.0 scope, release procedure and rollout responsibilities.
 - `article.html`, `starter.html`, `specimen.html`, `stress-report.html`: editable sources and companion PDFs.
 - `style.css`, `fonts.css`, `controls.js`: shared design, offline fonts and interactions.
-- `renderer.cjs`, `render.cjs`, `server.cjs`, `settings-store.cjs`, `publish.cjs`: deterministic PDF export, local editor and static packaging.
+- `renderer.cjs`, `render.cjs`, `server.cjs`, `settings-store.cjs`, `publish.cjs`: PDF export, local editor and static packaging.
 - `check.cjs`, `check-settings.cjs`, `check-help.cjs`, `check.py`, `VALIDATION.md`: behavioral checks, content checks and review guidance.
 - `experiments/comparison`: preserved earlier design comparisons; `experiments/original`: original print-only template. These are historical references, not places to write real documents.
 
 Fonts carry their licenses in `licenses/`; Lucide's license is in `LICENSE-LUCIDE`. WindBorne's name and logo are brand assets, not a grant of trademark rights. Keep font and icon licenses with redistributed assets.
 
+## Versioned template baseline
+
+Use the annotated `v1.0` tag for the reviewed baseline: after cloning, run `git checkout v1.0` before creating a document workspace. The resulting detached checkout is suitable for copying a template; maintainers should work on a branch for template changes. The tag fixes the source revision, not every machine’s browser/OS behavior. Keep `template-origin.json`, `toolchain.json`, the source/assets and the final PDF with each document. Use `main` deliberately when you want subsequent template changes; do not move the existing release tag.
+
 ## Maintaining the toolkit
 
 Change shared code in the public checkout using synthetic fixtures only. Setup also installs `requirements-dev.txt` here for the PDF-layout checks; document workspaces receive only the export dependency. Run `node setup.cjs`, `npm run check:workspace` and `npm run check` before handing off a change. GitHub Actions runs the same checks on Linux and macOS for pull requests and pushes to main; it uses no customer documents or publishing credentials and uploads no document artifacts. Automated checks catch known failures but do not replace visual PDF review or automatically enforce branch protection.
 
-Use pull requests for shared template changes. Do not copy a working manuscript back into `article.html`, a fixture, a screenshot or a test log. Existing Word templates remain alternatives when Word or a customer-specific format is required. This is the AI-assisted HTML/PDF workflow.
+Use pull requests for shared template changes. Do not copy a working manuscript back into `article.html`, a fixture, a screenshot or a test log. Dana’s Word template remains supported when Word is needed; it is not superseded by this workflow. Customer-mandated formats take precedence. This is the AI-assisted HTML/PDF workflow.
 
-The design has been reviewed, and the three default notices and classification mapping were confirmed on November 12, 2026. Tag releases only after checks pass; the package version alone does not identify a reviewed release. Record the template revision used for each document rather than silently updating its shared assets mid-draft.
+John approved the design; Chris confirmed the exact three default notices and classification mapping on November 12, 2026, following Mei-lan’s policy approval. These approvals do not authorize a particular document’s release or approve a storage/AI environment. See [release status and rollout](RELEASE.md) for the v1.0 baseline and remaining owner decisions. Record the template revision used for each document rather than silently updating its shared assets mid-draft.
 
 Distribution is a fixed three-choice control: **Public, Internal (default), Proprietary**. There is no custom-distribution input in the editor; use the source-only custom first-page footer for document-specific wording. Only change the classification scheme in code when explicitly requested and authorized; that requires updating validation, notices, help and tests together. Do not invent a new level for an individual document. This differs from Category, which still supports custom labels. Preserve supplied notice text even when its wording includes “confidential”; migrate the distribution field, not the manuscript or legal notice.

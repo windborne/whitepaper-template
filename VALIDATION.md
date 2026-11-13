@@ -26,15 +26,15 @@ Before release, inspect all rendered pages and verify:
 - Figure and table labels remain readable at actual print size. Mathematical operators and status symbols render correctly.
 - Text remains inside margins, captions remain attached to figures, and no heading is stranded.
 - Contents page numbers agree with actual section destinations, including references. No PDF contents block appears in web reading mode.
-- Distribution is absent from header metadata. Notice-only treatment applies on page one and at the web end; later PDF pages retain the short classification footer. Verify one-line default notices and wrapping for long custom notices. The first-page Internal notice says “Internal WindBorne Systems document. Not approved for public release.” The Public notice says “WindBorne Systems. For public distribution.” Verify all four complete defaults match DESIGN.md and name WindBorne Systems; custom notices stay intact. Later pages always use the uppercase distribution label, including PUBLIC and INTERNAL. Page numbers remain absent on page one and present later.
+- Distribution is absent from header metadata. Notice-only treatment applies on page one and at the web end; later PDF pages retain the company/title/month-year footer on the left and uppercase classification/page number on the right. Verify one-line default notices and wrapping for long custom notices. The first-page Internal notice says “Internal WindBorne Systems document. Not approved for public release.” The Public notice says “WindBorne Systems. For public distribution.” Verify all three complete defaults match DESIGN.md and name WindBorne Systems; custom notices stay intact. Later pages always use the uppercase distribution label, including PUBLIC and INTERNAL. Page numbers remain absent on page one and present later.
 - Static publication's PDF matches its baked settings and its View PDF works without the export server.
 - Source facts, caveats, tables, figures and references survive any restyling. Any unresolved sparse page or source issue is recorded rather than concealed.
 
 The original and blog-like reference treatments are preserved. Their old typography rules and checkers do not define the current system.
 
-## Verified checkpoint — November 9, 2026
+## Fixture coverage and release review
 
-Current public builds contain starter and working article (1 page each), the component specimen (5 pages), and the synthetic long report (7 pages). The 64 inventory records are verified in order with repeating headers. The small print REFERENCES label matches CONTENTS. Interaction/export tests cover a custom category, distribution, detailed authors, shaded abstract and one-column contents.
+The public builds contain starter and working article, the component specimen, and the synthetic long report. Page counts depend on the selected settings and current content; regenerate and review them for a release rather than relying on a historical page-count snapshot. The 64 inventory records are verified in order with repeating headers. The small print REFERENCES label matches CONTENTS. Interaction/export tests cover a custom category, distribution, detailed authors, shaded abstract and one-column contents.
 
 Every new manuscript needs a page-by-page review. Real source-document conversion checks belong in a separate private workspace; do not add those manuscripts or preview images to this public repository.
 
@@ -62,3 +62,11 @@ Optional cover checks verify off-by-default behavior, unchanged web geometry, pr
 Proposal checks verify contact/email metadata, delivery date and validity, suppression of the category, automatic cover activation with a persistent manual override, cover logo, responsive layout and restoration of ordinary paper metadata. In private bundles verify inactive short tabs expand only for the current document. Inspect long source notices in first-page footers and at the web end; later-page dates must exclude the validity period.
 
 Running-footer checks cover explicit short titles, omitted/blank fallback to the complete visible title, whitespace and punctuation, long-title wrapping, classification/page-number alignment and save/reload preservation. Inspect footer geometry in the generated PDF, not just CSS. Confirm first pages and covers have no running title/classification/page-number group.
+
+## Documentation and release consistency
+
+Before a release, compare README.md, SKILL.md, AI-PROMPT.md, DESIGN.md, the generated START-HERE.md and the active HTML sources with the implementation. Confirm exactly Public / Internal / Proprietary, Internal as the default, the exact three approved notices, and legacy-label migration. The HTML source must not offer retired classification choices even if JavaScript would replace them. Keep archived instructions clearly marked as historical.
+
+Inspect grouped figures with one caption: one frame surrounds all panels, captions remain outside it, borders default off, and explicit per-figure exceptions work. Verify compact artwork at 70% on desktop/print, at full available width on screens up to 700px, normal caption alignment, and an enlarged lightbox. Compact sizing remains an explicit authoring decision.
+
+Run the workspace and implementation checks and require successful GitHub Actions on the exact release commit before creating the annotated v1.0 tag. Approval scope and remaining rollout work are recorded in RELEASE.md. A version tag identifies the source; it does not establish identical rendering on every platform or complete security/handling approvals.
