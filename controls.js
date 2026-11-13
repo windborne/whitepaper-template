@@ -37,7 +37,22 @@ const bordersField=document.createElement('label');bordersField.className='toggl
 bordersField.innerHTML='<span>Figure borders</span><input type="checkbox" role="switch" id="figure-borders-option" aria-label="Figure borders">';
 coverField.before(bordersField);
 const figureBorders=bordersField.querySelector('input');
-function setFigureBorders(value){figureBorders.checked=value==='on';document.body.classList.toggle('with-figure-borders',figureBorders.checked);updatePDFLink()}
+// Inset vector frames avoid clipping from fractional print-viewport rounding.
+for(const art of document.querySelectorAll('.prose figure .figure-art')){
+ const media=[...art.children].filter(el=>el.matches('img,svg'));
+ if(!media.length)continue;
+ const wrap=document.createElement('span');wrap.className='figure-media';media[0].before(wrap);wrap.append(...media);
+ const frame=document.createElementNS('http://www.w3.org/2000/svg','svg');frame.classList.add('figure-frame');frame.setAttribute('aria-hidden','true');frame.setAttribute('focusable','false');
+ frame.innerHTML='<rect x="1" y="1" width="100%" height="100%" fill="none" stroke="currentColor" stroke-width="0.666667"/>';
+ wrap.append(frame);
+}
+function setFigureBorders(value){
+ figureBorders.checked=value==='on';document.body.classList.toggle('with-figure-borders',figureBorders.checked);
+ document.querySelectorAll('.prose figure').forEach(figure=>{
+  const framed=figure.dataset.figureBorder==='on'||(figureBorders.checked&&figure.dataset.figureBorder!=='off');
+  figure.querySelectorAll('.figure-media').forEach(wrap=>wrap.classList.toggle('frame-enabled',framed));
+ });updatePDFLink();
+}
 figureBorders.onchange=()=>setFigureBorders(figureBorders.checked?'on':'off');
 
 const coverPage=document.createElement('section');coverPage.className='pdf-cover';coverPage.setAttribute('aria-label','Cover page');

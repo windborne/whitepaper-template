@@ -40,10 +40,19 @@ figure{display:grid;grid-template-columns:minmax(0,1fr) var(--rail);gap:var(--ga
 [hidden]{display:none!important}
 .figure-art{display:block;width:100%;padding:0;border:0;border-radius:0;background:transparent;color:inherit;text-align:inherit;cursor:zoom-in;font:inherit}
 .figure-art:focus-visible{outline:2px solid var(--accent);outline-offset:6px}
-/* Frame the artwork itself, never captions, table cells or decorative cover art.
-   A hairline border stays inside the artwork box, including in printed output. */
-.with-figure-borders .prose figure:not([data-figure-border="off"]) .figure-art>:is(img,svg),
-.with-figure-borders dialog:not(.unframed-lightbox) .enlarged-art>:is(img,svg){border:.5pt solid var(--ink)}
+/* Draw a true 0.5pt vector frame inside each artwork box; never frame the caption. */
+.figure-media{position:relative;display:block;min-width:0;max-width:100%}
+.figure-media>svg.figure-frame{display:none;position:absolute;inset:0;width:100%;height:100%;max-width:none;color:var(--ink);pointer-events:none}
+.figure-media.frame-enabled>svg.figure-frame{display:block}
+.figure-frame rect{width:calc(100% - 2px);height:calc(100% - 2px)}
+/* Compact artwork keeps the standard caption column and left alignment. */
+@media screen and (min-width:701px), print{
+ figure.figure-compact .figure-media{width:70%;margin-inline:auto}
+}
+@media screen and (max-width:700px){
+ figure.figure-compact .figure-media{width:100%;margin-inline:0}
+}
+figure.figure-photo .figure-media,dialog.photo-lightbox .figure-media{width:fit-content;margin-inline:auto}
 .options-panel .figure-borders-setting{margin-top:18px}
 
 .ref-back{display:inline-block;margin-left:7px;text-decoration:none}.prose sup.fn a{color:inherit;text-decoration:none}.prose sup.fn a:hover{text-decoration:underline}
