@@ -1,8 +1,10 @@
 # Google Docs and Word companion
 
-Use this guide when the user wants an editable Google Doc or Word document. It adapts the WindBorne print style to native document formatting; it does not require converting a working document into HTML. The HTML editor remains the route for a web article and its matching PDF. This companion is available on `main`, after the fixed `v1.0.1` baseline, and does not supersede Dana's Word template or customer-required formats.
+Use this guide when the user wants an editable Google Doc or Word document. It adapts the WindBorne print style to native document formatting; it does not require converting a working document into HTML. The HTML editor remains the route for a web article and its matching PDF. This companion is included in `v1.1.0` and on `main`, and does not supersede Dana's Word template or customer-required formats.
 
 ## Start with the existing document
+
+Use current `main` for new documents unless the user requests a fixed tag or commit. Record the exact template commit in private handoff notes alongside the document/export. Do not silently restyle existing work to a newer template revision.
 
 - Work on a private copy unless the user requests edits to the live source. Keep real manuscripts, DOCX files, exports and QA images outside the public template checkout, in approved storage. Do not put a live private document URL or its content in this repository.
 - Preserve every paragraph, table value, figure, link, citation and supplied notice. Formatting changes do not authorize rewriting claims or replacing the document with excerpts. Keep existing section numbering and a useful Summary heading unless asked to change them.

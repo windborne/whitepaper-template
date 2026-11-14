@@ -4,15 +4,15 @@ A reusable editorial document system for technical papers, whitepapers, reports 
 
 ![Draft editor with Template and Article tabs, View PDF and Save settings](assets/editor-preview.png)
 
-The instructions below use the fixed `v1.0.1` baseline. For the newer Reset/Save controls and automatic grouped-image frames described on this branch, ask your agent to use `main` and omit `git checkout v1.0.1`. The published tag has not been moved.
+Use the latest `main` for new documents. The `v1.1.0` tag is a fixed checkpoint for reproducing this release; use a tag or commit only when a fixed revision is requested. Existing document workspaces keep their copied template until explicitly updated and checked.
 
 ## Start with your agent
 
-**Working in Google Docs or Word?** Use [GOOGLE-DOCS.md](GOOGLE-DOCS.md), available on `main` after `v1.0.1`. It adapts the typography, first-page logo, horizontal metadata and first-page/running footers to native document formatting. Keep an existing clean metadata line; labeled AUTHOR/DATE fields are not required. Ask your agent to edit a private copy and check its exported pages. This route does not require the HTML editor or replace Dana's Word template/customer-required formats.
+**Working in Google Docs or Word?** Use [GOOGLE-DOCS.md](GOOGLE-DOCS.md), included in `v1.1.0` and on `main`. It adapts the typography, first-page logo, horizontal metadata and first-page/running footers to native document formatting. Keep an existing clean metadata line; labeled AUTHOR/DATE fields are not required. Ask your agent to edit a private copy and check its exported pages. This route does not require the HTML editor or replace Dana's Word template/customer-required formats.
 
 Give your agent this repository and [AI-PROMPT.md](AI-PROMPT.md), plus your source text/files, title, authors and date. No prior knowledge of this project is needed. For example:
 
-> Use https://github.com/windborne/whitepaper-template at v1.0.1. Read README.md, SKILL.md and DESIGN.md, create a separate document workspace outside every Git checkout, set up its local editor, and open the starter Article in draft mode. Use the attached content to create my paper. Keep the template defaults unless I specify otherwise. Save my chosen settings, generate a PDF, and give me the editable source and PDF after reviewing both.
+> Use https://github.com/windborne/whitepaper-template on the latest main. Read README.md, SKILL.md and DESIGN.md, create a separate document workspace outside every Git checkout, set up its local editor, and open the starter Article in draft mode. Use the attached content to create my paper. Keep the template defaults unless I specify otherwise. Save my chosen settings, generate a PDF, and give me the editable source and PDF after reviewing both.
 
 The agent needs local file access and a terminal to install dependencies, edit HTML and run the server. **The browser is a layout/settings editor and preview, not a word processor.** Ask your agent to change the text, figures, author names or date in the HTML source; use Document settings to change their presentation.
 
@@ -23,16 +23,15 @@ The agent needs local file access and a terminal to install dependencies, edit H
 Requires Node.js 20+ and Python 3.10+. Git is needed only to clone the toolkit. Choose a storage location and AI tool already approved for your document’s classification; the location below is only a path example, not an approved-storage designation (macOS/Linux). Darius/the responsible IT or security owner must identify approved storage and AI environments for CUI, export-controlled or otherwise contract-restricted material before that content is provided to an agent. This repository does not name or approve those environments:
 
 ```sh
-git clone https://github.com/windborne/whitepaper-template.git
+git clone --branch main https://github.com/windborne/whitepaper-template.git
 cd whitepaper-template
-git checkout v1.0.1
 node create-document.cjs "$HOME/Documents/WindBorne Documents/my-paper"
 cd "$HOME/Documents/WindBorne Documents/my-paper"
 node setup.cjs
 npm start
 ```
 
-Already have the toolkit? Start with `node create-document.cjs` in its folder. Already have a document workspace? Read its `START-HERE.md` and resume there; do not recreate or overwrite it. For another document, create another workspace from the toolkit. On Windows, pass a quoted absolute destination such as `"C:\Users\you\Documents\WindBorne Documents\my-paper"`, then run the same Node commands inside that folder.
+Already have the toolkit? Check for uncommitted template work first; preserve it rather than resetting or overwriting it. On a clean checkout, run `git switch main` and `git pull --ff-only` before creating a new document with `node create-document.cjs`. If the pull cannot fast-forward, resolve the divergence before continuing; do not force-reset the checkout. Already have a document workspace? Read its `START-HERE.md` and resume there; do not recreate or overwrite it. For another document, create another workspace from the toolkit. On Windows, pass a quoted absolute destination such as `"C:\Users\you\Documents\WindBorne Documents\my-paper"`, then run the same Node commands inside that folder.
 
 `node setup.cjs` installs locked Node packages, creates a local Python environment, installs the pinned PDF dependency and Playwright Chromium, then verifies a real PDF export. On Linux it also installs Chromium's system libraries, which may require administrator access. Use `node setup.cjs --skip-system-deps` only if those libraries are already present. Install Node/Python first if setup reports they are missing. Setup can be rerun without resetting your document.
 
@@ -154,7 +153,7 @@ The standard editor has Template and Article tabs. For a private review bundle, 
 
 - `create-document.cjs`, `setup.cjs`, `doctor.cjs`: isolated document creation, dependency setup and export diagnostics.
 - `SKILL.md`, `AI-PROMPT.md`, `DESIGN.md`: reusable AI instructions and visual rules.
-- `RELEASE.md`: approved v1.0.1 scope, release procedure and rollout responsibilities.
+- `RELEASE.md`: v1.1.0 scope, release procedure and rollout responsibilities.
 - `article.html`, `starter.html`, `specimen.html`, `stress-report.html`: editable sources and companion PDFs.
 - `style.css`, `fonts.css`, `controls.js`: shared design, offline fonts and interactions.
 - `renderer.cjs`, `render.cjs`, `server.cjs`, `settings-store.cjs`, `publish.cjs`: PDF export, local editor and static packaging.
@@ -163,18 +162,20 @@ The standard editor has Template and Article tabs. For a private review bundle, 
 
 Fonts carry their licenses in `licenses/`; Lucide's license is in `LICENSE-LUCIDE`. WindBorne's name and logo are brand assets, not a grant of trademark rights. Keep font and icon licenses with redistributed assets.
 
-## Versioned template baseline
+## Template versions and reproducibility
 
-`v1.0.1` is the recommended maintenance release: it updates pypdf to 6.21.4 and adjusts a PDF text-extraction test. The document design and authoring workflow are unchanged. The original `v1.0` tag remains fixed; use the newer tag for new work. Existing document workspaces keep their copied dependencies until explicitly updated and checked.
+Use the latest `main` for new documents so they receive current fixes and guidance. `v1.1.0` is the fixed release checkpoint that includes Reset/Save controls, automatic grouped-image frames, hosted PDF link fixes, and the Google Docs/Word companion. The existing `v1.0` and `v1.0.1` tags remain unchanged.
 
-Use the annotated `v1.0.1` tag for the reviewed baseline: after cloning, run `git checkout v1.0.1` before creating a document workspace. The resulting detached checkout is suitable for copying a template; maintainers should work on a branch for template changes. The tag fixes the source revision, not every machine’s browser/OS behavior. Keep `template-origin.json`, `toolchain.json`, the source/assets and the final PDF with each document. Use `main` deliberately when you want subsequent template changes; do not move the existing release tag.
+When a fixed revision is requested, run `git checkout v1.1.0` (or the requested tag/commit) before creating the document workspace. Return the toolkit to `main` before starting later work that should use current defaults. Never move a published tag.
+
+Keep `template-origin.json`, `toolchain.json`, the source/assets and the final PDF with each HTML document. The workspace generator records the exact source commit and file hashes. For native Google Docs/Word work, record the template commit in private handoff notes beside the source/export. A source revision does not guarantee identical output across browser/OS versions. Resume existing workspaces as they are; do not silently replace their shared assets or dependencies. Update an existing document only when requested, then rerun setup/export checks and inspect its pages.
 
 ## Maintaining the toolkit
 
 Change shared code in the public checkout using synthetic fixtures only. Setup also installs `requirements-dev.txt` here for the PDF-layout checks; document workspaces receive only the export dependency. Run `node setup.cjs`, `npm run check:workspace` and `npm run check` before handing off a change. GitHub Actions runs the same checks on Linux and macOS for pull requests and pushes to main; it uses no customer documents or publishing credentials and uploads no document artifacts. Automated checks catch known failures but do not replace visual PDF review or automatically enforce branch protection.
 
-Use pull requests for shared template changes. Do not copy a working manuscript back into `article.html`, a fixture, a screenshot or a test log. Dana’s Word template remains supported when Word is needed; it is not superseded by this workflow. Customer-mandated formats take precedence. This is the AI-assisted HTML/PDF workflow.
+Use pull requests for shared template changes. Do not copy a working manuscript back into `article.html`, a fixture, a screenshot or a test log. Dana’s Word template remains supported when Word is needed; it is not superseded by this workflow. Customer-mandated formats take precedence. This toolkit supports AI-assisted HTML/PDF and a native Google Docs/Word companion.
 
-John approved the design; Chris confirmed the exact three default notices and classification mapping on November 12, 2026, following Mei-lan’s policy approval. These approvals do not authorize a particular document’s release or approve a storage/AI environment. See [release status and rollout](RELEASE.md) for the v1.0.1 baseline and remaining owner decisions. Record the template revision used for each document rather than silently updating its shared assets mid-draft.
+John approved the design; Chris confirmed the exact three default notices and classification mapping on November 12, 2026, following Mei-lan’s policy approval. These approvals do not authorize a particular document’s release or approve a storage/AI environment. See [release status and rollout](RELEASE.md) for the v1.1.0 checkpoint and remaining owner decisions. Record the template revision used for each document rather than silently updating its shared assets mid-draft.
 
 Distribution is a fixed three-choice control: **Public, Internal (default), Proprietary**. There is no custom-distribution input in the editor; use the source-only custom first-page footer for document-specific wording. Only change the classification scheme in code when explicitly requested and authorized; that requires updating validation, notices, help and tests together. Do not invent a new level for an individual document. This differs from Category, which still supports custom labels. Preserve supplied notice text even when its wording includes “confidential”; migrate the distribution field, not the manuscript or legal notice.
