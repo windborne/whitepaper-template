@@ -42,7 +42,7 @@ In header metadata, abbreviate the month with a period when a day is included, e
 
 ## Optional treatments
 
-Settings are ordered alphabetically: Abstract background, Author details, Category (optional), Distribution, Figure borders, PDF cover page, PDF table of contents, Prepared for (optional). Category is always visible and includes None (the default); Prepared for is an always-visible text field, blank by default, with “Conference/event name” as placeholder. The specimen also has Example authors for demonstration. Below the options, Save settings (Lucide save) persists changes in this document’s HTML. It is disabled until settings change, reports Saved on success and keeps unsaved choices visible on failure. The top bar uses View PDF (Lucide file-text) and Document settings (Lucide pencil-line).
+Settings are ordered alphabetically: Abstract background, Author details, Category (optional), Distribution, PDF cover page, PDF table of contents, Prepared for (optional). Category is always visible and includes None (the default); Prepared for is an always-visible text field, blank by default, with “Conference/event name” as placeholder. The specimen also has Example authors for demonstration. Below the options, Reset view (Lucide rotate-ccw) and Save settings (Lucide save) sit side by side without info icons. Reset discards unsaved choices and restores the last saved settings. Save persists changes in this document’s HTML in the local editor; hosted review mode saves per-document preferences in this browser only, confirms “Saved in this browser,” and leaves shared files and prepared PDFs unchanged. It is disabled until settings change, reports Saved on success and keeps unsaved choices visible on failure. The top bar uses View PDF (Lucide file-text) and Document settings (Lucide pencil-line).
 
 With four metadata fields, use two columns: Author / Date, then Prepared for / Category. With only one optional field, use three columns where space permits. Omit empty fields; never display the placeholder as content. This applies to web and PDF; long values wrap. Distribution is footer-only.
 
@@ -106,7 +106,7 @@ An element taller than the available page cannot be kept intact; the renderer de
 
 The local editor starts at `article.html?mode=edit`, with the starter copy preloaded in Article and the component specimen under Template. When editing a differently named draft, Template links back to that same Article. Settings save into the editable source, while PDF viewing always reflects the current controls. View web reader layout opens a new tab with a snapshot of those choices, preserving the editing tab. Manuscript text and metadata are edited in HTML, not in the settings panel. Static published readers hide editing controls and link their matching PDF.
 
-Settings help covers PDF table of contents, Distribution and Save settings. Info buttons expose short explanations on hover, keyboard focus or tap; Escape dismisses help before closing the panel.
+Settings help covers PDF table of contents and Distribution. Info buttons expose short explanations on hover, keyboard focus or tap; Escape dismisses help before closing the panel.
 
 ## Photographs
 
@@ -187,9 +187,9 @@ Distribution is a fixed three-choice control: **Public, Internal (default), Prop
 
 ## Optional figure borders
 
-Figure borders is a single on/off switch, off by default (`defaults.figureBorders: "off"`; use `"on"` to enable). The fixed 0.5pt Gray 900 frame follows the outer edge of the complete figure artwork group in web, lightbox and print; captions and decorative cover art remain outside it. No thickness control. Multiple images sharing one caption receive one shared outer frame around the complete artwork group, including the gap between panels; do not frame each panel separately. The SVG frame uses an explicit 0.5pt vector stroke inside the artwork box, inset slightly to avoid fractional print-viewport clipping; verify pagination at export. Use `data-figure-border="off"` on a figure that already has a frame or should remain unframed. Native HTML tables keep their own table rules. The setting is saved, carried to the web reader and honored by PDF export.
+Leave single-image figures unframed by default. Figures containing two or more image/SVG elements in one `.figure-art` automatically receive one shared 0.5pt WB Gray 900 frame. There is no Figure borders control in Document settings. Add a single-image frame in source with `data-figure-border="on"`; suppress any frame with `data-figure-border="off"`, including already-framed artwork. The frame surrounds the complete artwork group, including gaps between images; captions and cover artwork remain outside it. Keep panels sharing a caption together in one `.figure-art`. Do not frame individual panels separately. The inset SVG stroke avoids clipping at fractional print widths. Frames carry through web, lightbox and PDF; native HTML tables keep their own rules.
 
-Per-figure frame exceptions: use `data-figure-border="on"` on a figure to retain its frame when the document-wide Figure borders setting is off; use `"off"` to exclude it when the setting is on. Otherwise it follows the document setting, which defaults to off. These are source-level exceptions, not extra controls.
+Per-figure frame overrides take precedence over automatic grouping. Keep `defaults.figureBorders: "off"` in new documents; legacy source or URL settings of `"on"` remain supported for compatibility, but are not exposed in the editor. Use per-figure attributes for new requests.
 
 ## Compact artwork
 

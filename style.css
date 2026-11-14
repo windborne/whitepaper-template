@@ -53,7 +53,6 @@ figure{display:grid;grid-template-columns:minmax(0,1fr) var(--rail);gap:var(--ga
  figure.figure-compact .figure-media{width:100%;margin-inline:0}
 }
 figure.figure-photo .figure-media,dialog.photo-lightbox .figure-media{width:fit-content;margin-inline:auto}
-.options-panel .figure-borders-setting{margin-top:18px}
 
 .ref-back{display:inline-block;margin-left:7px;text-decoration:none}.prose sup.fn a{color:inherit;text-decoration:none}.prose sup.fn a:hover{text-decoration:underline}
 .notes li:target{background:var(--shade);outline:4px solid var(--shade)}
@@ -178,23 +177,21 @@ figure.figure-photo .figure-media,dialog.photo-lightbox .figure-media{width:fit-
 @media print{.table-wrap tbody th{padding:5.5pt 7pt 5.5pt 0}.table-note{font:8.5pt/1.45 var(--sans)}.table-wrap table{table-layout:auto}}
 
 /* Explicit, document-level settings persistence. */
-.settings-save{display:flex;align-items:center;gap:12px;margin-top:22px;flex-wrap:wrap}
-.preview-bar .save-settings{display:inline-flex;align-items:center;gap:7px;border:1px solid var(--line);padding:8px 10px;font:12px/1.4 var(--sans);color:var(--ink);background:#fff;cursor:pointer}
-.preview-bar .save-settings:disabled{opacity:.5;cursor:default}
-.preview-bar .save-settings:not(:disabled):hover{border-color:var(--muted);background:var(--shade)}
-.save-settings:focus-visible{outline:2px solid var(--accent);outline-offset:3px}
-.save-status{font:11px/1.4 var(--sans);color:var(--muted);flex:1;min-width:80px}
+.settings-save{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:10px;margin-top:22px}
+.preview-bar .settings-save>button{display:inline-flex;align-items:center;justify-content:center;gap:7px;border:1px solid var(--line);padding:8px;font:12px/1.4 var(--sans);color:var(--ink);background:#fff;cursor:pointer;white-space:nowrap}
+.preview-bar .settings-save>button:disabled{opacity:.5;cursor:default}
+.preview-bar .settings-save>button:not(:disabled):hover{border-color:var(--muted);background:var(--shade)}
+.settings-save>button:focus-visible{outline:2px solid var(--accent);outline-offset:3px}
+.save-status{grid-column:1/-1;font:11px/1.4 var(--sans);color:var(--muted)}
+.save-status:empty{display:none}
 
-/* Focusable and tappable help for the three non-obvious settings. */
+/* Focusable and tappable help for distribution and PDF contents. */
 .has-help{position:relative}
 .setting-label-row{display:flex;align-items:center;gap:6px;min-height:20px}
 .options-panel .setting-label-row label{margin:0;font:inherit;letter-spacing:0}
 .preview-bar .help-trigger{display:inline-flex;align-items:center;justify-content:center;width:24px;height:24px;padding:4px;flex:none;color:var(--muted);border:0;background:transparent;cursor:pointer}
 .preview-bar .help-trigger:hover,.preview-bar .help-trigger[aria-expanded="true"]{color:var(--ink)}
 .help-tooltip{position:absolute;z-index:5;top:28px;left:0;right:0;background:var(--ink);color:#fff;padding:10px 12px;font:12px/1.45 var(--sans);letter-spacing:0;box-shadow:0 3px 10px #0002;cursor:default}
-.settings-save{column-gap:6px}
-.settings-save .help-tooltip{top:auto;bottom:calc(100% + 7px)}
-.settings-save .save-status{margin-left:6px}
 
 /* Opt-in photo treatments: scientific charts and tables keep their own sizing. */
 @media screen {

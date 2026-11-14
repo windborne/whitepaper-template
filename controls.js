@@ -1,6 +1,12 @@
 const config=JSON.parse(document.getElementById('document-config').textContent);
 if(/^WindBorne Systems(?:[., ]+Inc\.?)?$/i.test(config.organization||''))config.organization='WindBorne Systems';
-let saveButton,saveStatus,savedDefaults,saving=false,saveFeedback='';
+let saveButton,resetButton,saveStatus,savedDefaults,saving=false,saveFeedback='';
+// Hosted review preferences are per browser and document, never shared file edits.
+const browserSettingsKey='windborne-review-settings:'+location.pathname;
+const browserSettingRules={abstract:['plain','shaded'],contents:['none','one','two'],cover:['on','off'],details:['none','title','organization','full'],authors:['single','many'],distribution:['Public','Internal','Proprietary'],category:80,preparedFor:160};
+function browserSettings(value){return Object.fromEntries(Object.entries(value||{}).filter(([key,v])=>typeof v==='string'&&(Array.isArray(browserSettingRules[key])?browserSettingRules[key].includes(v):typeof browserSettingRules[key]==='number'&&v.length<=browserSettingRules[key])))}
+if(config.hostedReview){try{const stored=JSON.parse(localStorage.getItem(browserSettingsKey)||'null');if(stored?.version===1)config.defaults={...config.defaults,...browserSettings(stored.settings)}}catch{}}
+
 const params=new URLSearchParams(config.published?'':location.search);const kind=document.body.dataset.document;
 const localDocument=location.protocol==='file:'||['127.0.0.1','localhost','::1'].includes(location.hostname);
 const editing=!config.published&&(params.get('mode')==='edit'||(params.get('mode')!=='public'&&localDocument));
@@ -32,28 +38,26 @@ const coverField=document.createElement('label');coverField.className='toggle-se
 coverField.innerHTML='<span>PDF cover page</span><input type="checkbox" role="switch" id="pdf-cover-option" aria-label="PDF cover page">';
 printContents.closest('.setting-field').before(coverField);
 const coverOption=coverField.querySelector('input');
-// A fixed hairline frame, shared by web, lightbox and PDF output.
-const bordersField=document.createElement('label');bordersField.className='toggle-setting figure-borders-setting';
-bordersField.innerHTML='<span>Figure borders</span><input type="checkbox" role="switch" id="figure-borders-option" aria-label="Figure borders">';
-coverField.before(bordersField);
-const figureBorders=bordersField.querySelector('input');
+// Border preferences are source-only; grouped artwork is framed automatically.
+let selectedFigureBorders='off';
 // Inset vector frames avoid clipping from fractional print-viewport rounding.
 for(const art of document.querySelectorAll('.prose figure .figure-art')){
  const media=[...art.children].filter(el=>el.matches('img,svg'));
  if(!media.length)continue;
- const wrap=document.createElement('span');wrap.className='figure-media';media[0].before(wrap);wrap.append(...media);
+ const wrap=document.createElement('span');wrap.className='figure-media';wrap.dataset.mediaCount=String(media.length);media[0].before(wrap);wrap.append(...media);
  const frame=document.createElementNS('http://www.w3.org/2000/svg','svg');frame.classList.add('figure-frame');frame.setAttribute('aria-hidden','true');frame.setAttribute('focusable','false');
  frame.innerHTML='<rect x="1" y="1" width="100%" height="100%" fill="none" stroke="currentColor" stroke-width="0.666667"/>';
  wrap.append(frame);
 }
 function setFigureBorders(value){
- figureBorders.checked=value==='on';document.body.classList.toggle('with-figure-borders',figureBorders.checked);
+ selectedFigureBorders=value==='on'?'on':'off';
  document.querySelectorAll('.prose figure').forEach(figure=>{
-  const framed=figure.dataset.figureBorder==='on'||(figureBorders.checked&&figure.dataset.figureBorder!=='off');
-  figure.querySelectorAll('.figure-media').forEach(wrap=>wrap.classList.toggle('frame-enabled',framed));
+  figure.querySelectorAll('.figure-media').forEach(wrap=>{
+   const framed=figure.dataset.figureBorder!=='off'&&(figure.dataset.figureBorder==='on'||Number(wrap.dataset.mediaCount)>=2||selectedFigureBorders==='on');
+   wrap.classList.toggle('frame-enabled',framed);
+  });
  });updatePDFLink();
 }
-figureBorders.onchange=()=>setFigureBorders(figureBorders.checked?'on':'off');
 
 const coverPage=document.createElement('section');coverPage.className='pdf-cover';coverPage.setAttribute('aria-label','Cover page');
 document.querySelector('.paper-header').before(coverPage);
@@ -82,7 +86,7 @@ function renderCover(){
 function setCover(value){coverOption.checked=value==='on';document.body.classList.toggle('with-pdf-cover',coverOption.checked);renderCover();updatePDFLink()}
 coverOption.onchange=()=>setCover(coverOption.checked?'on':'off');
 // Agent-authored source override; intentionally absent from document settings.
-const firstPageFooter=params.has('firstPageFooter')?params.get('firstPageFooter'):(config.defaults?.firstPageFooter||'');
+let firstPageFooter=params.has('firstPageFooter')?params.get('firstPageFooter'):(config.defaults?.firstPageFooter||'');
 function customFooterText(){return firstPageFooter.replace(/\s+/g,' ').trim()}
 let selectedCategory='',selectedPreparedFor='';
 let currentFirstNotice='';
@@ -236,26 +240,48 @@ setFigureBorders(params.has('figureBorders')?params.get('figureBorders'):default
 addEventListener('beforeprint',()=>{if(!document.body.dataset.pdfBuild)document.body.classList.add('native-print')});addEventListener('afterprint',()=>document.body.classList.remove('native-print'));
 async function printCurrent(){await document.fonts.ready;window.print()}
 document.querySelector('.print-trigger').onclick=printCurrent;
-function exportSettings(){return {figureBorders:figureBorders.checked?'on':'off',cover:coverOption.checked?'on':'off',abstract:abstract.checked?'shaded':'plain',contents:printContents.value,category:selectedCategory,preparedFor:selectedPreparedFor,distribution:distribution.value,details:authorDetails.value,authors:authors?.value||'single',firstPageFooter:customFooterText()}}
+function exportSettings(){return {figureBorders:selectedFigureBorders,cover:coverOption.checked?'on':'off',abstract:abstract.checked?'shaded':'plain',contents:printContents.value,category:selectedCategory,preparedFor:selectedPreparedFor,distribution:distribution.value,details:authorDetails.value,authors:authors?.value||'single',firstPageFooter:customFooterText()}}
 // Save only document settings; the article's content stays in the HTML source.
 function refreshSaveState(clearFeedback=false){
  if(!saveButton)return;
  if(clearFeedback&&!saving)saveFeedback='';
  const current=exportSettings();const dirty=Object.keys(current).some(key=>current[key]!==savedDefaults[key]);
- saveButton.disabled=saving||!dirty;saveButton.setAttribute('aria-busy',String(saving));
+ saveButton.disabled=saving||!dirty;if(resetButton)resetButton.disabled=saving||!dirty;saveButton.setAttribute('aria-busy',String(saving));
  saveButton.querySelector('span').textContent=saving?'Saving…':'Save settings';
  saveStatus.textContent=saving?'':saveFeedback||(dirty?'Unsaved changes':'');
 }
 savedDefaults={authors:'single',...defaults};
 saveButton=document.querySelector('.save-settings');saveStatus=document.querySelector('.save-status');
+const saveRow=saveButton.closest('.settings-save');
+saveRow.removeAttribute('data-help');saveRow.classList.remove('has-help');saveRow.querySelectorAll('.help-trigger,.help-tooltip').forEach(el=>el.remove());
+resetButton=document.createElement('button');resetButton.type='button';resetButton.className='reset-settings';
+resetButton.innerHTML='<svg data-lucide="rotate-ccw" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 11a9 9 0 1 1 9 9"/><path d="M3 3v8h8"/></svg><span>Reset view</span>';
+saveRow.prepend(resetButton);
+function clearSettingsQuery(){const url=new URL(location.href);Object.keys(exportSettings()).forEach(key=>url.searchParams.delete(key));history.replaceState(null,'',url)}
+resetButton.addEventListener('click',()=>{
+ if(saving)return;
+ const value=savedDefaults;
+ firstPageFooter=value.firstPageFooter||'';
+ authorDetails.value=value.details;
+ if(authors)authors.value=value.authors;
+ currentAuthors=authors?.value==='many'?exampleAuthors:baseAuthors;
+ setCategory(value.category,{autoCover:false});preparedFor.value=value.preparedFor;setPreparedFor(value.preparedFor);
+ setPrintContents(value.contents);setAbstract(value.abstract);setFigureBorders(value.figureBorders);setDistribution(value.distribution);renderAuthors();setCover(value.cover);
+ customEditor.hidden=true;customInput.value='';clearSettingsQuery();saveFeedback='View reset';refreshSaveState();
+});
+
 saveButton.addEventListener('click',async()=>{
  if(saving||saveButton.disabled)return;
  const snapshot=exportSettings();saving=true;saveFeedback='';refreshSaveState();
  try{
+  if(config.hostedReview){
+   localStorage.setItem(browserSettingsKey,JSON.stringify({version:1,settings:browserSettings(snapshot)}));
+   savedDefaults={...snapshot};config.defaults={...snapshot};clearSettingsQuery();saveFeedback='Saved in this browser';return;
+  }
   const response=await fetch('/api/settings',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({document:documentName,settings:snapshot,expected:savedDefaults})});
   if(!response.ok){const message=await response.text();throw Error(response.status===409?message:response.status===400?message:'Could not save. Open this document through the local editor and try again.')}
   const result=await response.json();savedDefaults=result.settings;config.defaults={...result.settings};
-  const url=new URL(location.href);Object.keys(snapshot).forEach(key=>url.searchParams.delete(key));history.replaceState(null,'',url);
+  clearSettingsQuery();
   saveFeedback=Object.keys(snapshot).some(key=>exportSettings()[key]!==snapshot[key])?'Saved; newer changes unsaved':'Saved';
  }catch(error){saveFeedback=error instanceof TypeError?'Could not save. Open this document through the local editor and try again.':error.message}
  finally{saving=false;refreshSaveState()}

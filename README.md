@@ -4,6 +4,8 @@ A reusable editorial document system for technical papers, whitepapers, reports 
 
 ![Draft editor with Template and Article tabs, View PDF and Save settings](assets/editor-preview.png)
 
+The instructions below use the fixed `v1.0.1` baseline. For the newer Reset/Save controls and automatic grouped-image frames described on this branch, ask your agent to use `main` and omit `git checkout v1.0.1`. The published tag has not been moved.
+
 ## Start with your agent
 
 Give your agent this repository and [AI-PROMPT.md](AI-PROMPT.md), plus your source text/files, title, authors and date. No prior knowledge of this project is needed. For example:
@@ -36,9 +38,11 @@ Open **[the draft editor](http://127.0.0.1:8743/article.html?mode=edit)**, or th
 
 - **Article** opens `article.html`, preloaded with starter copy. Your work stays in that file; reopening does not reset it.
 - **Template** opens the synthetic component specimen for reference. Its settings belong to the specimen, not your paper.
-- **Document settings** controls abstract shading, optional fixed-weight figure borders, author details, distribution, independent Category and Prepared for fields, PDF cover page and PDF contents. Info icons explain the less obvious choices.
+- **Document settings** controls abstract shading, author details, distribution, independent Category and Prepared for fields, PDF cover page and PDF contents. Info icons explain the less obvious choices.
 
-Figure borders default to off. When enabled, multiple images sharing a caption get one outer frame. Agents can enable a frame for a specific figure and use `figure-compact` for centered 70% artwork on desktop/print, while keeping normal caption alignment and full available width on mobile. See [figure guidance](DESIGN.md#optional-figure-borders); inspect readability before shrinking technical images.
+**Reset view** restores the last saved settings and discards unsaved choices. **Save settings** writes to the document’s HTML in the local editor. In a hosted review (`hostedReview: true`), the same button saves only this browser’s preferences for this document; it does not modify shared source or prepared PDFs. The status confirms “Saved in this browser.” Neither button has an info icon.
+
+Single-image figures are unframed by default. Two or more images sharing a caption automatically get one outer frame; there is no border toggle in Document settings. Agents can enable a frame for a specific figure and use `figure-compact` for centered 70% artwork on desktop/print, while keeping normal caption alignment and full available width on mobile. See [figure guidance](DESIGN.md#optional-figure-borders); inspect readability before shrinking technical images.
 
 The new folder has no Git repository or publishing remote. This prevents an ordinary push from that folder; it does not set access permissions, disable cloud sync or authorize sharing. Keep it in approved storage and never add the public template remote. Ask your agent to work in this folder, not in the toolkit checkout. A separate approved private repository is an option for collaboration, but is not created automatically.
 
@@ -48,7 +52,8 @@ The new folder has no Git repository or publishing remote. This prevents an ordi
 
 | Action | What it does |
 |---|---|
-| **Save settings** | Writes the current choices into this document's HTML. The button is disabled until something changes; **Saved** confirms success. It does not edit article text or generate a PDF. |
+| **Reset view** | Discards unsaved choices and restores the last saved settings. |
+| **Save settings** | In the local editor, writes the current choices into this document's HTML. The button is disabled until something changes; **Saved** confirms success. It does not edit article text or generate a PDF. |
 | **View PDF** | Generates a PDF using the current choices, including unsaved ones, and opens it in a new viewer tab. Use the viewer's download/save control to keep a copy. |
 | **View web reader layout** | Opens a new tab with editing controls hidden and your current choices applied. Your original editing tab stays open. This is a local preview, not a published website. |
 | **Print current PDF version** | Opens browser print. Use View PDF for the finished export with resolved contents page numbers. |
@@ -91,7 +96,7 @@ Contents numbering is separate: every top-level entry, including References and 
 
 Back matter normally follows References → Appendices → Glossary. If an appendix or glossary cites sources, put References last instead. A subtle divider follows References only when another section follows. See [back matter order](DESIGN.md#back-matter-order).
 
-Recommended defaults: figure borders off, PDF cover page off, plain abstract, two-column PDF contents (headers only), author name and title, Category None and Prepared for blank, Internal distribution. One-column contents includes headers and subheaders. PDF contents never appears in the web body and does not affect the web nav sidebar. See [DESIGN.md](DESIGN.md) for typography, options, footer language and page-flow rules. Distribution is required and footer-only. The first page uses a distribution-specific notice; subsequent pages use a short footer; the first-page and web-end notices include company wording as part of the notice itself, without an additional classification, organization or category prefix. Distribution markings do not provide access control.
+Recommended defaults: single-image figures unframed, grouped images automatically framed, PDF cover page off, plain abstract, two-column PDF contents (headers only), author name and title, Category None and Prepared for blank, Internal distribution. One-column contents includes headers and subheaders. PDF contents never appears in the web body and does not affect the web nav sidebar. See [DESIGN.md](DESIGN.md) for typography, options, footer language and page-flow rules. Distribution is required and footer-only. The first page uses a distribution-specific notice; subsequent pages use a short footer; the first-page and web-end notices include company wording as part of the notice itself, without an additional classification, organization or category prefix. Distribution markings do not provide access control.
 
 `stress-report.html` is a synthetic layout fixture, not research evidence. Keep it separate from your draft. Public examples contain placeholder or synthetic material; use real reports only in a separate private workspace.
 

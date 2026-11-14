@@ -2,6 +2,10 @@
 
 The `v1.0.1` annotated tag identifies the reviewed HTML/web/PDF template baseline. It is applied after the exact source commit passes the workspace checks and GitHub Actions on Ubuntu and macOS. The tag fixes the source revision, not every OS/browser outcome; preserve each document’s `template-origin.json`, `toolchain.json`, editable source, assets and final PDF. Do not move a published tag; use a new version for later changes.
 
+## Updates on main after v1.0.1
+
+The current branch adds matching Reset view / Save settings controls, browser-only preference saves for hosted reviews, automatic shared frames for grouped images, and source-only border overrides. README and agent guidance describe these changes. They are not part of the unchanged v1.0.1 tag; use main for these updates and preserve the resulting workspace’s recorded source revision. A future release should receive its own version tag after checks.
+
 ## Changes from v1.0
 
 [PR #1](https://github.com/windborne/whitepaper-template/pull/1) updates pypdf from 6.10.0 to 6.21.4 and makes the cover test tolerate spaces inserted into letter-spaced text during extraction. This maintenance release also updates the recommended version in the onboarding and agent guides. It does not change document styling or the authoring workflow. The original `v1.0` tag remains unchanged. Existing workspaces retain their copied requirements; update them explicitly and rerun setup/export checks before relying on the new dependency.

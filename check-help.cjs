@@ -16,7 +16,7 @@ module.exports=async function checkHelp(browser,origin){
  const touch=await browser.newContext({hasTouch:true,viewport:{width:390,height:844}});
  try{
   const page=await touch.newPage();await page.goto(origin+'/article.html?mode=edit');await page.locator('.options > summary').tap();
-  for(const id of ['contents','distribution','save','distribution-public','distribution-internal','distribution-proprietary']){
+  for(const id of ['contents','distribution','distribution-public','distribution-internal','distribution-proprietary']){
    const button=page.locator('[aria-controls="help-'+id+'"]'),help=page.locator('#help-'+id);
    await button.tap();assert.equal(await help.isVisible(),true);assert.equal(await button.getAttribute('aria-expanded'),'true');
    const box=await help.boundingBox();assert.ok(box.x>=0&&box.x+box.width<=390,'Help fits narrow viewport');
