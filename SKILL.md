@@ -1,6 +1,6 @@
 ---
 name: windborne-whitepaper
-description: Create or restyle technical papers, whitepapers and reports as an editable HTML article and a paginated PDF using the WindBorne editorial template. Use for document authoring and typesetting, not product interfaces or slides.
+description: Create or restyle technical papers, whitepapers, reports and proposals using the WindBorne editorial template. Support editable HTML with paginated PDF, or native Google Docs and Word via the companion guide. Use for document authoring and typesetting, not product interfaces or slides.
 ---
 
 # WindBorne technical documents
@@ -10,6 +10,8 @@ Use the approved template in this repository for an editorial, readable technica
 The fixed `v1.0.1` baseline predates the Reset/Save controls and automatic grouped-image frames described here. Use `main` when the user requests these updates; do not move existing tags.
 
 ## Start here
+
+**Format routing:** if the user requests Google Docs or Word, follow [GOOGLE-DOCS.md](GOOGLE-DOCS.md) before the HTML workflow below. Edit a private copy in native document format, preserve a clean horizontal metadata line, put the supplied logo above the first-page title, and use the approved notice plus running footers with automatic page numbers. Do not force the HTML metadata grid, web sidebar or editor setup onto that request. Inspect the rendered document and, for Google Docs, its actual exported PDF. This companion is a newer `main` addition, not part of `v1.0.1`. Keep every real source and derivative outside the public checkout.
 
 1. Read [README.md](README.md) for setup and the save/export workflow, then [DESIGN.md](DESIGN.md) for typography, components, optional treatments and web/print differences.
 2. Before receiving or writing real content into files, create a separate workspace with `node create-document.cjs <approved-destination>` from the toolkit checkout. The destination must be new/empty and outside every Git checkout. Run `node setup.cjs` there; it installs dependencies and tests PDF export. Author only in that workspace's `article.html`; use `specimen.html` for components and `stress-report.html` only as a synthetic fixture. When resuming, read `START-HERE.md` and preserve the existing manuscript. Do not initialize the public remote, move the workspace into the checkout, or copy the draft back. Create a new workspace for a new document; additional root-level HTML files are allowed inside an existing private review workspace. Keep shared CSS, fonts and assets beside the source. The no-Git folder does not enforce company storage or sharing controls. Preserve `template-origin.json` and the setup-generated `toolchain.json`.

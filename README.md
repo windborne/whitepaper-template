@@ -8,6 +8,8 @@ The instructions below use the fixed `v1.0.1` baseline. For the newer Reset/Save
 
 ## Start with your agent
 
+**Working in Google Docs or Word?** Use [GOOGLE-DOCS.md](GOOGLE-DOCS.md), available on `main` after `v1.0.1`. It adapts the typography, first-page logo, horizontal metadata and first-page/running footers to native document formatting. Keep an existing clean metadata line; labeled AUTHOR/DATE fields are not required. Ask your agent to edit a private copy and check its exported pages. This route does not require the HTML editor or replace Dana's Word template/customer-required formats.
+
 Give your agent this repository and [AI-PROMPT.md](AI-PROMPT.md), plus your source text/files, title, authors and date. No prior knowledge of this project is needed. For example:
 
 > Use https://github.com/windborne/whitepaper-template at v1.0.1. Read README.md, SKILL.md and DESIGN.md, create a separate document workspace outside every Git checkout, set up its local editor, and open the starter Article in draft mode. Use the attached content to create my paper. Keep the template defaults unless I specify otherwise. Save my chosen settings, generate a PDF, and give me the editable source and PDF after reviewing both.
