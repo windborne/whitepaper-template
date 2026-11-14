@@ -289,8 +289,14 @@ saveButton.addEventListener('click',async()=>{
 refreshSaveState();
 const status=document.createElement('p');status.className='export-status';status.setAttribute('role','status');status.hidden=true;document.querySelector('.options-panel').append(status);
 let exporting=false;
-document.querySelector('[data-pdf-link]').addEventListener('click',async e=>{
- if(config.published)return;
+const pdfLink=document.querySelector('[data-pdf-link]');
+if(config.hostedReview){
+ pdfLink.target='_blank';pdfLink.rel='noopener';
+ pdfLink.title='Opens the prepared review PDF. Use Print current PDF version to print your preview settings.';
+}
+pdfLink.addEventListener('click',async e=>{
+ // Hosted reviews serve prepared PDFs; only the local editor has a renderer API.
+ if(config.published||config.hostedReview)return;
  e.preventDefault();if(exporting)return;
  const link=e.currentTarget,original=link.querySelector('span').textContent;
  // Open synchronously so browser popup protection doesn't swallow an async export.

@@ -79,6 +79,12 @@ module.exports=async function checkSettings(browser,origin){
   assert.equal(await page.locator('.save-status').textContent(),'Saved in this browser');assert.equal(writes,0);assert.equal(await fs.readFile(file,'utf8'),hosted);
   await page.reload();await page.locator('.options > summary').click();assert.equal(await page.locator('#prepared-for').inputValue(),'Browser-only event');
   await page.locator('#prepared-for').fill('Discard this');await page.locator('.reset-settings').click();assert.equal(await page.locator('#prepared-for').inputValue(),'Browser-only event');
+  // Hosted View PDF must navigate to the prepared PDF, never the local-only API.
+  let exports=0;page.on('request',r=>{if(r.url().endsWith('/api/export'))exports++});
+  const pdfUrl=await page.locator('[data-pdf-link]').evaluate(el=>el.href);
+  await page.context().route(pdfUrl,route=>route.fulfill({contentType:'text/html',body:'Prepared PDF navigation test'}));
+  const opened=page.waitForEvent('popup');await page.getByRole('link',{name:'View PDF',exact:true}).click();const pdfPage=await opened;await pdfPage.waitForLoadState();assert.equal(pdfPage.url(),pdfUrl);assert.equal(exports,0);assert.equal(await pdfPage.evaluate(()=>window.opener===null),true);await pdfPage.close();
+  await page.locator('.options').evaluate(el=>el.open=true);
   // Saving cannot pretend to succeed when browser storage is unavailable.
   await page.evaluate(()=>{Storage.prototype.setItem=()=>{throw Error('Browser storage unavailable')}});await page.locator('#prepared-for').fill('Not saved');await page.locator('.save-settings').click();assert.match(await page.locator('.save-status').textContent(),/unavailable/);assert.equal(await page.locator('.save-settings').isEnabled(),true);
   console.log('Save/reset passed: local file persistence, browser-only hosted persistence, reload/reset, storage failure, source preservation, stale conflicts and validation');
